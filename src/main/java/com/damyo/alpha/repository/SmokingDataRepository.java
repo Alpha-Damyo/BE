@@ -1,7 +1,6 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.SmokingArea;
-import com.damyo.alpha.entity.SmokingData;
+import com.damyo.alpha.domain.SmokingData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,15 +11,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface SmokingDataRepository extends JpaRepository<SmokingData, BigDecimal> {
+public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> {
     SmokingData save(SmokingData smokingData);
 
     @Modifying
     @Query("SELECT sd FROM SmokingData sd " +
             "WHERE sd.smoking_area_id = :areaId")
-    List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") BigDecimal smokingAreaId);
+    List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") Long smokingAreaId);
 
-    void updateSmokingDataById();
-
-    void deleteSmokingDataById();
+//    void updateSmokingDataById();
+//
+//    void deleteSmokingDataById();
 }

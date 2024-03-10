@@ -1,10 +1,10 @@
-package com.damyo.alpha.entity;
+package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class SmokingArea {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigDecimal id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -29,7 +29,7 @@ public class SmokingArea {
     private Float longitude;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate created_at;
+    private LocalDateTime created_at;
 
     @Column(name = "status", nullable = false, length = 5)
     private String status;
@@ -41,7 +41,7 @@ public class SmokingArea {
     private String description;
 
     @Builder.Default
-    @OneToMany(mappedBy = "smoking_area", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "smoking_area_id", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<SmokingData> smokingDataList = new ArrayList<SmokingData>();
 

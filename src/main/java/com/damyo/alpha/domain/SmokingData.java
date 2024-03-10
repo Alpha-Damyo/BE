@@ -1,11 +1,11 @@
-package com.damyo.alpha.entity;
+package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,10 +17,10 @@ public class SmokingData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigDecimal id;
+    private Long id;
 
     @Column(name = "user_id")
-    private String user_id;
+    private UUID user_id;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;

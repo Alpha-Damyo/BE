@@ -1,6 +1,6 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.SmokingArea;
+import com.damyo.alpha.domain.SmokingArea;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface SmokingAreaRepository extends JpaRepository<SmokingArea, BigDecimal> {
+public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> {
     SmokingArea save(SmokingArea smokingArea);
 
     @Modifying
@@ -21,17 +21,17 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, BigDec
     @Modifying
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id = :id")
-    List<SmokingArea> findSmokingAreaById(@Param("id") BigDecimal id);
+    List<SmokingArea> findSmokingAreaById(@Param("id") Long id);
 
     @Modifying
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +
             "WHERE sa.id = :id")
-    void updateSmokingAreaNameById(@Param("name") String name, @Param("id") BigDecimal id);
+    void updateSmokingAreaNameById(@Param("name") String name, @Param("id") Long id);
     @Modifying
     @Query("UPDATE SmokingArea sa SET sa.status = 'false' " +
             "WHERE sa.id = :id " +
             "AND sa.status = 'true'")
-    void updateSmokingAreaStatusById(@Param("id") BigDecimal id);
+    void updateSmokingAreaStatusById(@Param("id") Long id);
 
-    void deleteSmokingAreaById();
+//    void deleteSmokingAreaById();
 }
