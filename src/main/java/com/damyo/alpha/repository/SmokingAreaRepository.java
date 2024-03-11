@@ -23,11 +23,11 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             "WHERE sa.id = :id")
     List<SmokingArea> findSmokingAreaById(@Param("id") Long id);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +
             "WHERE sa.id = :id")
     void updateSmokingAreaNameById(@Param("name") String name, @Param("id") Long id);
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.status = 'false' " +
             "WHERE sa.id = :id " +
             "AND sa.status = 'true'")

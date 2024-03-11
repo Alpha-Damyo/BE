@@ -23,6 +23,7 @@ public class SmokingAreaRepositoryTest {
     @BeforeEach()
     void createArea() {
         smokingAreaRepository.save(SmokingArea.builder()
+                                    .id(1L)
                                     .name("국민대")
                                     .created_at(LocalDateTime.now())
                                     .status("true")
