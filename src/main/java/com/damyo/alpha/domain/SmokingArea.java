@@ -30,7 +30,7 @@ public class SmokingArea {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "status", nullable = false)
     private boolean status;
@@ -42,8 +42,17 @@ public class SmokingArea {
     private String description;
 
     @Builder.Default
-    @OneToMany(mappedBy = "smoking_area_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<SmokingData> smokingDataList = new ArrayList<SmokingData>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Picture> pictureList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Info> infoList = new ArrayList<>();
 }

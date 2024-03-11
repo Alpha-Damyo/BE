@@ -1,17 +1,13 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.Challenge;
-import com.damyo.alpha.entity.Info;
+import com.damyo.alpha.domain.Info;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -42,7 +38,7 @@ class InfoRepositoryTest {
         for (Info info : infos) {
             System.out.println(info.getId());
         }
-        infoRepository.deleteInfoBySmokingAreaIdAndId(2L, 2L);
+        infoRepository.deleteInfoBySmokingAreaIdAndId("2", 2L);
         for (Info info : infos) {
             System.out.println(info.getId());
         }
@@ -50,7 +46,7 @@ class InfoRepositoryTest {
 
     @Test
     void findInfosBySmokingAreaId() {
-        List<Info> infos = infoRepository.findInfosBySmokingAreaId(2L);
+        List<Info> infos = infoRepository.findInfosBySmokingAreaId("2");
         for (Info info : infos) {
             System.out.println(info.getId());
         }

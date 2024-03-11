@@ -20,16 +20,17 @@ public class SmokingData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID user_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_Id", nullable = false)
+    private User user;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "smoking_area_id")
     @ToString.Exclude
-    private SmokingArea smoking_area_id;
+    private SmokingArea smokingArea;
 
 }

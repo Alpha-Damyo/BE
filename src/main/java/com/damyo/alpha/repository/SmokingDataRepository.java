@@ -16,8 +16,8 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
 
     @Modifying
     @Query("SELECT sd FROM SmokingData sd " +
-            "WHERE sd.smoking_area_id = :areaId")
-    List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") String smokingAreaId);
+            "WHERE sd.smokingArea = :areaId")
+    List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") String smokingArea);
 
 //    void updateSmokingDataById();
 //

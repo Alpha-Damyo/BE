@@ -1,7 +1,7 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.Picture;
-import com.damyo.alpha.entity.User;
+import com.damyo.alpha.domain.Picture;
+import com.damyo.alpha.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

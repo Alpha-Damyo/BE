@@ -1,4 +1,4 @@
-package com.damyo.alpha.entity;
+package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

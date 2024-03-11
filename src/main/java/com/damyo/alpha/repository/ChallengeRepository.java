@@ -1,6 +1,6 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.Challenge;
+import com.damyo.alpha.domain.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
