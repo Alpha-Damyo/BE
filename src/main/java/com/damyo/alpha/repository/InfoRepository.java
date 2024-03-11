@@ -1,4 +1,4 @@
 package com.damyo.alpha.repository;
 
-public class InfoRepository {
+public interface InfoRepository {
 }
