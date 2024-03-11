@@ -1,4 +1,4 @@
 package com.damyo.alpha.repository;
 
-public class ChallengeRepository {
+public interface ChallengeRepository {
 }
