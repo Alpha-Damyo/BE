@@ -22,4 +22,5 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
 //    void updateSmokingDataById();
 //
 //    void deleteSmokingDataById();
+
 }

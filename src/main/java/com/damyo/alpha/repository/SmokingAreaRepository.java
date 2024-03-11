@@ -35,4 +35,5 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     void updateSmokingAreaStatusById(@Param("id") String id);
 
 //    void deleteSmokingAreaById();
+
 }
