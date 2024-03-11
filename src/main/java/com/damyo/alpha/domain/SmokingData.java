@@ -2,6 +2,7 @@ package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,9 +20,10 @@ public class SmokingData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private UUID user_id;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
 

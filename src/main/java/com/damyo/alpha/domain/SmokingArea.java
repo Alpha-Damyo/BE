@@ -2,6 +2,7 @@ package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,8 +17,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SmokingArea {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -28,11 +28,12 @@ public class SmokingArea {
     @Column(name = "longitude")
     private Float longitude;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
 
-    @Column(name = "status", nullable = false, length = 5)
-    private String status;
+    @Column(name = "status", nullable = false)
+    private boolean status;
 
     @Column(name = "address", nullable = false, length = 100)
     private String address;

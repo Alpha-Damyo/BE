@@ -23,26 +23,26 @@ public class SmokingAreaRepositoryTest {
     @BeforeEach()
     void createArea() {
         smokingAreaRepository.save(SmokingArea.builder()
-                                    .id(1L)
+                                    .id("1")
                                     .name("국민대")
                                     .created_at(LocalDateTime.now())
-                                    .status("true")
+                                    .status(true)
                                     .address("서울특별시 성북구").build());
     }
 
     @Test
     @DisplayName("updateSmokingAreaNameById")
     void updateAreaNameById(){
-        smokingAreaRepository.updateSmokingAreaNameById("국민대 미래관", 1L);
-        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById(1L);
+        smokingAreaRepository.updateSmokingAreaNameById("국민대 미래관", "1");
+        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById("1");
         Assertions.assertThat(area.get(0).getName()).isEqualTo("국민대 미래관");
     }
 
     @Test
     @DisplayName("updateSmokingAreaStatusById")
     void updateAreaStatusById(){
-        smokingAreaRepository.updateSmokingAreaStatusById(1L);
-        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById(1L);
-        Assertions.assertThat(area.get(0).getStatus()).isEqualTo("false");
+        smokingAreaRepository.updateSmokingAreaStatusById("1");
+        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById("1");
+        Assertions.assertThat(area.get(0).isStatus()).isEqualTo(false);
     }
 }

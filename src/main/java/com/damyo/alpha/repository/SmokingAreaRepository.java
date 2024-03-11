@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> {
+public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String> {
     SmokingArea save(SmokingArea smokingArea);
 
     @Modifying
@@ -21,17 +21,18 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
     @Modifying
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id = :id")
-    List<SmokingArea> findSmokingAreaById(@Param("id") Long id);
+    List<SmokingArea> findSmokingAreaById(@Param("id") String id);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +
             "WHERE sa.id = :id")
-    void updateSmokingAreaNameById(@Param("name") String name, @Param("id") Long id);
+    void updateSmokingAreaNameById(@Param("name") String name, @Param("id") String id);
+
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE SmokingArea sa SET sa.status = 'false' " +
+    @Query("UPDATE SmokingArea sa SET sa.status = false " +
             "WHERE sa.id = :id " +
-            "AND sa.status = 'true'")
-    void updateSmokingAreaStatusById(@Param("id") Long id);
+            "AND sa.status = true")
+    void updateSmokingAreaStatusById(@Param("id") String id);
 
 //    void deleteSmokingAreaById();
 }
