@@ -1,6 +1,6 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.Picture;
+import com.damyo.alpha.domain.Picture;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

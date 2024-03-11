@@ -1,8 +1,6 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.entity.Challenge;
-import com.damyo.alpha.entity.Info;
-import org.junit.jupiter.api.Assertions;
+import com.damyo.alpha.domain.Challenge;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

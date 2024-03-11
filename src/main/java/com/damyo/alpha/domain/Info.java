@@ -1,10 +1,7 @@
-package com.damyo.alpha.entity;
+package com.damyo.alpha.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -16,8 +13,10 @@ public class Info {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "smoking_area_id")
-    private Long smokingAreaId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "smoking_area_Id")
+    @ToString.Exclude
+    private SmokingArea smokingArea;
 
     @Column(name = "score")
     private int score;
