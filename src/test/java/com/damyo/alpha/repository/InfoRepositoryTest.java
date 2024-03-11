@@ -16,21 +16,21 @@ class InfoRepositoryTest {
     @Autowired
     private InfoRepository infoRepository;
 
-    @BeforeEach
-    void insertDummies() {
-        Info info1 = infoRepository.save(
-                Info.builder().smokingAreaId(1L).score(4).build()
-        );
-        Info info2 = infoRepository.save(
-                Info.builder().smokingAreaId(1L).score(5).build()
-        );
-        Info info3 = infoRepository.save(
-                Info.builder().smokingAreaId(2L).score(4).build()
-        );
-        Info info4 = infoRepository.save(
-                Info.builder().smokingAreaId(2L).score(3).build()
-        );
-    }
+//    @BeforeEach
+//    void insertDummies() {
+//        Info info1 = infoRepository.save(
+//                Info.builder().smokingAreaId("1").score(4).build()
+//        );
+//        Info info2 = infoRepository.save(
+//                Info.builder().smokingAreaId("2").score(5).build()
+//        );
+//        Info info3 = infoRepository.save(
+//                Info.builder().smokingAreaId("2").score(4).build()
+//        );
+//        Info info4 = infoRepository.save(
+//                Info.builder().smokingAreaId("2").score(3).build()
+//        );
+//    }
 
     @Test
     void deleteInfoBySmokingAreaIdAndId() {

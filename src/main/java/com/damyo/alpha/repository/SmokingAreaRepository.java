@@ -14,14 +14,12 @@ import java.util.List;
 public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String> {
     SmokingArea save(SmokingArea smokingArea);
 
-    @Modifying
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.name = :name")
     List<SmokingArea> findSmokingAreaByName(@Param("name") String name);
-    @Modifying
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id = :id")
-    List<SmokingArea> findSmokingAreaById(@Param("id") String id);
+    SmokingArea findSmokingAreaById(String id);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +
