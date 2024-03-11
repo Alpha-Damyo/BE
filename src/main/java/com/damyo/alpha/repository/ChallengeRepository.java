@@ -21,4 +21,5 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT ch FROM Challenge ch " +
             "WHERE ch.startTime <= :datetime AND ch.endTime >= :datetime")
     List<Challenge> findAllByCurrentTime(@Param("datetime") LocalDateTime dateTime);
+
 }
