@@ -8,8 +8,7 @@ import java.util.Optional;
 
 public interface InfoRepository extends JpaRepository<Info, Long> {
     Info save(Info info);
-    Optional<Info> findInfoById(Long id);
     void deleteInfoBySmokingAreaIdAndId(Long smokingAreaId ,Long id);
-    List<Info> findInfoBySmokingAreaId(Long smokingAreaId);
+    List<Info> findInfosBySmokingAreaId(Long smokingAreaId);
 
 }

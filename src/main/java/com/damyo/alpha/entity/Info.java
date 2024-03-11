@@ -16,7 +16,7 @@ public class Info {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "smoking_area")
+    @Column(name = "smoking_area_id")
     private Long smokingAreaId;
 
     @Column(name = "score")

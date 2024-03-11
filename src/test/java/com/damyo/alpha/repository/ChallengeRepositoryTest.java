@@ -2,6 +2,7 @@ package com.damyo.alpha.repository;
 
 import com.damyo.alpha.entity.Challenge;
 import com.damyo.alpha.entity.Info;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +43,24 @@ class ChallengeRepositoryTest {
                         detailImgUrl("d").
                         build()
         );
+        Challenge challenge3 = challengeRepository.save(
+                Challenge.builder().
+                        name("c3").
+                        startTime(LocalDateTime.now().minusDays(2L)).
+                        endTime(LocalDateTime.now().minusDays(1L)).
+                        bannerImgUrl("c").
+                        detailImgUrl("d").
+                        build()
+        );
+        Challenge challenge4 = challengeRepository.save(
+                Challenge.builder().
+                        name("c4").
+                        startTime(LocalDateTime.now().plusDays(1L)).
+                        endTime(LocalDateTime.now().plusDays(2L)).
+                        bannerImgUrl("c").
+                        detailImgUrl("d").
+                        build()
+        );
     }
 
     @Test
@@ -51,7 +71,25 @@ class ChallengeRepositoryTest {
     }
 
     @Test
-    void deleteByName() {
-
+    @DisplayName("현 시간 활성화 챌린지 조회")
+    void findAllByCurrentTime() {
+        List<Challenge> challenges = challengeRepository.findAllByCurrentTime(LocalDateTime.now());
+        for (Challenge challenge : challenges) {
+            System.out.println(challenge.getName());
+        }
     }
+
+    @Test
+    @DisplayName("챌린지 조회")
+    void findAll() {
+        List<Challenge> challenges = challengeRepository.findAll();
+        for (Challenge challenge : challenges) {
+            System.out.println(challenge.getName());
+        }
+    }
+
+//    @Test
+//    void deleteByName() {
+//
+//    }
 }
