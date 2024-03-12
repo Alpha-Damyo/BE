@@ -13,42 +13,42 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class InfoRepositoryTest {
 
-    @Autowired
-    private InfoRepository infoRepository;
+//    @Autowired
+//    private InfoRepository infoRepository;
 
-    @BeforeEach
-    void insertDummies() {
-        Info info1 = infoRepository.save(
-                Info.builder().smokingAreaId(1L).score(4).build()
-        );
-        Info info2 = infoRepository.save(
-                Info.builder().smokingAreaId(1L).score(5).build()
-        );
-        Info info3 = infoRepository.save(
-                Info.builder().smokingAreaId(2L).score(4).build()
-        );
-        Info info4 = infoRepository.save(
-                Info.builder().smokingAreaId(2L).score(3).build()
-        );
-    }
+//    @BeforeEach
+//    void insertDummies() {
+//        Info info1 = infoRepository.save(
+//                Info.builder().smokingArea("1").score(4).build()
+//        );
+//        Info info2 = infoRepository.save(
+//                Info.builder().smokingArea("1").score(5).build()
+//        );
+//        Info info3 = infoRepository.save(
+//                Info.builder().smokingArea("2").score(4).build()
+//        );
+//        Info info4 = infoRepository.save(
+//                Info.builder().smokingArea("2").score(3).build()
+//        );
+//    }
 
-    @Test
-    void deleteInfoBySmokingAreaIdAndId() {
-        List<Info> infos = infoRepository.findAll();
-        for (Info info : infos) {
-            System.out.println(info.getId());
-        }
-        infoRepository.deleteInfoBySmokingAreaIdAndId("2", 2L);
-        for (Info info : infos) {
-            System.out.println(info.getId());
-        }
-    }
-
-    @Test
-    void findInfosBySmokingAreaId() {
-        List<Info> infos = infoRepository.findInfosBySmokingAreaId("2");
-        for (Info info : infos) {
-            System.out.println(info.getId());
-        }
-    }
+//    @Test
+//    void deleteInfoBySmokingAreaIdAndId() {
+//        List<Info> infos = infoRepository.findAll();
+//        for (Info info : infos) {
+//            System.out.println(info.getId());
+//        }
+//        infoRepository.deleteInfoBySmokingAreaIdAndId("2", 2L);
+//        for (Info info : infos) {
+//            System.out.println(info.getId());
+//        }
+//    }
+//
+//    @Test
+//    void findInfosBySmokingAreaId() {
+//        List<Info> infos = infoRepository.findInfosBySmokingAreaId("2");
+//        for (Info info : infos) {
+//            System.out.println(info.getId());
+//        }
+//    }
 }

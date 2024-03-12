@@ -14,7 +14,6 @@ import java.util.List;
 public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> {
     SmokingData save(SmokingData smokingData);
 
-    @Modifying
     @Query("SELECT sd FROM SmokingData sd " +
             "WHERE sd.smokingArea = :areaId")
     List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") String smokingArea);
