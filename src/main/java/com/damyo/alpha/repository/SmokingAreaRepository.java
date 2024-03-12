@@ -25,8 +25,8 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     SmokingArea findSmokingAreaById(@Param("id") String id);
 
     @Query("SELECT sa FROM SmokingArea sa " +
-            "WHERE sa.createdAt >= :date")
-    List<SmokingArea> findSmokingAreaByCreatedAt(@Param("date")LocalDateTime date);
+            "WHERE sa.createdAt >= :localDate")
+    List<SmokingArea> findSmokingAreaByCreatedAt(@Param("localDate")LocalDateTime date);
 
 
     @Modifying(clearAutomatically = true)
