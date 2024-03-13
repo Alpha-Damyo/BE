@@ -25,7 +25,7 @@ public class SmokingAreaRepositoryTest {
         smokingAreaRepository.save(SmokingArea.builder()
                                     .id("1")
                                     .name("국민대")
-                                    .created_at(LocalDateTime.now())
+                                    .createdAt(LocalDateTime.now())
                                     .status(true)
                                     .address("서울특별시 성북구").build());
     }

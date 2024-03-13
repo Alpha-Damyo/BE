@@ -24,7 +24,7 @@ public class SmokingDataRepositoryTest {
     @BeforeEach()
     void createData() {
         smokingDataRepository.save(SmokingData.builder()
-                .created_at(LocalDateTime.now()).build());
+                .createdAt(LocalDateTime.now()).build());
     }
 
 //    @Test
