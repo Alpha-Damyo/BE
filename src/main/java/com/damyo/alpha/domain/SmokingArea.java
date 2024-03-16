@@ -1,10 +1,10 @@
 package com.damyo.alpha.domain;
 
+import com.damyo.alpha.dto.SmokingAreaResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,4 +55,8 @@ public class SmokingArea {
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Info> infoList = new ArrayList<>();
+
+    public SmokingAreaResponse toDTO(){
+        return new SmokingAreaResponse(id, name, latitude, longitude, address, createdAt, status, description);
+    }
 }
