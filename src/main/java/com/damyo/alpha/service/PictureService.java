@@ -14,7 +14,7 @@ import java.util.UUID;
 @Service
 public class PictureService {
 
-    private PictureRepository pictureRepository;
+    private final PictureRepository pictureRepository;
 
     public PictureResponse getPicture(Long id) {
         Picture picture = pictureRepository.findPictureById(id).orElseThrow(null);
