@@ -18,12 +18,7 @@ public class PictureService {
 
     public PictureResponse getPicture(Long id) {
         Picture picture = pictureRepository.findPictureById(id).orElseThrow(null);
-        return PictureResponse.builder()
-                .id(id)
-                .pictureUrl(picture.getPictureUrl())
-                .createdAt(picture.getCreatedAt())
-                .likes(picture.getLikes())
-                .build();
+        return new PictureResponse(picture);
     }
 
     public List<PictureResponse> getPicturesByUser(UUID id) {
@@ -39,13 +34,7 @@ public class PictureService {
     private List<PictureResponse> getPictureListResponse(List<Picture> pictures) {
         List<PictureResponse> pictureList = new ArrayList<>();
         for (Picture picture: pictures) {
-            PictureResponse pictureResponse = PictureResponse.builder()
-                    .id(picture.getId())
-                    .pictureUrl(picture.getPictureUrl())
-                    .createdAt(picture.getCreatedAt())
-                    .likes(picture.getLikes())
-                    .build();
-            pictureList.add(pictureResponse);
+            pictureList.add(new PictureResponse(picture));
         }
         return pictureList;
     }

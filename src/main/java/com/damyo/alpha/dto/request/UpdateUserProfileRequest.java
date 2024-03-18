@@ -4,10 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
-@Getter
-public class UpdateUserProfileRequest {
-    @Email
-    private String email;
-    @NotBlank
-    private String profileUrl;
+public record UpdateUserProfileRequest (
+        @Email String email,
+        String profileUrl
+) {
+
 }

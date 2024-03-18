@@ -19,29 +19,19 @@ public class UserService {
 
     public UserResponse getUser(UUID id) {
         User user = userRepository.findUserById(id).orElseThrow(null);
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .createdAt(user.getCreatedAt())
-                .profileUrl(user.getProfileUrl())
-                .contribution(user.getContribution())
-                .gender(user.getGender())
-                .age(user.getAge())
-                .build();
+        return new UserResponse(user);
     }
 
     public void updateName(UpdateUserNameRequest updateUserNameRequest) {
-        userRepository.updateNameByEmail(updateUserNameRequest.getName(), updateUserNameRequest.getEmail());
+        userRepository.updateNameByEmail(updateUserNameRequest.name(), updateUserNameRequest.email());
     }
 
     public void updateProfile(UpdateUserProfileRequest request) {
-        userRepository.updateProfileUrlByEmail(request.getProfileUrl(), request.getEmail());
+        userRepository.updateProfileUrlByEmail(request.profileUrl(), request.email());
     }
 
     public void updateContribution(UpdateUserScoreRequest request) {
-        userRepository.updateContributionByEmail(request.getIncrement(), request.getEmail());
+        userRepository.updateContributionByEmail(request.increment(), request.email());
     }
 
     public void deleteUser(UUID userId) {

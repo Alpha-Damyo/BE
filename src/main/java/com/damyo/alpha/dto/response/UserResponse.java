@@ -1,20 +1,25 @@
 package com.damyo.alpha.dto.response;
 
+import  com.damyo.alpha.domain.User;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Builder
-@Getter
-public class UserResponse {
-    private UUID id;
-    private String name;
-    private String email;
-    private LocalDateTime createdAt;
-    private String profileUrl;
-    private int contribution;
-    private String gender;
-    private int age;
+public record UserResponse (
+        UUID id,
+        String name,
+        @Email String email,
+        LocalDateTime createdAt,
+        String profileUrl,
+        int contribution,
+        String gender,
+        int age
+) {
+    public UserResponse(User user) {
+        this(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(),
+                user.getProfileUrl(), user.getContribution(), user.getGender(), user.getAge());
+    }
 }

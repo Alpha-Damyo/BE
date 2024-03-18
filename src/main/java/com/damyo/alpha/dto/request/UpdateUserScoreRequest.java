@@ -2,10 +2,9 @@ package com.damyo.alpha.dto.request;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
+public record UpdateUserScoreRequest (
+        @Email String email,
+        int increment
+) {
 
-@Getter
-public class UpdateUserScoreRequest {
-    @Email
-    private String email;
-    private int increment;
 }
