@@ -21,7 +21,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     @Modifying
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id = :id")
-    List<SmokingArea> findSmokingAreaById(@Param("id") String id);
+    SmokingArea findSmokingAreaById(@Param("id") String id);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +
