@@ -5,6 +5,7 @@ import com.damyo.alpha.service.SmokingDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -13,8 +14,8 @@ public class SmokingDataController {
 
     // 데이터 추가 기능
     @PostMapping("/data/postData")
-    public void postSmokingData(SmokingDataListRequest datasRequest){
-        smokingDataService.addSmokingData(datasRequest);
+    public void postSmokingData(@RequestBody SmokingDataListRequest dataListRequest){
+        smokingDataService.addSmokingData(dataListRequest);
     }
 
 //    // TODO 데이터 구역별 통계 반환

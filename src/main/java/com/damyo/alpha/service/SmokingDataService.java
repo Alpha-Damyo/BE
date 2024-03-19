@@ -15,9 +15,8 @@ public class SmokingDataService {
 
     private final SmokingDataRepository smokingDataRepository;
 
-
-    public void addSmokingData(SmokingDataListRequest datasRequest) {
-        List<SmokingDataRequest> smokingDataRequests = datasRequest.dataRequests();
+    public void addSmokingData(SmokingDataListRequest dataListRequest) {
+        List<SmokingDataRequest> smokingDataRequests = dataListRequest.dataRequests();
         for(SmokingDataRequest dataRequest : smokingDataRequests) {
             smokingDataRepository.save(SmokingData.builder().user(dataRequest.user()).createdAt(dataRequest.creatdAt()).smokingArea(dataRequest.smokingArea()).build());
         }

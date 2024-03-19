@@ -15,6 +15,6 @@ public record SmokingAreaRequest(
         boolean closed,
         boolean hygiene,
         boolean dirty,
-        boolean air_out
+        boolean airOut
 ) {
 }
