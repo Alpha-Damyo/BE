@@ -1,10 +1,8 @@
 package com.damyo.alpha.dto.request;
 
-import com.damyo.alpha.dto.request.SmokingDataRequest;
-
 import java.util.List;
 
-public record SmokingDatasRequest(
+public record SmokingDataListRequest(
         List<SmokingDataRequest> dataRequests
 ) {
 }

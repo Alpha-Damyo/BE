@@ -1,6 +1,6 @@
 package com.damyo.alpha.controller;
 
-import com.damyo.alpha.dto.request.SmokingDatasRequest;
+import com.damyo.alpha.dto.request.SmokingDataListRequest;
 import com.damyo.alpha.service.SmokingDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ public class SmokingDataController {
 
     // 데이터 추가 기능
     @PostMapping("/data/postData")
-    public void postSmokingData(SmokingDatasRequest datasRequest){
+    public void postSmokingData(SmokingDataListRequest datasRequest){
         smokingDataService.addSmokingData(datasRequest);
     }
 

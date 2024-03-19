@@ -42,6 +42,27 @@ public class SmokingArea {
     @Column(name = "description", length = 200)
     private String description;
 
+    @Column(name = "score")
+    private Float score;
+
+    @Column(name = "opened")
+    private boolean opened;
+
+    @Column(name = "closed")
+    private boolean closed;
+
+    @Column(name = "hygiene")
+    private boolean hygiene;
+
+    @Column(name = "dirty")
+    private boolean dirty;
+
+    @Column(name = "air_out")
+    private boolean airOut;
+
+    @Column(name = "no_exist")
+    private boolean noExist;
+
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -58,6 +79,8 @@ public class SmokingArea {
     private List<Info> infoList = new ArrayList<>();
 
     public SmokingAreaResponse toDTO(){
-        return new SmokingAreaResponse(id, name, latitude, longitude, address, createdAt, status, description);
+        return new SmokingAreaResponse(id, name, latitude, longitude,
+                address, createdAt, status, description, score, opened,
+                closed, hygiene, dirty, airOut, noExist);
     }
 }

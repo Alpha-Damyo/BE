@@ -1,8 +1,8 @@
 package com.damyo.alpha.controller;
 
-import com.damyo.alpha.dto.request.SmokingAreasRequest;
+import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
-import com.damyo.alpha.dto.response.SmokingAreasResponse;
+import com.damyo.alpha.dto.response.SmokingAreaListResponse;
 import com.damyo.alpha.service.SmokingAreaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,14 @@ public class SmokingAreaController {
 
     // 전체구역
     @GetMapping("/area")
-    public ResponseEntity<SmokingAreasResponse> getSmokingAreas(){
+    public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
         List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(LocalDateTime.of(1000,1,1,1,1,1));
-        return ResponseEntity.ok(new SmokingAreasResponse(areaResponses));
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
     // TODO 제보된 흡연구역 추가 기능
     @PostMapping("/area/postArea")
-    public void postSmokingArea(SmokingAreasRequest areas){
+    public void postSmokingArea(SmokingAreaListRequest areas){
 
     }
 
@@ -42,16 +42,16 @@ public class SmokingAreaController {
 
     // 특정날짜이후 추가된 구역찾기
     @GetMapping("/area/dateSearch")
-    public ResponseEntity<SmokingAreasResponse> getSmokingAreasByCreatedAt(@RequestParam LocalDateTime createdAt){
+    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(@RequestParam LocalDateTime createdAt){
         List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(createdAt);
-        return ResponseEntity.ok(new SmokingAreasResponse(areaResponses));
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
     // TODO 변경 -> 검색어로 구역찾기
     @GetMapping("/area/nameSearch")
-    public ResponseEntity<SmokingAreasResponse> getSmokingAreasByName(@RequestParam String name){
+    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestParam String name){
         List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
-        return ResponseEntity.ok(new SmokingAreasResponse(areaResponses));
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
     //  TODO 임시여부에 따른 검색
