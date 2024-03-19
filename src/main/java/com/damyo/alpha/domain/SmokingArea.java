@@ -1,10 +1,11 @@
 package com.damyo.alpha.domain;
 
-import com.damyo.alpha.dto.SmokingAreaResponse;
+import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ public class SmokingArea {
     private String name;
 
     @Column(name = "latitude")
-    private Float latitude;
+    private BigDecimal latitude;
 
     @Column(name = "longitude")
-    private Float longitude;
+    private BigDecimal longitude;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

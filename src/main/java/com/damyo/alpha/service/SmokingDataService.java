@@ -1,15 +1,12 @@
 package com.damyo.alpha.service;
 
 import com.damyo.alpha.domain.SmokingData;
-import com.damyo.alpha.dto.SmokingDataRequest;
-import com.damyo.alpha.dto.SmokingDatasRequest;
-import com.damyo.alpha.dto.StaticsDateResponse;
-import com.damyo.alpha.dto.StaticsRegionResponse;
+import com.damyo.alpha.dto.request.SmokingDataRequest;
+import com.damyo.alpha.dto.request.SmokingDatasRequest;
 import com.damyo.alpha.repository.SmokingDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,9 +23,11 @@ public class SmokingDataService {
         }
     }
 
-    public StaticsRegionResponse getStaticsByRegion(String region) {
-    }
-
-    public StaticsDateResponse getStaticsByDate(LocalDateTime date) {
-    }
+//    public StaticsRegionResponse getStaticsByRegion(String region) {
+//        return new StaticsRegionResponse();
+//    }
+//
+//    public StaticsDateResponse getStaticsByDate(LocalDateTime date) {
+//        return new StaticsDateResponse();
+//    }
 }

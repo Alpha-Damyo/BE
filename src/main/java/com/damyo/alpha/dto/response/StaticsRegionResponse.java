@@ -1,4 +1,4 @@
-package com.damyo.alpha.dto;
+package com.damyo.alpha.dto.response;
 
 import com.damyo.alpha.domain.SmokingArea;
 

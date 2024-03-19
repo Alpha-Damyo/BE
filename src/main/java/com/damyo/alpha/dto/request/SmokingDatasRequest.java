@@ -1,4 +1,6 @@
-package com.damyo.alpha.dto;
+package com.damyo.alpha.dto.request;
+
+import com.damyo.alpha.dto.request.SmokingDataRequest;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.damyo.alpha.dto;
+package com.damyo.alpha.dto.response;
 
 public record StaticsDateResponse() {
 }

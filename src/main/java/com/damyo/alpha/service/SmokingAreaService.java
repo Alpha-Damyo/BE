@@ -1,6 +1,6 @@
 package com.damyo.alpha.service;
 
-import com.damyo.alpha.dto.SmokingAreaResponse;
+import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.domain.SmokingArea;
 import com.damyo.alpha.repository.SmokingAreaRepository;
 import lombok.RequiredArgsConstructor;

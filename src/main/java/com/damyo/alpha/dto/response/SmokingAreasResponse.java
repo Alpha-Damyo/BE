@@ -1,4 +1,6 @@
-package com.damyo.alpha.dto;
+package com.damyo.alpha.dto.response;
+
+import com.damyo.alpha.dto.response.SmokingAreaResponse;
 
 import java.util.List;
 

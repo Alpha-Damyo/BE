@@ -1,4 +1,4 @@
-package com.damyo.alpha.dto;
+package com.damyo.alpha.dto.request;
 
 import com.damyo.alpha.domain.SmokingArea;
 import com.damyo.alpha.domain.User;
