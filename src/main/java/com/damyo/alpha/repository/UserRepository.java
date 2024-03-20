@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     User save(User user);
     Optional<User> findUserByEmail(String email);
+    Optional<User> findUserById(UUID id);
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.name = :name where u.email = :email")
     void updateNameByEmail(String name, String email);
@@ -22,6 +23,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.contribution = u.contribution + :increment where u.email = :email")
     void updateContributionByEmail(int increment, String email);
-    void deleteUserByEmail(String email);
-
+    void deleteUserById(UUID id);
 }
