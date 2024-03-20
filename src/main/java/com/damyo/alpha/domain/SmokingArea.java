@@ -1,5 +1,6 @@
 package com.damyo.alpha.domain;
 
+import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,10 +26,10 @@ public class SmokingArea {
     private String name;
 
     @Column(name = "latitude")
-    private Float latitude;
+    private BigDecimal latitude;
 
     @Column(name = "longitude")
-    private Float longitude;
+    private BigDecimal longitude;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
@@ -42,6 +43,27 @@ public class SmokingArea {
 
     @Column(name = "description", length = 200)
     private String description;
+
+    @Column(name = "score")
+    private Float score;
+
+    @Column(name = "opened")
+    private boolean opened;
+
+    @Column(name = "closed")
+    private boolean closed;
+
+    @Column(name = "hygiene")
+    private boolean hygiene;
+
+    @Column(name = "dirty")
+    private boolean dirty;
+
+    @Column(name = "air_out")
+    private boolean airOut;
+
+    @Column(name = "no_exist")
+    private boolean noExist;
 
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
@@ -57,4 +79,10 @@ public class SmokingArea {
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Info> infoList = new ArrayList<>();
+
+    public SmokingAreaResponse toDTO(){
+        return new SmokingAreaResponse(id, name, latitude, longitude,
+                address, createdAt, status, description, score, opened,
+                closed, hygiene, dirty, airOut, noExist);
+    }
 }

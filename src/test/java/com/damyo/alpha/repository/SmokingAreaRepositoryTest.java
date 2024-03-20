@@ -1,6 +1,7 @@
 package com.damyo.alpha.repository;
 
 import com.damyo.alpha.domain.SmokingArea;
+
 import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,9 +27,26 @@ public class SmokingAreaRepositoryTest {
         smokingAreaRepository.save(SmokingArea.builder()
                                     .id("1")
                                     .name("국민대")
+                                    .latitude(35.43345f)
+                                    .longitude(125.2321f)
                                     .createdAt(LocalDateTime.now())
                                     .status(true)
-                                    .address("서울특별시 성북구").build());
+                                    .address("서울특별시 성북구")
+                                    .description("대학교").build());
+    }
+
+    @Test
+    @DisplayName("findSmokingAreaByName")
+    void findSmokingAreaByName(){
+        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName("국민대");
+        Assertions.assertThat(areas.get(0).getId()).isEqualTo("1");
+    }
+
+    @Test
+    @DisplayName("findSmokingAreaByCreatedAt")
+    void findAreaByCreatedAt(){
+        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByCreatedAt(LocalDateTime.of(2021,1,1,0,0,0));
+        Assertions.assertThat(areas.get(0).getName()).isEqualTo("국민대");
     }
 
     @Test
@@ -45,4 +64,35 @@ public class SmokingAreaRepositoryTest {
         SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
         Assertions.assertThat(area.isStatus()).isEqualTo(false);
     }
+
+    @Test
+    @DisplayName("updateSmokingAreaAddressById")
+    void updateSmokingAreaAddressById(){
+        smokingAreaRepository.updateSmokingAreaAddressById("서울특별시 성북구 정릉로 77","1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        Assertions.assertThat(area.getAddress()).isEqualTo("서울특별시 성북구 정릉로 77");
+    }
+
+    @Test
+    @DisplayName("updateSmokingAreaDescriptionById")
+    void updateSmokingAreaDescriptionById(){
+        smokingAreaRepository.updateSmokingAreaDescriptionById("미래관 3층","1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        Assertions.assertThat(area.getDescription()).isEqualTo("미래관 3층");
+    }
+
+    @Test
+    @DisplayName("deleteSmokingAreaById")
+    void deleteSmokingAreaById(){
+        List<SmokingArea> areasBefore = smokingAreaRepository.findSmokingAreaByCreatedAt(LocalDateTime.of(2021,1,1,0,0,0));
+        for (SmokingArea area : areasBefore){
+            System.out.println(area);
+        }
+        smokingAreaRepository.deleteById("1");
+        List<SmokingArea> areasAfter = smokingAreaRepository.findSmokingAreaByCreatedAt(LocalDateTime.of(2021,1,1,0,0,0));
+        for (SmokingArea area : areasAfter){
+            System.out.println(area);
+        }
+    }
+
 }
