@@ -1,5 +1,6 @@
 package com.damyo.alpha.domain;
 
+import com.damyo.alpha.dto.response.ChallengeResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +34,8 @@ public class Challenge {
 
     @Column(name = "detail_img_url")
     private String detailImgUrl;
+
+    public ChallengeResponse toDto() {
+        return new ChallengeResponse(name, startTime, endTime, bannerImgUrl, detailImgUrl);
+    }
 }
