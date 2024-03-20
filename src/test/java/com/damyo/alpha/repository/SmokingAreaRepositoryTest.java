@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class SmokingAreaRepositoryTest {
         smokingAreaRepository.save(SmokingArea.builder()
                                     .id("1")
                                     .name("국민대")
-                                    .latitude(35.43345f)
-                                    .longitude(125.2321f)
+                                    .latitude(BigDecimal.valueOf(35.43345))
+                                    .longitude(BigDecimal.valueOf(125.2321))
                                     .createdAt(LocalDateTime.now())
                                     .status(true)
                                     .address("서울특별시 성북구")
