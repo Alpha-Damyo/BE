@@ -20,6 +20,7 @@ class InfoRepositoryTest {
     @Autowired
     private SmokingAreaRepository smokingAreaRepository;
 
+
     @BeforeEach
     void insertDummies() {
         SmokingArea smokingArea1 = smokingAreaRepository.save(
@@ -50,6 +51,7 @@ class InfoRepositoryTest {
                 Info.builder().smokingArea(smokingArea2).score(3).build()
         );
     }
+
 
     @Test
     void deleteInfoBySmokingAreaIdAndId() {

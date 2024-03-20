@@ -34,15 +34,15 @@ public class SmokingAreaRepositoryTest {
     @DisplayName("updateSmokingAreaNameById")
     void updateAreaNameById(){
         smokingAreaRepository.updateSmokingAreaNameById("국민대 미래관", "1");
-        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById("1");
-        Assertions.assertThat(area.get(0).getName()).isEqualTo("국민대 미래관");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        Assertions.assertThat(area.getName()).isEqualTo("국민대 미래관");
     }
 
     @Test
     @DisplayName("updateSmokingAreaStatusById")
     void updateAreaStatusById(){
         smokingAreaRepository.updateSmokingAreaStatusById("1");
-        List<SmokingArea> area = smokingAreaRepository.findSmokingAreaById("1");
-        Assertions.assertThat(area.get(0).isStatus()).isEqualTo(false);
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        Assertions.assertThat(area.isStatus()).isEqualTo(false);
     }
 }
