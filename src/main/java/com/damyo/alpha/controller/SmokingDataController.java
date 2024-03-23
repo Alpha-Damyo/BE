@@ -18,14 +18,14 @@ public class SmokingDataController {
         smokingDataService.addSmokingData(dataListRequest);
     }
 
-//    // TODO 데이터 구역별 통계 반환
+//    // 데이터 구역별 통계 반환
 //    @GetMapping("/data/regionStatics")
 //    public ResponseEntity<StaticsRegionResponse> getSmokingDataStaticsByArea(@RequestParam String region){
 //        StaticsRegionResponse regionResponse = smokingDataService.getStaticsByRegion(region);
 //        return ResponseEntity.ok(regionResponse);
 //    }
 //
-//    // TODO 데이터 시간별 통계 반환
+//    // 데이터 시간별 통계 반환
 //    @GetMapping("/data/dateStatics")
 //    public ResponseEntity<StaticsDateResponse> getSmokingDateStaticsByDate(@RequestParam LocalDateTime date){
 //        StaticsDateResponse dateResponse = smokingDataService.getStaticsByDate(date);

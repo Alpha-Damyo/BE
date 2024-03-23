@@ -46,16 +46,16 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
-    // TODO 검색어로 구역찾기
+    // 검색어로 구역찾기
 //    @GetMapping("/area/nameSearch")
 //    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
 //        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
 //        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
 //    }
 
-    // TODO 위도 경도에 따른 검색
+    // 위도 경도에 따른 검색
     @GetMapping("/area/locateSearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(@RequestBody SearchLocateRequest coordinate){
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(@RequestBody SearchLocateRequest coordinate){
         BigDecimal latitude = coordinate.latitude();
         BigDecimal longitude = coordinate.longitude();
         BigDecimal range = coordinate.range();
@@ -65,8 +65,8 @@ public class SmokingAreaController {
     }
 
     // TODO 주소구역에 따른 검색
-    @GetMapping("/area/addressSearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(){
+    @GetMapping("/area/regionSearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(@RequestBody String region){
 
     }
 
