@@ -1,5 +1,6 @@
 package com.damyo.alpha.controller;
 
+import com.damyo.alpha.dto.request.SearchLocateRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.dto.response.SmokingAreaListResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,16 +47,21 @@ public class SmokingAreaController {
     }
 
     // TODO 검색어로 구역찾기
-    @GetMapping("/area/nameSearch")
-    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
-        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
-        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
-    }
+//    @GetMapping("/area/nameSearch")
+//    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
+//        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
+//        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
+//    }
 
     // TODO 위도 경도에 따른 검색
     @GetMapping("/area/locateSearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(){
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(@RequestBody SearchLocateRequest coordinate){
+        BigDecimal latitude = coordinate.latitude();
+        BigDecimal longitude = coordinate.longitude();
+        BigDecimal range = coordinate.range();
 
+        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
     // TODO 주소구역에 따른 검색
