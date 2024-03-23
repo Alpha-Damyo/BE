@@ -57,4 +57,8 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
 
     void deleteById(String id);
 
+    @Query("SELECT  sa FROM SmokingArea sa " +
+            "WHERE sa.latitude BETWEEN :minLa AND :maxLa " +
+            "AND sa.longitude BETWEEN :minLo AND :maxLo")
+    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude, @Param("range") BigDecimal range);
 }

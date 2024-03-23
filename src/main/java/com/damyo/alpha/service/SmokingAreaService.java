@@ -74,7 +74,13 @@ public class SmokingAreaService {
     }
 
     public List<SmokingAreaResponse> findAreaByCoordinate(BigDecimal latitude, BigDecimal longitude, BigDecimal range) {
-        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(latitude, longitude, range);
+        BigDecimal minLatitude, maxLatitude, minLongitude, maxLongitude;
+        minLatitude = latitude.subtract(range);
+        maxLatitude = latitude.add(range);
+        minLongitude = longitude.subtract(range);
+        maxLongitude = longitude.add(range);
+
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude, minLongitude, maxLongitude, range);
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
