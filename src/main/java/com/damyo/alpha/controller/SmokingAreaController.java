@@ -44,31 +44,29 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
-//    // TODO 변경 -> 검색어로 구역찾기
-//    @GetMapping("/area/nameSearch")
-//    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
-//        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
-//        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
-//    }
-
-    //  TODO 임시여부에 따른 검색
-//    @GetMapping("area/statusSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+    // TODO 검색어로 구역찾기
+    @GetMapping("/area/nameSearch")
+    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
+        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
+    }
 
     // TODO 위도 경도에 따른 검색
-//    @GetMapping("area/locateSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+    @GetMapping("/area/locateSearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(){
+
+    }
 
     // TODO 주소구역에 따른 검색
-//    @GetMapping("area/addressSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+    @GetMapping("/area/addressSearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingArea(){
+
+    }
 
     // TODO 특정 퀴리에 따른 검색
+
+    // TODO 평가에 따른 구역의 평점 업데이트
+
+    // TODO 평가에 따른 구역의 태그 업데이트
 
 }
