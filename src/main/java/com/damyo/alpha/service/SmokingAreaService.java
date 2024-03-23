@@ -8,6 +8,7 @@ import com.damyo.alpha.repository.SmokingAreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,5 +71,15 @@ public class SmokingAreaService {
         String areaNumber = String.format("%04d", number);
 
         return areaName + "-" + areaNumber;
+    }
+
+    public List<SmokingAreaResponse> findAreaByCoordinate(BigDecimal latitude, BigDecimal longitude, BigDecimal range) {
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(latitude, longitude, range);
+        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+
+        for(SmokingArea area : areaList){
+            areaResponseList.add(area.toDTO());
+        }
+        return areaResponseList;
     }
 }
