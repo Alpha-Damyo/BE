@@ -72,6 +72,11 @@ public class SmokingAreaController {
     }
 
     // TODO 특정 퀴리에 따른 검색
+    @GetMapping("/area/querySearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody String query){
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
+    }
 
     // TODO 평가에 따른 구역의 평점 업데이트
 
