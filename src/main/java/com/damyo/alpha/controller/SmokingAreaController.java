@@ -72,7 +72,7 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
-    // TODO 특정 퀴리에 따른 검색
+    // 특정 퀴리에 따른 검색
     @GetMapping("/area/querySearch")
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody SearchQueryRequest query){
         List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);

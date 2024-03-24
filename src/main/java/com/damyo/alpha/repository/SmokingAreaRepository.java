@@ -67,6 +67,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.id LIKE %:region%")
     List<SmokingArea> findSmokingAreaByRegion(@Param("region") String region);
 
+    // TODO 추후 개선 고민
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE (sa.id LIKE %:word% OR sa.address LIKE %:word%) " +
             "AND sa.status = :temp " +
