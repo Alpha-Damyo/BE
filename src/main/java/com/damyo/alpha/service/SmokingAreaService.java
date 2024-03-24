@@ -88,4 +88,14 @@ public class SmokingAreaService {
         }
         return areaResponseList;
     }
+
+    public List<SmokingAreaResponse> findAreaByRegion(String region) {
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByRegion(region);
+        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+
+        for(SmokingArea area : areaList){
+            areaResponseList.add(area.toDTO());
+        }
+        return areaResponseList;
+    }
 }

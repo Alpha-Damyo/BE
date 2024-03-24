@@ -60,14 +60,15 @@ public class SmokingAreaController {
         BigDecimal longitude = coordinate.longitude();
         BigDecimal range = coordinate.range();
 
-        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
-        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
-    // TODO 주소구역에 따른 검색
+    // 주소구역에 따른 검색
     @GetMapping("/area/regionSearch")
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(@RequestBody String region){
-
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
     // TODO 특정 퀴리에 따른 검색

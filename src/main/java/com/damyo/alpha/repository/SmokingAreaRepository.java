@@ -27,6 +27,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.createdAt >= :localDate")
     List<SmokingArea> findSmokingAreaByCreatedAt(@Param("localDate")LocalDateTime date);
 
+    // TODO 추후 개선 고민
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:areaName% " +
             "ORDER BY sa.createdAt DESC " +
@@ -61,4 +62,8 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.latitude BETWEEN :minLa AND :maxLa " +
             "AND sa.longitude BETWEEN :minLo AND :maxLo")
     List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude, @Param("range") BigDecimal range);
+
+    @Query("SELECT sa FROM SmokingArea sa " +
+            "WHERE sa.id LIKE %:region%")
+    List<SmokingArea> findSmokingAreaByRegion(@Param("region") String region);
 }
