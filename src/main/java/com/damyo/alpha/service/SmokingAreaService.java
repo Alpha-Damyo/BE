@@ -1,5 +1,6 @@
 package com.damyo.alpha.service;
 
+import com.damyo.alpha.dto.request.SearchQueryRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.request.SmokingAreaRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
@@ -99,8 +100,14 @@ public class SmokingAreaService {
         return areaResponseList;
     }
 
-    public List<SmokingAreaResponse> findAreaByQuery(String query) {
-        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(query);
+    public List<SmokingAreaResponse> findAreaByQuery(SearchQueryRequest query) {
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(
+                query.word(),
+                query.status(),
+                query.opened(),
+                query.closed(),
+                query.hygeine(),
+                query.airOut());
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){

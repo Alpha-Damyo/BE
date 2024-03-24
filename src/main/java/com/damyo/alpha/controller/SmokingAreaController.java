@@ -1,6 +1,7 @@
 package com.damyo.alpha.controller;
 
 import com.damyo.alpha.dto.request.SearchLocateRequest;
+import com.damyo.alpha.dto.request.SearchQueryRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.dto.response.SmokingAreaListResponse;
@@ -73,7 +74,7 @@ public class SmokingAreaController {
 
     // TODO 특정 퀴리에 따른 검색
     @GetMapping("/area/querySearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody String query){
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody SearchQueryRequest query){
         List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
