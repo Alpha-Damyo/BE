@@ -98,4 +98,14 @@ public class SmokingAreaService {
         }
         return areaResponseList;
     }
+
+    public List<SmokingAreaResponse> findAreaByQuery(String query) {
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(query);
+        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+
+        for(SmokingArea area : areaList){
+            areaResponseList.add(area.toDTO());
+        }
+        return areaResponseList;
+    }
 }
