@@ -79,8 +79,4 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
-    // TODO 평가에 따른 구역의 평점 업데이트
-
-    // TODO 평가에 따른 구역의 태그 업데이트
-
 }

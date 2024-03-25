@@ -115,4 +115,12 @@ public class SmokingAreaService {
         }
         return areaResponseList;
     }
+
+    public void updateAreaRate(){
+
+    }
+
+    public void updateAreaTags(){
+
+    }
 }
