@@ -28,7 +28,7 @@ public class SmokingAreaService {
     }
 
     public List<SmokingAreaResponse> findAreaByCreatedAt(LocalDateTime createdAt) {
-        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByCreatedAt(createdAt);
+        List<SmokingArea> areas = smokingAreaRepository.findAll();
         List<SmokingAreaResponse> areaResponses = new ArrayList<>();
 
         for(SmokingArea area : areas) {
