@@ -38,4 +38,25 @@ public class Info {
 
     @Column(name = "dirty")
     private boolean dirty;
+
+    @Column(name = "indoor")
+    private boolean indoor;
+
+    @Column(name = "outdoor")
+    private boolean outdoor;
+
+    @Column(name = "big")
+    private boolean big;
+
+    @Column(name = "small")
+    private boolean small;
+
+    @Column(name = "crowded")
+    private boolean crowded;
+
+    @Column(name = "quite")
+    private boolean quite;
+
+    @Column(name = "chair")
+    private boolean chair;
 }
