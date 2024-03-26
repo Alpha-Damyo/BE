@@ -32,6 +32,13 @@ public class InfoService {
         int airOutSum = 0;
         int hygieneSum = 0;
         int dirtySum = 0;
+        int indoorSum = 0;
+        int outdoorSum = 0;
+        int bigSum = 0;
+        int smallSum = 0;
+        int crowdedSum = 0;
+        int quiteSum = 0;
+        int chairSum = 0;
         for (Info info : infos){
             scoreSum += info.getScore();
             openedSum += info.isOpened()? 1 : 0;
@@ -40,7 +47,14 @@ public class InfoService {
             airOutSum += info.isAirOut()? 1 : 0;
             hygieneSum += info.isHygiene()? 1 : 0;
             dirtySum += info.isDirty()? 1 : 0;
+            indoorSum += info.isIndoor()? 1 : 0;
+            outdoorSum += info.isOutdoor()? 1 : 0;
+            bigSum += info.isBig()? 1 : 0;
+            smallSum += info.isSmall()? 1 : 0;
+            crowdedSum += info.isCrowded()? 1 : 0;
+            quiteSum += info.isQuite()? 1 : 0;
+            chairSum += info.isChair()? 1 : 0;
         }
-        return new InfoResponse((float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum);
+        return new InfoResponse((float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
     }
 }

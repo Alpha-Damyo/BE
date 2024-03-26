@@ -14,7 +14,14 @@ public record UpdateInfoRequest(
         boolean notExist,
         boolean airOut,
         boolean hygiene,
-        boolean dirty
+        boolean dirty,
+        boolean indoor,
+        boolean outdoor,
+        boolean big,
+        boolean small,
+        boolean crowded,
+        boolean quite,
+        boolean chair
 ) {
         public UpdateInfoRequest(Info info) {
                 this(info.getSmokingArea().getId(),
@@ -24,7 +31,14 @@ public record UpdateInfoRequest(
                         info.isNotExist(),
                         info.isAirOut(),
                         info.isHygiene(),
-                        info.isDirty());
+                        info.isDirty(),
+                        info.isIndoor(),
+                        info.isOutdoor(),
+                        info.isBig(),
+                        info.isSmall(),
+                        info.isCrowded(),
+                        info.isQuite(),
+                        info.isChair());
         }
         public Info toEntity(SmokingArea smokingArea) {
                 return Info.builder().
@@ -36,6 +50,13 @@ public record UpdateInfoRequest(
                         airOut(airOut).
                         hygiene(hygiene).
                         dirty(dirty).
+                        indoor(indoor).
+                        outdoor(outdoor).
+                        big(big).
+                        small(small).
+                        crowded(crowded).
+                        quite(quite).
+                        chair(chair).
                         build();
         }
 }
