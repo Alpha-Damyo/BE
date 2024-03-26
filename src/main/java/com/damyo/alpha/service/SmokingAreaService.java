@@ -5,6 +5,7 @@ import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.request.SmokingAreaRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.domain.SmokingArea;
+import com.damyo.alpha.repository.InfoRepository;
 import com.damyo.alpha.repository.SmokingAreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
+    private final InfoRepository infoRepository;
 
     public List<SmokingAreaResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -137,7 +139,12 @@ public class SmokingAreaService {
     }
 
     public void updateAreaRate(){
-
+        List<SmokingArea> areas = smokingAreaRepository.findAll();
+        for(SmokingArea area : areas){
+            String id = area.getId();
+            float score = infoRepository.findScoreBySmokingAreaId(id);
+            smokingAreaRepository.updateSmokingAreaScoreById(score, id);
+        }
     }
 
     public void updateAreaTags(){

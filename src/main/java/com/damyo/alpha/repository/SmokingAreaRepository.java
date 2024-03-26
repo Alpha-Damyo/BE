@@ -57,6 +57,11 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.id = :id")
     void updateSmokingAreaDescriptionById(@Param("description") String description, @Param("id") String id);
 
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.score = :score " +
+            "WHERE sa.id = :id")
+    void updateSmokingAreaScoreById(@Param("score") Float score, @Param("id") String id);
+
 
     void deleteById(String id);
 
