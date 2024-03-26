@@ -6,6 +6,13 @@ public record SearchQueryRequest(
         boolean opened,
         boolean closed,
         boolean hygeine,
-        boolean airOut
+        boolean airOut,
+        boolean indoor,
+        boolean outdoor,
+        boolean big,
+        boolean small,
+        boolean crowded,
+        boolean quite,
+        boolean chair
 ) {
 }
