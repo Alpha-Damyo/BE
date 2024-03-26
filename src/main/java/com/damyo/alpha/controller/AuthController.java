@@ -1,6 +1,7 @@
 package com.damyo.alpha.controller;
 
 
+import com.damyo.alpha.domain.User;
 import com.damyo.alpha.dto.request.LoginRequest;
 import com.damyo.alpha.dto.request.SignUpRequest;
 import com.damyo.alpha.dto.response.TokenResponse;
@@ -27,7 +28,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        authService.login(loginRequest);
-        return null;
+        User user = authService.login(loginRequest);
+        String token = authService.generateToken(user);
+        return ResponseEntity.ok().body(new TokenResponse(token));
     }
 }
