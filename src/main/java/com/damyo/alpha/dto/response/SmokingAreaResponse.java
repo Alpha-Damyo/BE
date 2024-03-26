@@ -19,6 +19,13 @@ public record SmokingAreaResponse(
         boolean hygiene,
         boolean dirty,
         boolean air_out,
-        boolean no_exist
+        boolean no_exist,
+        boolean indoor,
+        boolean outdoor,
+        boolean big,
+        boolean small,
+        boolean crowded,
+        boolean quite,
+        boolean chair
 ) {
 }

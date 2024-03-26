@@ -65,6 +65,27 @@ public class SmokingArea {
     @Column(name = "no_exist")
     private boolean noExist;
 
+    @Column(name = "indoor")
+    private boolean indoor;
+
+    @Column(name = "outdoor")
+    private boolean outdoor;
+
+    @Column(name = "big")
+    private boolean big;
+
+    @Column(name = "small")
+    private boolean small;
+
+    @Column(name = "crowded")
+    private boolean crowded;
+
+    @Column(name = "quite")
+    private boolean quite;
+
+    @Column(name = "chair")
+    private boolean chair;
+
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude

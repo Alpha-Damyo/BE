@@ -55,7 +55,9 @@ public class SmokingAreaService {
             smokingAreaRepository.save(SmokingArea.builder().id(areaId).name(area.name()).latitude(area.latitude())
                     .longitude(area.longitude()).createdAt(area.createdAt()).status(true).address(area.address())
                     .description(area.description()).score(area.score()).opened(area.opened()).closed(area.closed())
-                    .hygiene(area.hygiene()).dirty(area.dirty()).airOut(area.airOut()).noExist(false).build());
+                    .hygiene(area.hygiene()).dirty(area.dirty()).airOut(area.airOut()).noExist(false).indoor(area.indoor())
+                    .outdoor(area.outdoor()).big(area.big()).small(area.small()).crowded(area.crowded()).quite(area.quite())
+                    .chair(area.chair()).build());
         }
     }
 
