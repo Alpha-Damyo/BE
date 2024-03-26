@@ -76,6 +76,19 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "AND sa.opened = :opened " +
             "AND sa.closed = :closed " +
             "AND sa.hygiene = :hygiene " +
-            "AND sa.airOut = :airOut")
-    List<SmokingArea> findSmokingAreaByQuery(@Param("word") String word, @Param("temp") boolean temp, @Param("opened") boolean opened, @Param("closed") boolean closed, @Param("hygeine") boolean hygeine, @Param("airOut") boolean airOut);
+            "AND sa.airOut = :airOut " +
+            "AND sa.indoor = :indoor " +
+            "AND sa.outdoor = :outdoor " +
+            "AND sa.big = :big " +
+            "AND sa.small = :small " +
+            "AND sa.crowded = :crowded " +
+            "AND sa.quite = :quite " +
+            "AND sa.chair = :chair")
+    List<SmokingArea> findSmokingAreaByQuery(@Param("word") String word, @Param("temp") boolean temp,
+                                             @Param("opened") boolean opened, @Param("closed") boolean closed,
+                                             @Param("hygeine") boolean hygeine, @Param("airOut") boolean airOut,
+                                             @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
+                                             @Param("big") boolean big, @Param("small") boolean small,
+                                             @Param("crowded") boolean crowded, @Param("quite") boolean quite,
+                                             @Param("chair") boolean chair);
 }

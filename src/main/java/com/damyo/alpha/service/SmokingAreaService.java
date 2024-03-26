@@ -120,7 +120,14 @@ public class SmokingAreaService {
                 query.opened(),
                 query.closed(),
                 query.hygeine(),
-                query.airOut());
+                query.airOut(),
+                query.indoor(),
+                query.outdoor(),
+                query.big(),
+                query.small(),
+                query.crowded(),
+                query.quite(),
+                query.chair());
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
