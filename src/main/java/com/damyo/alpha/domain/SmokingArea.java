@@ -104,6 +104,7 @@ public class SmokingArea {
     public SmokingAreaResponse toDTO(){
         return new SmokingAreaResponse(id, name, latitude, longitude,
                 address, createdAt, status, description, score, opened,
-                closed, hygiene, dirty, airOut, noExist);
+                closed, hygiene, dirty, airOut, noExist, indoor, outdoor,
+                big, small, crowded, quite, chair);
     }
 }

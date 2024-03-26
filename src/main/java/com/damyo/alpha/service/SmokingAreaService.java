@@ -22,13 +22,24 @@ public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
 
+    public List<SmokingAreaResponse> findAreaAll(){
+        List<SmokingArea> areas = smokingAreaRepository.findAll();
+        List<SmokingAreaResponse> areaResponses = new ArrayList<>();
+
+        for(SmokingArea area : areas) {
+            areaResponses.add(area.toDTO());
+        }
+
+        return areaResponses;
+    }
+
     public SmokingAreaResponse findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId);
         return area.toDTO();
     }
 
     public List<SmokingAreaResponse> findAreaByCreatedAt(LocalDateTime createdAt) {
-        List<SmokingArea> areas = smokingAreaRepository.findAll();
+        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByCreatedAt(createdAt);
         List<SmokingAreaResponse> areaResponses = new ArrayList<>();
 
         for(SmokingArea area : areas) {

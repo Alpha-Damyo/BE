@@ -23,7 +23,7 @@ public class SmokingAreaController {
     // 전체구역
     @GetMapping("/area")
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
-        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(LocalDateTime.of(1000,1,1,1,1,1));
+        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaAll();
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
