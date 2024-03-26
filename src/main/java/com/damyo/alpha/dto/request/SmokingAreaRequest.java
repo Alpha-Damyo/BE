@@ -15,6 +15,13 @@ public record SmokingAreaRequest(
         boolean closed,
         boolean hygiene,
         boolean dirty,
-        boolean airOut
+        boolean airOut,
+        boolean indoor,
+        boolean outdoor,
+        boolean big,
+        boolean small,
+        boolean crowded,
+        boolean quite,
+        boolean chair
 ) {
 }
