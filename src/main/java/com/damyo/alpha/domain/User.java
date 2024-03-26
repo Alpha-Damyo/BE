@@ -1,6 +1,6 @@
 package com.damyo.alpha.domain;
 
-import com.damyo.alpha.domain.Picture;
+import com.damyo.alpha.dto.request.SignUpRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,4 +47,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<SmokingData> smokingDatas = new ArrayList<>();
+
+    public User(SignUpRequest signUpDto) {
+        this(null, signUpDto.getName(), signUpDto.getEmail(), null, signUpDto.getProfileUrl(),
+                0, signUpDto.getGender(), signUpDto.getAge(), new ArrayList<>(), new ArrayList<>());
+    }
 }
