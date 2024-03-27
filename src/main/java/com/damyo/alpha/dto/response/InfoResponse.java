@@ -1,6 +1,7 @@
 package com.damyo.alpha.dto.response;
 
 public record InfoResponse(
+        int size,
         float score,
         int opened,
         int closed,
@@ -16,7 +17,8 @@ public record InfoResponse(
         int quite,
         int chair
 ) {
-    public InfoResponse(float score,
+    public InfoResponse(int size,
+                        float score,
                         int opened,
                         int closed,
                         int notExist,
@@ -30,6 +32,7 @@ public record InfoResponse(
                         int crowded,
                         int quite,
                         int chair) {
+        this.size = size;
         this.score = score;
         this.opened = opened;
         this.closed = closed;
