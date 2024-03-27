@@ -29,6 +29,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.createdAt >= :localDate")
     List<SmokingArea> findSmokingAreaByCreatedAt(@Param("localDate")LocalDateTime date);
 
+    // TODO 추후 개선 고민
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:areaName% " +
             "ORDER BY sa.createdAt DESC " +
@@ -56,7 +57,62 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.id = :id")
     void updateSmokingAreaDescriptionById(@Param("description") String description, @Param("id") String id);
 
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.score = :score " +
+            ", sa.opened = :opened " +
+            ", sa.closed = :closed " +
+            ", sa.hygiene = :hygiene " +
+            ", sa.dirty = :dirty " +
+            ", sa.airOut = :airOut " +
+            ", sa.indoor = :indoor " +
+            ", sa.outdoor = :outdoor " +
+            ", sa.big = :big " +
+            ", sa.small = :small " +
+            ", sa.crowded = :crowded " +
+            ", sa.quite = :quite " +
+            ", sa.chair = :chair " +
+            ", sa.noExist = :noExist " +
+            "WHERE sa.id = :id")
+    void updateSmokingAreaInfoById(@Param("opened") boolean opened, @Param("closed") boolean closed,
+                                   @Param("hygeine") boolean hygeine, @Param("dirty") boolean dirty,
+                                   @Param("airOut") boolean airOut, @Param("score") float score,
+                                   @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
+                                   @Param("big") boolean big, @Param("small") boolean small,
+                                   @Param("crowded") boolean crowded, @Param("quite") boolean quite,
+                                   @Param("chair") boolean chair, @Param("noExist") boolean noExist, @Param("id") String id);
+
 
     void deleteById(String id);
 
+    @Query("SELECT  sa FROM SmokingArea sa " +
+            "WHERE sa.latitude BETWEEN :minLa AND :maxLa " +
+            "AND sa.longitude BETWEEN :minLo AND :maxLo")
+    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude, @Param("range") BigDecimal range);
+
+    @Query("SELECT sa FROM SmokingArea sa " +
+            "WHERE sa.id LIKE %:region%")
+    List<SmokingArea> findSmokingAreaByRegion(@Param("region") String region);
+
+    // TODO 추후 개선 고민
+    @Query("SELECT sa FROM SmokingArea sa " +
+            "WHERE (sa.id LIKE %:word% OR sa.address LIKE %:word%) " +
+            "AND sa.status = :temp " +
+            "AND sa.opened = :opened " +
+            "AND sa.closed = :closed " +
+            "AND sa.hygiene = :hygiene " +
+            "AND sa.airOut = :airOut " +
+            "AND sa.indoor = :indoor " +
+            "AND sa.outdoor = :outdoor " +
+            "AND sa.big = :big " +
+            "AND sa.small = :small " +
+            "AND sa.crowded = :crowded " +
+            "AND sa.quite = :quite " +
+            "AND sa.chair = :chair")
+    List<SmokingArea> findSmokingAreaByQuery(@Param("word") String word, @Param("temp") boolean temp,
+                                             @Param("opened") boolean opened, @Param("closed") boolean closed,
+                                             @Param("hygeine") boolean hygeine, @Param("airOut") boolean airOut,
+                                             @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
+                                             @Param("big") boolean big, @Param("small") boolean small,
+                                             @Param("crowded") boolean crowded, @Param("quite") boolean quite,
+                                             @Param("chair") boolean chair);
 }

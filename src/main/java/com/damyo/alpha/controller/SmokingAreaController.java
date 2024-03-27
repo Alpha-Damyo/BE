@@ -1,5 +1,7 @@
 package com.damyo.alpha.controller;
 
+import com.damyo.alpha.dto.request.SearchLocateRequest;
+import com.damyo.alpha.dto.request.SearchQueryRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.dto.response.SmokingAreaListResponse;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,31 +47,36 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
-//    // TODO 변경 -> 검색어로 구역찾기
+    // 검색어로 구역찾기
 //    @GetMapping("/area/nameSearch")
 //    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
 //        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
 //        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
 //    }
 
-    //  TODO 임시여부에 따른 검색
-//    @GetMapping("area/statusSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+    // 위도 경도에 따른 검색
+    @GetMapping("/area/locateSearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(@RequestBody SearchLocateRequest coordinate){
+        BigDecimal latitude = coordinate.latitude();
+        BigDecimal longitude = coordinate.longitude();
+        BigDecimal range = coordinate.range();
 
-    // TODO 위도 경도에 따른 검색
-//    @GetMapping("area/locateSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
+    }
 
-    // TODO 주소구역에 따른 검색
-//    @GetMapping("area/addressSearch")
-//    public ResponseEntity<SmokingAreasResponse> searchSmokingArea(){
-//
-//    }
+    // 주소구역에 따른 검색
+    @GetMapping("/area/regionSearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(@RequestBody String region){
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
+    }
 
-    // TODO 특정 퀴리에 따른 검색
+    // 특정 퀴리에 따른 검색
+    @GetMapping("/area/querySearch")
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody SearchQueryRequest query){
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
+        return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
+    }
 
 }
