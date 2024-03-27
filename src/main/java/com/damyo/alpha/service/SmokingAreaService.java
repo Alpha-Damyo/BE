@@ -98,7 +98,7 @@ public class SmokingAreaService {
         minLongitude = longitude.subtract(range);
         maxLongitude = longitude.add(range);
 
-        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude, minLongitude, maxLongitude, range);
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude, minLongitude, maxLongitude);
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){

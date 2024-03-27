@@ -74,7 +74,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             ", sa.noExist = :noExist " +
             "WHERE sa.id = :id")
     void updateSmokingAreaInfoById(@Param("opened") boolean opened, @Param("closed") boolean closed,
-                                   @Param("hygeine") boolean hygeine, @Param("dirty") boolean dirty,
+                                   @Param("hygiene") boolean hygiene, @Param("dirty") boolean dirty,
                                    @Param("airOut") boolean airOut, @Param("score") float score,
                                    @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
                                    @Param("big") boolean big, @Param("small") boolean small,
@@ -87,7 +87,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     @Query("SELECT  sa FROM SmokingArea sa " +
             "WHERE sa.latitude BETWEEN :minLa AND :maxLa " +
             "AND sa.longitude BETWEEN :minLo AND :maxLo")
-    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude, @Param("range") BigDecimal range);
+    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude);
 
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:region%")
@@ -110,7 +110,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "AND sa.chair = :chair")
     List<SmokingArea> findSmokingAreaByQuery(@Param("word") String word, @Param("temp") boolean temp,
                                              @Param("opened") boolean opened, @Param("closed") boolean closed,
-                                             @Param("hygeine") boolean hygeine, @Param("airOut") boolean airOut,
+                                             @Param("hygiene") boolean hygiene, @Param("airOut") boolean airOut,
                                              @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
                                              @Param("big") boolean big, @Param("small") boolean small,
                                              @Param("crowded") boolean crowded, @Param("quite") boolean quite,
