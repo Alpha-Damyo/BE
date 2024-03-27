@@ -12,3 +12,6 @@ spring:
     init:
       mode: always
 
+jwt:
+  secret: ${JWT_SECRET}
+
