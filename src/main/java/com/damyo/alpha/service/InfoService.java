@@ -55,6 +55,6 @@ public class InfoService {
             quiteSum += info.isQuite()? 1 : 0;
             chairSum += info.isChair()? 1 : 0;
         }
-        return new InfoResponse((float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
+        return new InfoResponse(infos.size(), (float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
     }
 }
