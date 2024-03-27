@@ -14,6 +14,7 @@ public interface InfoRepository extends JpaRepository<Info, Long> {
     @Query("DELETE FROM Info WHERE id = (SELECT id FROM (SELECT min(id) AS id FROM Info WHERE smokingArea.id = :saId) AS tmp)")
     // delete from Info where id in () order by id
     void deleteRecentInfoBySmokingAreaId(@Param("saId") String smokingAreaId);
-    List<Info> findInfosBySmokingAreaId(String smokingAreaId);
+    @Query("SELECT i FROM Info i WHERE i.smokingArea.id = :saId")
+    List<Info> findInfosBySmokingAreaId(@Param("saId") String smokingAreaId);
 
 }
