@@ -1,8 +1,10 @@
 package com.damyo.alpha.service;
 
+import com.damyo.alpha.domain.Info;
 import com.damyo.alpha.dto.request.SearchQueryRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.request.SmokingAreaRequest;
+import com.damyo.alpha.dto.response.InfoResponse;
 import com.damyo.alpha.dto.response.SmokingAreaResponse;
 import com.damyo.alpha.domain.SmokingArea;
 import com.damyo.alpha.repository.InfoRepository;
@@ -22,7 +24,7 @@ import java.util.Map;
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
-    private final InfoRepository infoRepository;
+    private final InfoService infoService;
 
     public List<SmokingAreaResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -138,16 +140,88 @@ public class SmokingAreaService {
         return areaResponseList;
     }
 
-    public void updateAreaRate(){
+    public void updateAllArea(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
         for(SmokingArea area : areas){
             String id = area.getId();
-            float score = infoRepository.findScoreBySmokingAreaId(id);
-            smokingAreaRepository.updateSmokingAreaScoreById(score, id);
+            updateAreaByInfo(id);
         }
     }
 
-    public void updateAreaTags(){
+    private void updateAreaByInfo(String id){
+        InfoResponse infoResponse = infoService.getInfo(id);
+
+        boolean isOpened;
+        if(infoResponse.opened() >= infoResponse.closed()){
+            isOpened = true;
+        }
+        else{
+            isOpened = false;
+        }
+
+        boolean isClean;
+        if(infoResponse.hygiene() >= infoResponse.dirty()){
+            isClean = true;
+        }
+        else{
+            isClean = false;
+        }
+
+        boolean isOut;
+        if(infoResponse.outdoor() >= infoResponse.indoor()){
+            isOut = true;
+        }
+        else{
+            isOut = false;
+        }
+
+        boolean isBig;
+        if(infoResponse.big() >= infoResponse.small()){
+            isBig = true;
+        }
+        else{
+            isBig = false;
+        }
+
+        boolean isQuite;
+        if(infoResponse.quite() >= infoResponse.crowded()){
+            isQuite = true;
+        }
+        else{
+            isQuite = false;
+        }
+
+        boolean isAir;
+        if(infoResponse.airOut() >= infoResponse.size() - infoResponse.airOut()){
+            isAir = true;
+        }
+        else{
+            isAir = false;
+        }
+
+        boolean isChair;
+        if(infoResponse.chair() >= infoResponse.size() - infoResponse.chair()){
+            isChair = true;
+        }
+        else{
+            isChair = false;
+        }
+
+        boolean noExist;
+        if(infoResponse.notExist() > 10){
+            noExist = true;
+        }
+        else{
+            noExist = false;
+        }
+
+        smokingAreaRepository.updateSmokingAreaInfoById(isOpened, isOpened,
+                                                        isClean, isClean,
+                                                        isAir , infoResponse.score(),
+                                                        isOut, isOut,
+                                                        isBig, isBig,
+                                                        isQuite, isQuite,
+                                                        isChair, noExist, id);
 
     }
 }

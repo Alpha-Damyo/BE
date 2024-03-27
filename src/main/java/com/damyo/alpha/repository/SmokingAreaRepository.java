@@ -59,8 +59,27 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.score = :score " +
+            ", sa.opened = :opened " +
+            ", sa.closed = :closed " +
+            ", sa.hygiene = :hygiene " +
+            ", sa.dirty = :dirty " +
+            ", sa.airOut = :airOut " +
+            ", sa.indoor = :indoor " +
+            ", sa.outdoor = :outdoor " +
+            ", sa.big = :big " +
+            ", sa.small = :small " +
+            ", sa.crowded = :crowded " +
+            ", sa.quite = :quite " +
+            ", sa.chair = :chair " +
+            ", sa.noExist = :noExist " +
             "WHERE sa.id = :id")
-    void updateSmokingAreaScoreById(@Param("score") Float score, @Param("id") String id);
+    void updateSmokingAreaInfoById(@Param("opened") boolean opened, @Param("closed") boolean closed,
+                                   @Param("hygeine") boolean hygeine, @Param("dirty") boolean dirty,
+                                   @Param("airOut") boolean airOut, @Param("score") float score,
+                                   @Param("indoor") boolean indoor, @Param("outdoor") boolean outdoor,
+                                   @Param("big") boolean big, @Param("small") boolean small,
+                                   @Param("crowded") boolean crowded, @Param("quite") boolean quite,
+                                   @Param("chair") boolean chair, @Param("noExist") boolean noExist, @Param("id") String id);
 
 
     void deleteById(String id);
