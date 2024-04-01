@@ -41,19 +41,19 @@ public class InfoService {
         int chairSum = 0;
         for (Info info : infos){
             scoreSum += info.getScore();
-            openedSum += info.isOpened()? 1 : 0;
-            closedSum += info.isClosed()? 1 : 0;
-            notExistSum += info.isNotExist()? 1 : 0;
-            airOutSum += info.isAirOut()? 1 : 0;
-            hygieneSum += info.isHygiene()? 1 : 0;
-            dirtySum += info.isDirty()? 1 : 0;
-            indoorSum += info.isIndoor()? 1 : 0;
-            outdoorSum += info.isOutdoor()? 1 : 0;
-            bigSum += info.isBig()? 1 : 0;
-            smallSum += info.isSmall()? 1 : 0;
-            crowdedSum += info.isCrowded()? 1 : 0;
-            quiteSum += info.isQuite()? 1 : 0;
-            chairSum += info.isChair()? 1 : 0;
+            openedSum += info.getOpened()? 1 : 0;
+            closedSum += info.getClosed()? 1 : 0;
+            notExistSum += info.getNotExist()? 1 : 0;
+            airOutSum += info.getAirOut()? 1 : 0;
+            hygieneSum += info.getHygiene()? 1 : 0;
+            dirtySum += info.getDirty()? 1 : 0;
+            indoorSum += info.getIndoor()? 1 : 0;
+            outdoorSum += info.getOutdoor()? 1 : 0;
+            bigSum += info.getBig()? 1 : 0;
+            smallSum += info.getSmall()? 1 : 0;
+            crowdedSum += info.getCrowded()? 1 : 0;
+            quiteSum += info.getQuite()? 1 : 0;
+            chairSum += info.getChair()? 1 : 0;
         }
         return new InfoResponse(infos.size(), (float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
     }

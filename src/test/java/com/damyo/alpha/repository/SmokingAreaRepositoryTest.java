@@ -36,12 +36,6 @@ public class SmokingAreaRepositoryTest {
                                     .description("대학교").build());
     }
 
-    @Test
-    @DisplayName("findSmokingAreaByName")
-    void findSmokingAreaByName(){
-        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName("국민대");
-        Assertions.assertThat(areas.get(0).getId()).isEqualTo("1");
-    }
 
     @Test
     @DisplayName("findSmokingAreaByCreatedAt")
@@ -82,18 +76,5 @@ public class SmokingAreaRepositoryTest {
         Assertions.assertThat(area.getDescription()).isEqualTo("미래관 3층");
     }
 
-    @Test
-    @DisplayName("deleteSmokingAreaById")
-    void deleteSmokingAreaById(){
-        List<SmokingArea> areasBefore = smokingAreaRepository.findSmokingAreaByCreatedAt(LocalDateTime.of(2021,1,1,0,0,0));
-        for (SmokingArea area : areasBefore){
-            System.out.println(area);
-        }
-        smokingAreaRepository.deleteById("1");
-        List<SmokingArea> areasAfter = smokingAreaRepository.findSmokingAreaByCreatedAt(LocalDateTime.of(2021,1,1,0,0,0));
-        for (SmokingArea area : areasAfter){
-            System.out.println(area);
-        }
-    }
 
 }

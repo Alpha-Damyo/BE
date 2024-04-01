@@ -27,7 +27,7 @@ public class Picture {
     private LocalDateTime createdAt;
 
     @Column(name = "likes")
-    private int likes;
+    private Integer likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
