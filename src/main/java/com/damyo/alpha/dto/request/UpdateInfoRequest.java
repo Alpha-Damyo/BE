@@ -26,19 +26,19 @@ public record UpdateInfoRequest(
         public UpdateInfoRequest(Info info) {
                 this(info.getSmokingArea().getId(),
                         info.getScore(),
-                        info.isOpened(),
-                        info.isClosed(),
-                        info.isNotExist(),
-                        info.isAirOut(),
-                        info.isHygiene(),
-                        info.isDirty(),
-                        info.isIndoor(),
-                        info.isOutdoor(),
-                        info.isBig(),
-                        info.isSmall(),
-                        info.isCrowded(),
-                        info.isQuite(),
-                        info.isChair());
+                        info.getOpened(),
+                        info.getClosed(),
+                        info.getNotExist(),
+                        info.getAirOut(),
+                        info.getHygiene(),
+                        info.getDirty(),
+                        info.getIndoor(),
+                        info.getOutdoor(),
+                        info.getBig(),
+                        info.getSmall(),
+                        info.getCrowded(),
+                        info.getQuite(),
+                        info.getChair());
         }
         public Info toEntity(SmokingArea smokingArea) {
                 return Info.builder().
