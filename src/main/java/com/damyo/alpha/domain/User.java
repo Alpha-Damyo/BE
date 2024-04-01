@@ -36,11 +36,11 @@ public class User {
     @Column(name = "profile_url")
     private String profileUrl;
     @Column(name = "contribution")
-    private int contribution;
+    private Integer contribution;
     @Column(name = "gender")
     private String gender;
     @Column(name = "age")
-    private int age;
+    private Integer age;
 
     @OneToMany(mappedBy = "user")
     private List<Picture> pictures = new ArrayList<>();

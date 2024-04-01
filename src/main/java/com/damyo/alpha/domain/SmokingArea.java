@@ -48,43 +48,43 @@ public class SmokingArea {
     private Float score;
 
     @Column(name = "opened")
-    private boolean opened;
+    private Boolean opened;
 
     @Column(name = "closed")
-    private boolean closed;
+    private Boolean closed;
 
     @Column(name = "hygiene")
-    private boolean hygiene;
+    private Boolean hygiene;
 
     @Column(name = "dirty")
-    private boolean dirty;
+    private Boolean dirty;
 
     @Column(name = "air_out")
-    private boolean airOut;
+    private Boolean airOut;
 
     @Column(name = "no_exist")
-    private boolean noExist;
+    private Boolean noExist;
 
     @Column(name = "indoor")
-    private boolean indoor;
+    private Boolean indoor;
 
     @Column(name = "outdoor")
-    private boolean outdoor;
+    private Boolean outdoor;
 
     @Column(name = "big")
-    private boolean big;
+    private Boolean big;
 
     @Column(name = "small")
-    private boolean small;
+    private Boolean small;
 
     @Column(name = "crowded")
-    private boolean crowded;
+    private Boolean crowded;
 
     @Column(name = "quite")
-    private boolean quite;
+    private Boolean quite;
 
     @Column(name = "chair")
-    private boolean chair;
+    private Boolean chair;
 
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)

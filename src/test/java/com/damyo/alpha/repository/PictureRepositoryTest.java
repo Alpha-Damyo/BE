@@ -53,6 +53,7 @@ public class PictureRepositoryTest {
                 SmokingArea.builder()
                         .id("area1")
                         .name("국민대")
+                        .createdAt(LocalDateTime.now())
                         .status(true)
                         .address("서울")
                         .build()
@@ -60,8 +61,9 @@ public class PictureRepositoryTest {
 
         SmokingArea smokingArea2 = smokingAreaRepository.save(
                 SmokingArea.builder()
-                        .id("area2")
+                        .id("area3")
                         .name("부산대")
+                        .createdAt(LocalDateTime.now())
                         .status(true)
                         .address("부산")
                         .build()
@@ -106,7 +108,7 @@ public class PictureRepositoryTest {
     @Test
     @DisplayName("흡연구역 사진 목록 조회O")
     void findPicturesBySmokingArea_Id() {
-        SmokingArea area2 = smokingAreaRepository.findSmokingAreaById("area2");
+        SmokingArea area2 = smokingAreaRepository.findSmokingAreaById("area3");
         List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(area2.getId());
         int idx = 11;
         for (Picture picture : pictures) {
