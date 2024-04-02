@@ -3,7 +3,7 @@ package com.damyo.alpha.service;
 import com.damyo.alpha.domain.User;
 import com.damyo.alpha.dto.request.LoginRequest;
 import com.damyo.alpha.dto.request.SignUpRequest;
-import com.damyo.alpha.infrastructure.JwtProvider;
+import com.damyo.alpha.security.infrastructure.JwtProvider;
 import com.damyo.alpha.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +33,9 @@ public class AuthService {
             loginRequest.convertToEmail();
         }
         return userRepository.findUserByEmail(loginRequest.getEmail()).orElseThrow(RuntimeException::new);
+    }
+    public User login(SignUpRequest signUpRequest) {
+        return userRepository.findUserByEmail(signUpRequest.getEmail()).orElseThrow(RuntimeException::new);
     }
 
     @Transactional

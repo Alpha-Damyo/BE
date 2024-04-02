@@ -21,9 +21,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest);
-        return ResponseEntity.ok().body("회원 가입 완료");
+        User user = authService.login(signUpRequest);
+        String token = authService.generateToken(user);
+        return ResponseEntity.ok().body(new TokenResponse(token));
     }
 
     @PostMapping("/login")
