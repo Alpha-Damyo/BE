@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 public record UpdateUserScoreRequest (
         @Email String email,
-        int increment
+        Integer increment
 ) {
 
 }

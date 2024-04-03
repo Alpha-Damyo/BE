@@ -2,7 +2,7 @@ package com.damyo.alpha.dto.response;
 
 public record InfoResponse(
         Integer size,
-        float score,
+        Float score,
         Integer opened,
         Integer closed,
         Integer notExist,

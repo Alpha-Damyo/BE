@@ -25,7 +25,7 @@ public class InfoService {
 
     public InfoResponse getInfo(String smokingAreaId) {
         List<Info> infos = infoRepository.findInfosBySmokingAreaId(smokingAreaId);
-        float scoreSum = 0;
+        Float scoreSum = 0F;
         Integer openedSum = 0;
         Integer closedSum = 0;
         Integer notExistSum = 0;
