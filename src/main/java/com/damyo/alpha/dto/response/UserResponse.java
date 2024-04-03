@@ -14,9 +14,9 @@ public record UserResponse (
         @Email String email,
         LocalDateTime createdAt,
         String profileUrl,
-        int contribution,
+        Integer contribution,
         String gender,
-        int age
+        Integer age
 ) {
     public UserResponse(User user) {
         this(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(),

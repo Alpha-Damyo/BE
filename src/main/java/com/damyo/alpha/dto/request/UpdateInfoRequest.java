@@ -8,7 +8,7 @@ public record UpdateInfoRequest(
         @NonNull
         String smokingAreaId,
         @NonNull
-        int score,
+        Integer score,
         Boolean opened,
         Boolean closed,
         Boolean notExist,
