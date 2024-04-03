@@ -16,13 +16,13 @@ public class PictureController {
 
     private final PictureService pictureService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/single/{id}")
     public ResponseEntity<PictureResponse> getPicture(@PathVariable Long id) {
         PictureResponse picture = pictureService.getPicture(id);
         return ResponseEntity.ok().body(picture);
     }
 
-    @GetMapping("/u/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<List<PictureResponse>> getPicturesByUser(@PathVariable UUID id) {
         List<PictureResponse> pictureList = pictureService.getPicturesByUser(id);
         return ResponseEntity.ok().body(pictureList);
