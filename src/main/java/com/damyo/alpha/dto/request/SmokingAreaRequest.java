@@ -10,7 +10,7 @@ public record SmokingAreaRequest(
         String description,
         BigDecimal latitude,
         BigDecimal longitude,
-        float score,
+        Float score,
         Boolean opened,
         Boolean closed,
         Boolean hygiene,
