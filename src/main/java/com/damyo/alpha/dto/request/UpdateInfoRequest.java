@@ -9,37 +9,20 @@ public record UpdateInfoRequest(
         String smokingAreaId,
         @NonNull
         int score,
-        boolean opened,
-        boolean closed,
-        boolean notExist,
-        boolean airOut,
-        boolean hygiene,
-        boolean dirty,
-        boolean indoor,
-        boolean outdoor,
-        boolean big,
-        boolean small,
-        boolean crowded,
-        boolean quite,
-        boolean chair
+        Boolean opened,
+        Boolean closed,
+        Boolean notExist,
+        Boolean airOut,
+        Boolean hygiene,
+        Boolean dirty,
+        Boolean indoor,
+        Boolean outdoor,
+        Boolean big,
+        Boolean small,
+        Boolean crowded,
+        Boolean quite,
+        Boolean chair
 ) {
-        public UpdateInfoRequest(Info info) {
-                this(info.getSmokingArea().getId(),
-                        info.getScore(),
-                        info.getOpened(),
-                        info.getClosed(),
-                        info.getNotExist(),
-                        info.getAirOut(),
-                        info.getHygiene(),
-                        info.getDirty(),
-                        info.getIndoor(),
-                        info.getOutdoor(),
-                        info.getBig(),
-                        info.getSmall(),
-                        info.getCrowded(),
-                        info.getQuite(),
-                        info.getChair());
-        }
         public Info toEntity(SmokingArea smokingArea) {
                 return Info.builder().
                         smokingArea(smokingArea).
