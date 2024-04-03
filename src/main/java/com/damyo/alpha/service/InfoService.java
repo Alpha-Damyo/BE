@@ -26,19 +26,19 @@ public class InfoService {
     public InfoResponse getInfo(String smokingAreaId) {
         List<Info> infos = infoRepository.findInfosBySmokingAreaId(smokingAreaId);
         float scoreSum = 0;
-        int openedSum = 0;
-        int closedSum = 0;
-        int notExistSum = 0;
-        int airOutSum = 0;
-        int hygieneSum = 0;
-        int dirtySum = 0;
-        int indoorSum = 0;
-        int outdoorSum = 0;
-        int bigSum = 0;
-        int smallSum = 0;
-        int crowdedSum = 0;
-        int quiteSum = 0;
-        int chairSum = 0;
+        Integer openedSum = 0;
+        Integer closedSum = 0;
+        Integer notExistSum = 0;
+        Integer airOutSum = 0;
+        Integer hygieneSum = 0;
+        Integer dirtySum = 0;
+        Integer indoorSum = 0;
+        Integer outdoorSum = 0;
+        Integer bigSum = 0;
+        Integer smallSum = 0;
+        Integer crowdedSum = 0;
+        Integer quiteSum = 0;
+        Integer chairSum = 0;
         for (Info info : infos){
             scoreSum += info.getScore();
             openedSum += info.getOpened()? 1 : 0;
@@ -55,6 +55,6 @@ public class InfoService {
             quiteSum += info.getQuite()? 1 : 0;
             chairSum += info.getChair()? 1 : 0;
         }
-        return new InfoResponse(infos.size(), (float)(Math.round(scoreSum / infos.size() * 10) / 10.0), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
+        return new InfoResponse(infos.size(), (Math.round(scoreSum / infos.size() * 10) / 10.0F), openedSum, closedSum, notExistSum, airOutSum, hygieneSum, dirtySum, indoorSum, outdoorSum, bigSum, smallSum, crowdedSum, quiteSum, chairSum);
     }
 }
