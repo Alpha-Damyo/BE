@@ -1,5 +1,7 @@
 package com.damyo.alpha.security.infrastructure;
 
+import com.damyo.alpha.exception.errorCode.AuthErrorCode;
+import com.damyo.alpha.exception.exception.AuthException;
 import com.damyo.alpha.security.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -19,6 +21,8 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+
+import static com.damyo.alpha.exception.errorCode.AuthErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -78,14 +82,16 @@ public class JwtProvider {
                     .setSigningKey(secret.getBytes())
                     .build()
                     .parseClaimsJws(token);
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("유효하지 않는 JWT 서명 입니다.");
+        } catch (SecurityException e) {
+            throw new AuthException(SIGNATURE_NOT_FOUND);
+        } catch (MalformedJwtException e) {
+            throw new AuthException(MALFORMED_TOKEN);
         } catch (ExpiredJwtException e) {
-            log.error("만료된 JWT token 입니다.");
+            throw new AuthException(EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰 입니다.");
+            throw new AuthException(UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            log.error("잘못된 JWT 토큰 입니다.");
+            throw new AuthException(INVALID_TOKEN);
         }
     }
 
