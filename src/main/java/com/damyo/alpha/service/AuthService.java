@@ -19,9 +19,6 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public void signUp(SignUpRequest signUpRequest) {
-        if (signUpRequest.isKakao()) {
-            signUpRequest.convertToEmail();
-        }
         if (userRepository.findUserByEmail(signUpRequest.getEmail()).isPresent()) {
             throw new RuntimeException();
         }
@@ -29,9 +26,6 @@ public class AuthService {
     }
 
     public User login(LoginRequest loginRequest) {
-        if (loginRequest.isKakao()) {
-            loginRequest.convertToEmail();
-        }
         return userRepository.findUserByEmail(loginRequest.getEmail()).orElseThrow(RuntimeException::new);
     }
     public User login(SignUpRequest signUpRequest) {
