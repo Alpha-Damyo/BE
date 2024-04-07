@@ -1,11 +1,8 @@
 package com.damyo.alpha.security.infrastructure;
 
-import com.damyo.alpha.exception.errorCode.AuthErrorCode;
-import com.damyo.alpha.exception.exception.AuthException;
 import com.damyo.alpha.security.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +51,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(issuedAt())
                 .setExpiration(expiredAt())
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -76,34 +73,17 @@ public class JwtProvider {
         return null;
     }
 
-    public void validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(secret.getBytes())
-                    .build()
-                    .parseClaimsJws(token);
-        } catch (SecurityException e) {
-            throw new AuthException(SIGNATURE_NOT_FOUND);
-        } catch (MalformedJwtException e) {
-            throw new AuthException(MALFORMED_TOKEN);
-        } catch (ExpiredJwtException e) {
-            throw new AuthException(EXPIRED_TOKEN);
-        } catch (UnsupportedJwtException e) {
-            throw new AuthException(UNSUPPORTED_TOKEN);
-        } catch (IllegalArgumentException e) {
-            throw new AuthException(INVALID_TOKEN);
-        }
-    }
-
-    public Authentication createAuthentication(String token) {
-        String email = Jwts.parserBuilder()
+    public String validateTokenAndGetEmail(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .get("email", String.class);
+    }
 
+    public Authentication createAuthentication(String email) {
         UserDetails userDetails = userDetailService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
