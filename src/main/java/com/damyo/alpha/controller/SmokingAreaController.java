@@ -34,7 +34,7 @@ public class SmokingAreaController {
     }
 
     // 아이디로 구역정보 불러오기
-    @GetMapping("/area/{smokingAreaId}")
+    @GetMapping("/area/find/{smokingAreaId}")
     public ResponseEntity<SmokingAreaResponse> getSmokingAreaById(@PathVariable String smokingAreaId){
         SmokingAreaResponse areaResponse = smokingAreaService.findAreaById(smokingAreaId);
         return ResponseEntity.ok(areaResponse);
