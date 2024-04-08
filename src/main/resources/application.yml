@@ -11,9 +11,28 @@ spring:
   sql:
     init:
       mode: always
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0B
+      location: /users/charming/temp
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 jwt:
   secret: ${JWT_SECRET}
   allowed-urls: /auth/signup, /auth/login, /pic/sa, /ch, /data
 
 
+cloud:
+  aws:
+    s3:
+      bucketName: ${S3_BUCKETNAME}
+    credentials:
+      access-key: ${S3_ACCESSKEY}
+      secret-key: ${S3_SECRETKEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
