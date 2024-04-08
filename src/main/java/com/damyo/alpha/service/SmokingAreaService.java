@@ -1,6 +1,7 @@
 package com.damyo.alpha.service;
 
 import com.damyo.alpha.domain.Info;
+import com.damyo.alpha.dto.request.SearchLocateRequest;
 import com.damyo.alpha.dto.request.SearchQueryRequest;
 import com.damyo.alpha.dto.request.SmokingAreaListRequest;
 import com.damyo.alpha.dto.request.SmokingAreaRequest;
@@ -91,14 +92,16 @@ public class SmokingAreaService {
         return areaName + "-" + areaNumber;
     }
 
-    public List<SmokingAreaResponse> findAreaByCoordinate(BigDecimal latitude, BigDecimal longitude, BigDecimal range) {
+    public List<SmokingAreaResponse> findAreaByCoordinate(SearchLocateRequest request) {
         BigDecimal minLatitude, maxLatitude, minLongitude, maxLongitude;
-        minLatitude = latitude.subtract(range);
-        maxLatitude = latitude.add(range);
-        minLongitude = longitude.subtract(range);
-        maxLongitude = longitude.add(range);
+        minLatitude = request.latitude().subtract(request.range());
+        maxLatitude = request.latitude().add(request.range());
+        minLongitude = request.longitude().subtract(request.range());
+        maxLongitude = request.longitude().add(request.range());
 
-        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude,
+                minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
+                request.indoor(), request.outdoor(), request.hygeine(), request.chair());
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){

@@ -57,11 +57,7 @@ public class SmokingAreaController {
     // 위도 경도에 따른 검색
     @GetMapping("/area/locateSearch")
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(@RequestBody SearchLocateRequest coordinate){
-        BigDecimal latitude = coordinate.latitude();
-        BigDecimal longitude = coordinate.longitude();
-        BigDecimal range = coordinate.range();
-
-        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(coordinate);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
