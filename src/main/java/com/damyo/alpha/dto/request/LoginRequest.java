@@ -1,17 +1,9 @@
 package com.damyo.alpha.dto.request;
 
-import lombok.Getter;
+import jakarta.validation.constraints.Email;
 
-@Getter
-public class LoginRequest {
-    private String email;
-    private String authProvider;
+public record LoginRequest (
+        @Email String email
+) {
 
-    public boolean isKakao() {
-        return "kakao".equals(this.authProvider);
-    }
-
-    public void convertToEmail() {
-        this.email += "@kakao.com";
-    }
 }

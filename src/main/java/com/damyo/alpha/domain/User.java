@@ -49,7 +49,7 @@ public class User {
     private List<SmokingData> smokingDatas = new ArrayList<>();
 
     public User(SignUpRequest signUpDto) {
-        this(null, signUpDto.getName(), signUpDto.getEmail(), null, signUpDto.getProfileUrl(),
-                0, signUpDto.getGender(), signUpDto.getAge(), new ArrayList<>(), new ArrayList<>());
+        this(null, signUpDto.name(), signUpDto.email(), null, signUpDto.profileUrl(),
+                0, signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>());
     }
 }
