@@ -21,12 +21,12 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
     @Query("SELECT sd FROM SmokingData sd " +
             "WHERE sd.id = :id")
     SmokingData findSmokingDataById(@Param("id") Long id);
-    @Query("SELECT sd FROM SmokingData sd " +
-            "WHERE sd.smokingArea.id = :areaId")
+    @Query("SELECT sd FROM SmokingData sd JOIN FETCH sd.smokingArea sa " +
+            "WHERE sa.id = :areaId")
     List<SmokingData> findSmokingDataBySmokingAreaId(@Param("areaId") String smokingAreaId);
 
-    @Query("SELECT sd FROM SmokingData sd " +
-            "WHERE sd.user.id = :userId")
+    @Query("SELECT sd FROM SmokingData sd JOIN FETCH sd.user u " +
+            "WHERE u.id = :userId")
     List<SmokingData> findSmokingDataByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT sd FROM SmokingData sd " +
