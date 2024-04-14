@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,24 +26,30 @@ public class SmokingDataService {
 
     //TODO 지역활용 통계
     public StatisticsRegionResponse getStatisticsByRegion() {
-
+        List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        return new StatisticsRegionResponse(getAllRegion(list), getAreaTop(list));
     }
 
     //TODO 전체 지역 통계 기능
-    private AllRegionStatisticsResponse getAllRegion() {
-        List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+    private AllRegionStatisticsResponse getAllRegion(List<Object[]> list) {
+        Map<String, Integer> allRegion = new HashMap<>();
 
+        for(Object[] area : list){
+            String name = ((String) area[0]).substring(0, 5);
+            Integer count = (Integer) area[1];
+            allRegion.compute(name, (k, v) -> (v == null) ? count : v + count);
+        }
+
+        List<Map.Entry<String, Integer>> allRegionList = new ArrayList<>(allRegion.entrySet());
+
+        Collections.sort(allRegionList, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
+        return new AllRegionStatisticsResponse(allRegionList);
     }
 
-    private AreaTopResponse getAreaTop() {
-        List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+    private AreaTopResponse getAreaTop(List<Object[]> list) {
         if(list.size() < 3) return new AreaTopResponse(list);
         return  new AreaTopResponse(list.subList(0, 3));
-    }
-
-    //TODO 지역 top3 통계 기능
-    private RegionTopResponse getRegionTop() {
-
     }
 
     public StatisticsDateResponse getStatisticsByDate() {
