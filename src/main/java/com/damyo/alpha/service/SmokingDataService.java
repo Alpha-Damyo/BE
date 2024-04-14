@@ -52,18 +52,18 @@ public class SmokingDataService {
     private HourlyStatisticsResponse getHourlyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
-        Integer[] time = new Integer[8];
+        Integer[] time = new Integer[9];
 
         for(SmokingData data : dataList){
             int h = data.getCreatedAt().getHour();
-            if(h < 3) time[0] += 1;
-            else if(h < 6) time[1] += 1;
-            else if(h < 9) time[2] += 1;
-            else if(h < 12) time[3] += 1;
-            else if(h < 15) time[4] += 1;
-            else if(h < 18) time[5] += 1;
-            else if(h < 21) time[6] += 1;
-            else time[7] += 1;
+            if(h < 3) time[1] += 1;
+            else if(h < 6) time[2] += 1;
+            else if(h < 9) time[3] += 1;
+            else if(h < 12) time[4] += 1;
+            else if(h < 15) time[5] += 1;
+            else if(h < 18) time[6] += 1;
+            else if(h < 21) time[7] += 1;
+            else time[8] += 1;
         }
 
         return new HourlyStatisticsResponse(time);
@@ -85,20 +85,17 @@ public class SmokingDataService {
     private  WeeklyStatisticsResponse getWeeklyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
-        Integer week1 = 0;
-        Integer week2 = 0;
-        Integer week3 = 0;
-        Integer week4 = 0;
+        Integer[] week = new Integer[5];
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
-            if(d <= 7) week1 += 1;
-            else if(d <= 15) week2 += 1;
-            else if(d <= 23) week3 += 1;
-            else week4 += 1;
+            if(d <= 7) week[1] += 1;
+            else if(d <= 15) week[2] += 1;
+            else if(d <= 23) week[3] += 1;
+            else week[4] += 1;
         }
 
-        return new WeeklyStatisticsResponse(week1, week2, week3, week4);
+        return new WeeklyStatisticsResponse(week);
     }
 
     private MonthlyStatisticsResponse getMonthlyStatistics() {
