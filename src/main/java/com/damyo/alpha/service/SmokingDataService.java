@@ -99,10 +99,13 @@ public class SmokingDataService {
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
-
+            if(d <= 7) week1 += 1;
+            else if(d <= 15) week2 += 1;
+            else if(d <= 23) week3 += 1;
+            else week4 += 1;
         }
 
-        return new DailyStatisticsResponse(days);
+        return new WeeklyStatisticsResponse(week1, week2, week3, week4);
     }
 
     private MonthlyStatisticsResponse getMonthlyStatistics() {
