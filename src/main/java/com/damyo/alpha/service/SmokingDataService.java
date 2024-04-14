@@ -49,7 +49,6 @@ public class SmokingDataService {
 
     }
 
-    //TODO 시간대별 3시간 평균 통계 기능
     private HourlyStatisticsResponse getHourlyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
@@ -77,7 +76,6 @@ public class SmokingDataService {
         return new HourlyStatisticsResponse(count0To3, count3To6, count6To9, count9To12, count12To15, count15To18, count18To21, count21To0);
     }
 
-    //TODO 일단위 평균 통계 기능
     private DailyStatisticsResponse getDailyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
         Integer[] days = new Integer[32];
