@@ -87,7 +87,7 @@ public class SmokingDataService {
             days[d] += 1;
         }
 
-
+        return new DailyStatisticsResponse(days);
     }
 
     //TODO 주단위 평균 통계 기능
