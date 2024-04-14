@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Repository
@@ -38,6 +39,13 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
             "WHERE sd.createdAt >= :startTime " +
             "AND sd.createdAt <= :endTime")
     Integer findUserNumberByCreateAt(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+
+    @Query("SELECT sa.id, COUNT(sd) FROM SmokingData sd JOIN sd.smokingArea sa " +
+            "WHERE sd.createdAt >= :startTime " +
+            "AND sd.createdAt <= :endTime " +
+            "GROUP BY sa.id " +
+            "ORDER BY COUNT(sd) DESC")
+    List<Object[]> findAreaTopByCreatedAt(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingData sd SET sd.createdAt = :localDate " +

@@ -1,4 +1,8 @@
 package com.damyo.alpha.dto.response;
 
-public record AreaTopResponse() {
+import java.util.List;
+
+public record AreaTopResponse(
+    List<Object[]> areaTop
+) {
 }

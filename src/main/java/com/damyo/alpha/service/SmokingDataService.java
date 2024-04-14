@@ -8,7 +8,6 @@ import com.damyo.alpha.repository.SmokingDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,12 +31,14 @@ public class SmokingDataService {
 
     //TODO 전체 지역 통계 기능
     private AllRegionStatisticsResponse getAllRegion() {
-        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+
     }
 
-    //TODO 구역 top3 통계 기능
     private AreaTopResponse getAreaTop() {
-
+        List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        if(list.size() < 3) return new AreaTopResponse(list);
+        return  new AreaTopResponse(list.subList(0, 3));
     }
 
     //TODO 지역 top3 통계 기능
