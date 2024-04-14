@@ -47,13 +47,12 @@ public class SmokingDataService {
 
     public StatisticsDateResponse getStatisticsByDate() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
-
-
-        return new StatisticsDateResponse(getHourlyStatistics(dataList), getDailyStatistics(dataList), getWeeklyStatistics(dataList), getMonthlyStatistics(dataList), getDayWeekStatistics(dataList));
+        Integer peopleSum = smokingDataRepository.findUserNumberByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        return new StatisticsDateResponse(getHourlyStatistics(dataList, peopleSum), getDailyStatistics(dataList, peopleSum), getWeeklyStatistics(dataList, peopleSum), getMonthlyStatistics(dataList, peopleSum), getDayWeekStatistics(dataList, peopleSum));
     }
 
-    private HourlyStatisticsResponse getHourlyStatistics(List<SmokingData> dataList) {
-        Integer[] time = new Integer[9];
+    private HourlyStatisticsResponse getHourlyStatistics(List<SmokingData> dataList, Integer peopleSum) {
+        Double[] time = new Double[9];
 
         for(SmokingData data : dataList){
             int h = data.getCreatedAt().getHour();
@@ -67,52 +66,72 @@ public class SmokingDataService {
             else time[8] += 1;
         }
 
+        if(peopleSum != 0){
+            for(int i=1; i<9; i++) time[i] /= peopleSum;
+        }
+
         return new HourlyStatisticsResponse(time);
     }
 
-    private DailyStatisticsResponse getDailyStatistics(List<SmokingData> dataList) {
-        Integer[] days = new Integer[32];
+    private DailyStatisticsResponse getDailyStatistics(List<SmokingData> dataList, Integer peopleSum) {
+        Double[] days = new Double[32];
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
             days[d] += 1;
         }
 
+        if(peopleSum != 0){
+            for(int i=1; i<32; i++) days[i] /= peopleSum;
+        }
+
         return new DailyStatisticsResponse(days);
     }
 
-    private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList) {
-        Integer[] week = new Integer[5];
+    private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList, Integer peopleSum) {
+        Double[] weeks = new Double[5];
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
-            if(d <= 7) week[1] += 1;
-            else if(d <= 15) week[2] += 1;
-            else if(d <= 23) week[3] += 1;
-            else week[4] += 1;
+            if(d <= 7) weeks[1] += 1;
+            else if(d <= 15) weeks[2] += 1;
+            else if(d <= 23) weeks[3] += 1;
+            else weeks[4] += 1;
         }
 
-        return new WeeklyStatisticsResponse(week);
+
+        if(peopleSum != 0){
+            for(int i=1; i<5; i++) weeks[i] /= peopleSum;
+        }
+
+        return new WeeklyStatisticsResponse(weeks);
     }
 
-    private MonthlyStatisticsResponse getMonthlyStatistics(List<SmokingData> dataList) {
-        Integer[] month = new Integer[13];
+    private MonthlyStatisticsResponse getMonthlyStatistics(List<SmokingData> dataList, Integer peopleSum) {
+        Double[] month = new Double[13];
 
         for(SmokingData data : dataList) {
             int m = data.getCreatedAt().getMonthValue();
             month[m] += 1;
         }
 
+        if(peopleSum != 0){
+            for(int i=1; i<13; i++) month[i] /= peopleSum;
+        }
+
         return new MonthlyStatisticsResponse(month);
     }
 
-    private DayOfWeekStatisticsResponse getDayWeekStatistics(List<SmokingData> dataList) {
-        Integer[] dayWeek = new Integer[8];
+    private DayOfWeekStatisticsResponse getDayWeekStatistics(List<SmokingData> dataList, Integer peopleSum) {
+        Double[] dayWeek = new Double[8];
 
         for(SmokingData data : dataList){
             int d = data.getCreatedAt().getDayOfWeek().getValue();
-
             dayWeek[d] += 1;
+        }
+
+        if(peopleSum != 0){
+            for(int i=1; i<8; i++) dayWeek[i] /= peopleSum;
         }
 
         return new DayOfWeekStatisticsResponse(dayWeek);
