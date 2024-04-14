@@ -8,6 +8,7 @@ import com.damyo.alpha.repository.SmokingDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -81,7 +82,6 @@ public class SmokingDataService {
         return new DailyStatisticsResponse(days);
     }
 
-    //TODO 주단위 평균 통계 기능
     private  WeeklyStatisticsResponse getWeeklyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
@@ -111,9 +111,17 @@ public class SmokingDataService {
         return new MonthlyStatisticsResponse(month);
     }
 
-    //TODO 요일별 평균 통계 기능
     private DayOfWeekStatisticsResponse getDayWeekStatistics() {
+        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        Integer[] dayWeek = new Integer[8];
 
+        for(SmokingData data : dataList){
+            int d = data.getCreatedAt().getDayOfWeek().getValue();
+
+            dayWeek[d] += 1;
+        }
+
+        return new DayOfWeekStatisticsResponse(dayWeek);
     }
 
 }
