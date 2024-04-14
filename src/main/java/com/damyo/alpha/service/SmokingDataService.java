@@ -90,12 +90,32 @@ public class SmokingDataService {
 
     //TODO 주단위 평균 통계 기능
     private  WeeklyStatisticsResponse getWeeklyStatistics() {
+        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
+        Integer week1 = 0;
+        Integer week2 = 0;
+        Integer week3 = 0;
+        Integer week4 = 0;
+
+        for(SmokingData data : dataList) {
+            int d = data.getCreatedAt().getDayOfMonth();
+
+        }
+
+        return new DailyStatisticsResponse(days);
     }
 
-    //TODO 월단위 평균 통계 기능
     private MonthlyStatisticsResponse getMonthlyStatistics() {
+        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
+        Integer[] month = new Integer[13];
+
+        for(SmokingData data : dataList) {
+            int m = data.getCreatedAt().getMonthValue();
+            month[m] += 1;
+        }
+
+        return new MonthlyStatisticsResponse(month);
     }
 
     //TODO 요일별 평균 통계 기능
