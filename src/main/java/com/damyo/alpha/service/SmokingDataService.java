@@ -45,14 +45,14 @@ public class SmokingDataService {
 
     }
 
-    //TODO 시간활용 통계
     public StatisticsDateResponse getStatisticsByDate() {
-
-    }
-
-    private HourlyStatisticsResponse getHourlyStatistics() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
 
+
+        return new StatisticsDateResponse(getHourlyStatistics(dataList), getDailyStatistics(dataList), getWeeklyStatistics(dataList), getMonthlyStatistics(dataList), getDayWeekStatistics(dataList));
+    }
+
+    private HourlyStatisticsResponse getHourlyStatistics(List<SmokingData> dataList) {
         Integer[] time = new Integer[9];
 
         for(SmokingData data : dataList){
@@ -70,8 +70,7 @@ public class SmokingDataService {
         return new HourlyStatisticsResponse(time);
     }
 
-    private DailyStatisticsResponse getDailyStatistics() {
-        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+    private DailyStatisticsResponse getDailyStatistics(List<SmokingData> dataList) {
         Integer[] days = new Integer[32];
 
         for(SmokingData data : dataList) {
@@ -82,9 +81,7 @@ public class SmokingDataService {
         return new DailyStatisticsResponse(days);
     }
 
-    private  WeeklyStatisticsResponse getWeeklyStatistics() {
-        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
-
+    private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList) {
         Integer[] week = new Integer[5];
 
         for(SmokingData data : dataList) {
@@ -98,9 +95,7 @@ public class SmokingDataService {
         return new WeeklyStatisticsResponse(week);
     }
 
-    private MonthlyStatisticsResponse getMonthlyStatistics() {
-        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
-
+    private MonthlyStatisticsResponse getMonthlyStatistics(List<SmokingData> dataList) {
         Integer[] month = new Integer[13];
 
         for(SmokingData data : dataList) {
@@ -111,8 +106,7 @@ public class SmokingDataService {
         return new MonthlyStatisticsResponse(month);
     }
 
-    private DayOfWeekStatisticsResponse getDayWeekStatistics() {
-        List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+    private DayOfWeekStatisticsResponse getDayWeekStatistics(List<SmokingData> dataList) {
         Integer[] dayWeek = new Integer[8];
 
         for(SmokingData data : dataList){

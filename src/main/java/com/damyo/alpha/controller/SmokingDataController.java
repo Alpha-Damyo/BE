@@ -25,14 +25,14 @@ public class SmokingDataController {
     // 데이터 구역별 통계 반환
     @GetMapping("/data/regionStatics")
     public ResponseEntity<StatisticsRegionResponse> getSmokingDataStaticsByArea(){
-        StatisticsRegionResponse regionResponse = smokingDataService.getStaticsByRegion();
+        StatisticsRegionResponse regionResponse = smokingDataService.getStatisticsByRegion();
         return ResponseEntity.ok(regionResponse);
     }
 
     // 데이터 시간별 통계 반환
     @GetMapping("/data/dateStatics")
     public ResponseEntity<StatisticsDateResponse> getSmokingDateStaticsByDate(){
-        StatisticsDateResponse dateResponse = smokingDataService.getStaticsByDate();
+        StatisticsDateResponse dateResponse = smokingDataService.getStatisticsByDate();
         return ResponseEntity.ok(dateResponse);
     }
 
