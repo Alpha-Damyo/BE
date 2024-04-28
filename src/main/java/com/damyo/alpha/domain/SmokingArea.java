@@ -101,6 +101,11 @@ public class SmokingArea {
     @ToString.Exclude
     private List<Info> infoList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Star> staredList = new ArrayList<>();
+
     public SmokingAreaResponse toDTO(){
         return new SmokingAreaResponse(id, name, latitude, longitude,
                 address, createdAt, status, description, score, opened,

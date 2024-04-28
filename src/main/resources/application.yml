@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWOD}
   jpa:
     hibernate:
       ddl-auto: create
