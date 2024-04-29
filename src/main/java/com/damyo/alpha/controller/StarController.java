@@ -33,9 +33,9 @@ public class StarController {
     }
 
     // 즐겨찾기 제거
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteStar(@PathVariable Long id) {
-        starService.deleteStar(id);
+    @DeleteMapping("/{starId}")
+    public ResponseEntity<?> deleteStar(@PathVariable Long starId, @AuthenticationPrincipal UserDetailsImpl details) {
+        starService.deleteStar(starId, details.getId());
         return ResponseEntity.ok().body("즐겨찾기 제거 완료");
     }
 }

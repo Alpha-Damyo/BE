@@ -9,6 +9,6 @@ public record StarResponse(
         String groupName
 ) {
     public StarResponse(Star star) {
-        this(star.getId(), star.getSmokingArea().getId(), star.getCustomName(), star.getCustomName());
+        this(star.getId(), star.getSmokingArea().getId(), star.getCustomName(), star.getGroupName());
     }
 }

@@ -5,6 +5,8 @@ import com.damyo.alpha.domain.Star;
 import com.damyo.alpha.domain.User;
 import com.damyo.alpha.dto.request.AddStarRequest;
 import com.damyo.alpha.dto.response.StarResponse;
+import com.damyo.alpha.exception.errorCode.StarErrorCode;
+import com.damyo.alpha.exception.exception.StarException;
 import com.damyo.alpha.exception.exception.UserException;
 import com.damyo.alpha.repository.SmokingAreaRepository;
 import com.damyo.alpha.repository.StarRepository;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.damyo.alpha.exception.errorCode.StarErrorCode.STAR_NOT_FOUND;
+import static com.damyo.alpha.exception.errorCode.StarErrorCode.UNAUTHORIZED_ACTION;
 import static com.damyo.alpha.exception.errorCode.UserErrorCode.USER_NOT_FOUND;
 
 @Service
@@ -53,7 +57,13 @@ public class StarService {
         return starResponseList;
     }
 
-    public void deleteStar(Long id) {
-        starRepository.deleteById(id);
+    public void deleteStar(Long starId, UUID memberId) {
+        Star star = starRepository.findStarById(starId).orElseThrow(
+                () -> new StarException(STAR_NOT_FOUND)
+        );
+        if (!star.getUser().getId().equals(memberId)) {
+            throw new StarException(UNAUTHORIZED_ACTION);
+        }
+        starRepository.deleteById(starId);
     }
 }
