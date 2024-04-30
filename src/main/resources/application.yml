@@ -21,7 +21,7 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  allowed-urls: /auth/signup, /auth/login, /pic/sa, /ch, /data
+  allowed-urls: /auth/**, /pic/**, /ch/**, /data/**, /area/**, /info/**
 
 
 cloud:

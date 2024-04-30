@@ -42,14 +42,17 @@ public class User {
     @Column(name = "age")
     private Integer age;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Picture> pictures = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<SmokingData> smokingDatas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Star> starList = new ArrayList<>();
+
     public User(SignUpRequest signUpDto) {
         this(null, signUpDto.name(), signUpDto.email(), null, signUpDto.profileUrl(),
-                0, signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>());
+                0, signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 }

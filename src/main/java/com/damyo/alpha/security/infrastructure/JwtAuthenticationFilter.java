@@ -1,5 +1,6 @@
 package com.damyo.alpha.security.infrastructure;
 
+import com.damyo.alpha.exception.errorCode.CommonErrorCode;
 import com.damyo.alpha.exception.exception.AuthException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,11 +23,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.damyo.alpha.exception.errorCode.AuthErrorCode.*;
+import static com.damyo.alpha.exception.errorCode.CommonErrorCode.INTERNAL_SERVER_ERROR;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     @Value("${jwt.allowed-urls}")
@@ -34,7 +37,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtProvider.resolveToken(request);
-
         try {
             String email = jwtProvider.validateTokenAndGetEmail(token);
             Authentication authentication = jwtProvider.createAuthentication(email);
@@ -51,15 +53,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             request.setAttribute("exception", new AuthException(UNSUPPORTED_TOKEN));
         } catch (IllegalArgumentException e) {
             request.setAttribute("exception", new AuthException(INVALID_TOKEN));
+        } catch (UsernameNotFoundException e) {
+            request.setAttribute("exception", new AuthException(EMAIL_NOT_FOUND));
+        } catch (Exception e) {
+            request.setAttribute("exception", new AuthException(INTERNAL_SERVER_ERROR));
         }
 
         filterChain.doFilter(request, response);
-    }
-
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        return Arrays.stream(allowedUrls).anyMatch(path::startsWith);
     }
 }
