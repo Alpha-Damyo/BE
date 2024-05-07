@@ -1,7 +1,9 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.domain.Info;
-import com.damyo.alpha.domain.SmokingArea;
+import com.damyo.alpha.api.info.domain.InfoRepository;
+import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
+import com.damyo.alpha.api.info.domain.Info;
+import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

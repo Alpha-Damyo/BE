@@ -19,6 +19,7 @@ bin/
 
 ### IntelliJ IDEA ###
 /src/test/resources/application.yml
+/src/main/resources/application-dev.yml
 .idea
 *.iws
 *.iml

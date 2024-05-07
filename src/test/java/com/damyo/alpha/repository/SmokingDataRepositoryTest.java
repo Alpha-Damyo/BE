@@ -1,8 +1,11 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.domain.SmokingArea;
-import com.damyo.alpha.domain.SmokingData;
-import com.damyo.alpha.domain.User;
+import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
+import com.damyo.alpha.api.smokingdata.domain.SmokingDataRepository;
+import com.damyo.alpha.api.user.domain.UserRepository;
+import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
+import com.damyo.alpha.api.smokingdata.domain.SmokingData;
+import com.damyo.alpha.api.user.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
 
 import java.time.LocalDateTime;
 import java.util.List;

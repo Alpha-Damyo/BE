@@ -1,6 +1,7 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.domain.User;
+import com.damyo.alpha.api.user.domain.User;
+import com.damyo.alpha.api.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.domain.SmokingArea;
+import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 
-import org.aspectj.lang.annotation.Before;
+import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
