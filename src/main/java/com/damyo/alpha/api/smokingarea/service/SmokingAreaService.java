@@ -6,6 +6,7 @@ import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.info.service.InfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -138,6 +139,7 @@ public class SmokingAreaService {
         return areaResponseList;
     }
 
+    @Scheduled(cron = "0 0 4 * * MON")
     public void updateAllArea(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
         for(SmokingArea area : areas){
