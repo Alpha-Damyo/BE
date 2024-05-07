@@ -5,6 +5,8 @@ import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.smokingdata.controller.dto.*;
 import com.damyo.alpha.api.smokingdata.domain.SmokingData;
 import com.damyo.alpha.api.smokingdata.domain.SmokingDataRepository;
+import com.damyo.alpha.api.user.domain.User;
+import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,14 @@ public class SmokingDataService {
 
     private final SmokingDataRepository smokingDataRepository;
     private final SmokingAreaRepository smokingAreaRepository;
+    private final UserRepository userRepository;
 
     public void addSmokingData(SmokingDataListRequest dataListRequest) {
         List<SmokingDataRequest> smokingDataRequests = dataListRequest.dataRequests();
         for(SmokingDataRequest dataRequest : smokingDataRequests) {
             SmokingArea area = smokingAreaRepository.findSmokingAreaById(dataRequest.smokingAreaId());
-            smokingDataRepository.save(SmokingData.builder().user(dataRequest.user()).createdAt(dataRequest.createdAt()).smokingArea(area).build());
+            User user = userRepository.findUserByEmail(dataRequest.email()).get();
+            smokingDataRepository.save(SmokingData.builder().user(user).createdAt(dataRequest.createdAt()).smokingArea(area).build());
         }
     }
 

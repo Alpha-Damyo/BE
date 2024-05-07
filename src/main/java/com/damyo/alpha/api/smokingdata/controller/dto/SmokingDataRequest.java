@@ -6,7 +6,7 @@ import com.damyo.alpha.api.user.domain.User;
 import java.time.LocalDateTime;
 
 public record SmokingDataRequest(
-        User user,
+        String email,
         LocalDateTime createdAt,
         String smokingAreaId
 ) {
