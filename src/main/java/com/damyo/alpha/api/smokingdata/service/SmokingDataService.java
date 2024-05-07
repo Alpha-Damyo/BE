@@ -1,5 +1,7 @@
 package com.damyo.alpha.api.smokingdata.service;
 
+import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
+import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.smokingdata.controller.dto.*;
 import com.damyo.alpha.api.smokingdata.domain.SmokingData;
 import com.damyo.alpha.api.smokingdata.domain.SmokingDataRepository;
@@ -14,11 +16,13 @@ import java.util.*;
 public class SmokingDataService {
 
     private final SmokingDataRepository smokingDataRepository;
+    private final SmokingAreaRepository smokingAreaRepository;
 
     public void addSmokingData(SmokingDataListRequest dataListRequest) {
         List<SmokingDataRequest> smokingDataRequests = dataListRequest.dataRequests();
         for(SmokingDataRequest dataRequest : smokingDataRequests) {
-            smokingDataRepository.save(SmokingData.builder().user(dataRequest.user()).createdAt(dataRequest.creatdAt()).smokingArea(dataRequest.smokingArea()).build());
+            SmokingArea area = smokingAreaRepository.findSmokingAreaById(dataRequest.smokingAreaId());
+            smokingDataRepository.save(SmokingData.builder().user(dataRequest.user()).createdAt(dataRequest.createdAt()).smokingArea(area).build());
         }
     }
 

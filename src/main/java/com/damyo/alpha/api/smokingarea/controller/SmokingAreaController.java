@@ -21,7 +21,7 @@ public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
 
     // 전체구역
-    @GetMapping("/area")
+    @GetMapping("/area/all")
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
         List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaAll();
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));

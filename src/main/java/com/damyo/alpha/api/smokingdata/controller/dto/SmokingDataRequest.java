@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record SmokingDataRequest(
         User user,
-        LocalDateTime creatdAt,
-        SmokingArea smokingArea
+        LocalDateTime createdAt,
+        String smokingAreaId
 ) {
 }
