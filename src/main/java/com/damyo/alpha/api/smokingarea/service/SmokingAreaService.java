@@ -1,10 +1,7 @@
 package com.damyo.alpha.api.smokingarea.service;
 
-import com.damyo.alpha.api.smokingarea.controller.dto.SearchQueryRequest;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaListRequest;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaRequest;
+import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaResponse;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.info.service.InfoService;
@@ -88,14 +85,18 @@ public class SmokingAreaService {
         return areaName + "-" + areaNumber;
     }
 
-    public List<SmokingAreaResponse> findAreaByCoordinate(BigDecimal latitude, BigDecimal longitude, BigDecimal range) {
+    public List<SmokingAreaResponse> findAreaByCoordinate(SearchLocateRequest request) {
         BigDecimal minLatitude, maxLatitude, minLongitude, maxLongitude;
-        minLatitude = latitude.subtract(range);
-        maxLatitude = latitude.add(range);
-        minLongitude = longitude.subtract(range);
-        maxLongitude = longitude.add(range);
 
-        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        minLatitude = request.latitude().subtract(request.range());
+        maxLatitude = request.latitude().add(request.range());
+        minLongitude = request.longitude().subtract(request.range());
+        maxLongitude = request.longitude().add(request.range());
+
+        List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude,
+                minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
+                request.indoor(), request.outdoor(), request.hygeine(), request.chair());
+
         List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
