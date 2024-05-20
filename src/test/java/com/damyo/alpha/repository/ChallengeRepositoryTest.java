@@ -1,6 +1,7 @@
 package com.damyo.alpha.repository;
 
-import com.damyo.alpha.domain.Challenge;
+import com.damyo.alpha.api.challenge.domain.Challenge;
+import com.damyo.alpha.api.challenge.domain.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
