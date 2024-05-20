@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  spring:
+    container_name: spring
+    restart: "no"
+    image: spring
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
