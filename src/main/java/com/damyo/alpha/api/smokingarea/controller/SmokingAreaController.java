@@ -21,7 +21,7 @@ public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
 
     // 전체구역
-    @GetMapping("/area")
+    @GetMapping("/area/all")
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
         List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaAll();
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
@@ -57,11 +57,7 @@ public class SmokingAreaController {
     // 위도 경도에 따른 검색
     @GetMapping("/area/locateSearch")
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(@RequestBody SearchLocateRequest coordinate){
-        BigDecimal latitude = coordinate.latitude();
-        BigDecimal longitude = coordinate.longitude();
-        BigDecimal range = coordinate.range();
-
-        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(latitude, longitude, range);
+        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(coordinate);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
