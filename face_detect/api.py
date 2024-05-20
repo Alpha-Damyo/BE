@@ -49,7 +49,7 @@ async def filter_image(file: UploadFile):
     cv2.imwrite(filename, filtered_img)
 
     try:
-        s3.upload_file(f'{filename}', filtered_img, filename, ExtraArgs={'ContentType': 'image/jpeg'})
+        s3.upload_file(f'{filename}', os.getenv('S3_BUCKET_NAME'), filename, ExtraArgs={'ContentType': 'image/jpeg'})
     except:
         os.remove(f'{filename}')
         return JSONResponse(status_code=500, content={'msg': 'failed to upload image'})
@@ -60,7 +60,7 @@ async def filter_image(file: UploadFile):
     )
 
 
-    
+    os.remove(f'{filename}')
     return JSONResponse(status_code=200, content={'msg': 'success', 'url': url})
 
 
