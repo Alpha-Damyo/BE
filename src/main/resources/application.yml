@@ -17,8 +17,6 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  allowed-urls: /auth/**, /pic/**, /ch/**, /data/**, /area/**, /info/**
-
 
 cloud:
   aws:
@@ -32,3 +30,10 @@ cloud:
       auto: false
     stack:
       auto: false
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  paths-to-match:
+    - /api/**

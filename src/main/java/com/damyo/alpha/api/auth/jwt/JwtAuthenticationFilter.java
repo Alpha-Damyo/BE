@@ -29,13 +29,9 @@ import static com.damyo.alpha.global.exception.error.CommonErrorCode.INTERNAL_SE
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    @Value("${jwt.allowed-urls}")
-    private String[] allowedUrls;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtProvider.resolveToken(request);
-        log.info(request.getRequestURI());
         try {
             String email = jwtProvider.validateTokenAndGetEmail(token);
             Authentication authentication = jwtProvider.createAuthentication(email);
@@ -55,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (UsernameNotFoundException e) {
             request.setAttribute("exception", new AuthException(EMAIL_NOT_FOUND));
         } catch (Exception e) {
+            log.error(e.getMessage());
             request.setAttribute("exception", new AuthException(INTERNAL_SERVER_ERROR));
         }
 

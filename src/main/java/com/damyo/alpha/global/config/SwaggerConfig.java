@@ -30,7 +30,7 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("API Docs")
+                .title("Damyo's Spring Server API Docs")
                 .description("This is Damyo's API Docs")
                 .version("1.0.0");
     }

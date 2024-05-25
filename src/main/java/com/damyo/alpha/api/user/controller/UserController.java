@@ -5,6 +5,7 @@ import com.damyo.alpha.api.user.controller.dto.UpdateUserProfileRequest;
 import com.damyo.alpha.api.user.controller.dto.UpdateUserScoreRequest;
 import com.damyo.alpha.api.user.controller.dto.UserResponse;
 import com.damyo.alpha.api.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "UserController")
 public class UserController {
 
     private final UserService userService;
