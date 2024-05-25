@@ -36,23 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = jwtProvider.validateTokenAndGetEmail(token);
             Authentication authentication = jwtProvider.createAuthentication(email);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (SecurityException e) {
-            request.setAttribute("exception", new AuthException(SIGNATURE_NOT_FOUND));
-        } catch (SignatureException e) {
-            request.setAttribute("exception", new AuthException(SIGNATURE_INVALID));
-        } catch (MalformedJwtException e) {
-            request.setAttribute("exception", new AuthException(MALFORMED_TOKEN));
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", new AuthException(EXPIRED_TOKEN));
-        } catch (UnsupportedJwtException e) {
-            request.setAttribute("exception", new AuthException(UNSUPPORTED_TOKEN));
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("exception", new AuthException(INVALID_TOKEN));
-        } catch (UsernameNotFoundException e) {
-            request.setAttribute("exception", new AuthException(EMAIL_NOT_FOUND));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            request.setAttribute("exception", new AuthException(INTERNAL_SERVER_ERROR));
+            request.setAttribute("exception", new AuthException(INVALID_TOKEN));
         }
 
         filterChain.doFilter(request, response);
