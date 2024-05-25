@@ -9,7 +9,7 @@ public record SearchLocateRequest(
         Boolean status,
         Boolean opened,
         Boolean closed,
-        Boolean hygeine,
+        Boolean hygiene,
         Boolean indoor,
         Boolean outdoor,
         Boolean chair
