@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface PictureRepository extends JpaRepository<Picture, Long> {
+public interface PictureRepository extends JpaRepository<Picture, Long>, PictureCustomRepository {
     Picture save(Picture picture);
     Optional<Picture> findPictureById(Long id);
     void deletePictureById(Long id);
