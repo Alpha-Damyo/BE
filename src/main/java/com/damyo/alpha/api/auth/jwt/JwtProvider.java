@@ -26,7 +26,7 @@ public class JwtProvider {
 
     @Value("${jwt.secret}")
     private String secret;
-    private static final int EXPIRED_DURATION = 30;
+    private static final int EXPIRED_DURATION = 24;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "Bearer ";
     private Key key;
@@ -55,7 +55,7 @@ public class JwtProvider {
 
     private Date expiredAt() {
         LocalDateTime now = LocalDateTime.now();
-        return Date.from(now.plusSeconds(EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(now.plusHours(EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private Date issuedAt() {
