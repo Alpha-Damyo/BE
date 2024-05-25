@@ -92,7 +92,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "AND (:close = TRUE AND sa.closed = TRUE) " +
             "AND (:indoor = TRUE AND sa.indoor = TRUE) " +
             "AND (:outdoor = TRUE AND sa.outdoor = TRUE) " +
-            "AND (:hygeine = TRUE AND sa.hygiene = TRUE) " +
+            "AND (:hygiene = TRUE AND sa.hygiene = TRUE) " +
             "AND (:chair = TRUE AND sa.chair = TRUE)")
     List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude,
                                                   @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude,
