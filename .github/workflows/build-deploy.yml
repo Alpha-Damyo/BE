@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_KEY }}
           source: "./docker-compose.yml"
-          target: "test"
+          target: "BE"
           
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v1.0.3
@@ -68,6 +68,6 @@ jobs:
             fi
             
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/api-server:latest
-            sudo docker-compose -f test/docker-compose.yml up -d
+            sudo docker-compose -f BE/docker-compose.yml up -d
         
 
