@@ -3,7 +3,7 @@ services:
   spring:
     container_name: spring
     restart: "no"
-    image: spring
+    image: damyo/api-server:latest
     env_file:
       - .env
     ports:

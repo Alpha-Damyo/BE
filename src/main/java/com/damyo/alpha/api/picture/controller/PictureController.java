@@ -4,6 +4,7 @@ import com.damyo.alpha.api.picture.controller.dto.UploadPictureRequest;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.picture.service.S3ImageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/pic")
+@RequestMapping("/api/pic")
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "PictureController")
 public class PictureController {
 
     private final PictureService pictureService;

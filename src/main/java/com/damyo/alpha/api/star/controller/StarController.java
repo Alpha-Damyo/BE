@@ -4,6 +4,7 @@ import com.damyo.alpha.api.star.controller.dto.AddStarRequest;
 import com.damyo.alpha.api.star.controller.dto.StarResponse;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.star.service.StarService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +15,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/star")
+@RequestMapping("/api/star")
+@Tag(name = "StarController")
 public class StarController {
     private final StarService starService;
 
