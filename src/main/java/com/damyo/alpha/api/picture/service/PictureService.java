@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.picture.service;
 
+import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 import com.damyo.alpha.api.picture.domain.Picture;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.user.domain.User;
@@ -9,6 +10,8 @@ import com.damyo.alpha.api.picture.domain.PictureRepository;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -60,6 +63,12 @@ public class PictureService {
                         build());
     }
 
-    public
+    public PictureSliceResponse getPageContestPicture(Long cursorId, String sortBy, String region) {
+        Long pageSize = 24L;
+        if(cursorId == 0) cursorId = null;
+        PictureSliceResponse pictureSliceResponse = pictureRepository.getPictureListByPaging(cursorId, pageSize, sortBy, region);
+
+        return pictureSliceResponse;
+    }
 
 }
