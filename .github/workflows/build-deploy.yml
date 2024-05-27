@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_KEY }}
           source: "./docker-compose.yml"
-          target: "BE"
+          target: "test"
           
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v1.0.3
@@ -63,8 +63,10 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_KEY }} 
           script: |
-            sudo docker stop spring
-            sudo docker rm spring
+            if [ "$(sudo docker ps -qa)" ]; then
+              sudo docker rm -f $(sudo docker ps -qa)
+            fi
+            
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/api-server:latest
             sudo docker-compose up -d
         
