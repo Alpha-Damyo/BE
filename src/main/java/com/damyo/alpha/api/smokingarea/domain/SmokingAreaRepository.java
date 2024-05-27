@@ -86,8 +86,18 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
 
     @Query("SELECT  sa FROM SmokingArea sa " +
             "WHERE sa.latitude BETWEEN :minLa AND :maxLa " +
-            "AND sa.longitude BETWEEN :minLo AND :maxLo")
-    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude, @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude);
+            "AND sa.longitude BETWEEN :minLo AND :maxLo " +
+            "AND (:status = TRUE AND sa.status = TRUE) " +
+            "AND (:open = TRUE AND sa.opened = TRUE) " +
+            "AND (:close = TRUE AND sa.closed = TRUE) " +
+            "AND (:indoor = TRUE AND sa.indoor = TRUE) " +
+            "AND (:outdoor = TRUE AND sa.outdoor = TRUE) " +
+            "AND (:hygiene = TRUE AND sa.hygiene = TRUE) " +
+            "AND (:chair = TRUE AND sa.chair = TRUE)")
+    List<SmokingArea> findSmokingAreaByCoordinate(@Param("minLa") BigDecimal minLatitude, @Param("maxLa") BigDecimal maxLatitude,
+                                                  @Param("minLo") BigDecimal minLongitude, @Param("maxLo") BigDecimal maxLongitude,
+                                                  @Param("status") Boolean status, @Param("open") Boolean open, @Param("close") Boolean close,
+                                                  @Param("indoor") Boolean indoor, @Param("outdoor") Boolean outdoor, @Param("hygiene") Boolean hygiene, @Param("chair") Boolean chair);
 
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:region%")
@@ -96,18 +106,18 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     // TODO 추후 개선 고민
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE (sa.id LIKE %:word% OR sa.address LIKE %:word%) " +
-            "AND sa.status = :temp " +
-            "AND sa.opened = :opened " +
-            "AND sa.closed = :closed " +
-            "AND sa.hygiene = :hygiene " +
-            "AND sa.airOut = :airOut " +
-            "AND sa.indoor = :indoor " +
-            "AND sa.outdoor = :outdoor " +
-            "AND sa.big = :big " +
-            "AND sa.small = :small " +
-            "AND sa.crowded = :crowded " +
-            "AND sa.quite = :quite " +
-            "AND sa.chair = :chair")
+            "AND (:temp = TRUE AND sa.status = TRUE) " +
+            "AND (:opened = TRUE AND sa.opened = TRUE) " +
+            "AND (:closed = TRUE AND sa.closed = TRUE) " +
+            "AND (:hygiene = TRUE AND sa.hygiene = TRUE) " +
+            "AND (:airOut = TRUE AND sa.airOut = TRUE) " +
+            "AND (:indoor = TRUE AND sa.indoor = TRUE) " +
+            "AND (:outdoor = TRUE AND sa.outdoor = TRUE) " +
+            "AND (:big = TRUE AND sa.big = TRUE) " +
+            "AND (:small = TRUE AND sa.small = TRUE) " +
+            "AND (:crowded = TRUE AND sa.crowded = TRUE) " +
+            "AND (:quite = TRUE AND sa.quite = TRUE) " +
+            "AND (:chair = TRUE AND sa.chair = TRUE)")
     List<SmokingArea> findSmokingAreaByQuery(@Param("word") String word, @Param("temp") boolean temp,
                                              @Param("opened") boolean opened, @Param("closed") boolean closed,
                                              @Param("hygiene") boolean hygiene, @Param("airOut") boolean airOut,

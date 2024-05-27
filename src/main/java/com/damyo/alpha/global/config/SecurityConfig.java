@@ -20,13 +20,15 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint entryPoint;
-    @Value("${jwt.allowed-urls}")
-    private String[] allowedUrls;
+    private static final String[] ALLOWED_URLS = {
+            "/api/auth/**", "/api/pic/**", "/api/ch/**", "/api/data/**", "/api/area/**", "/api/info/**",
+            "/swagger-ui/**", "/v3/**", "/favicon.ico"
+    };
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequest ->
-                authorizeRequest.requestMatchers(allowedUrls).permitAll()
+                authorizeRequest.requestMatchers(ALLOWED_URLS).permitAll()
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)

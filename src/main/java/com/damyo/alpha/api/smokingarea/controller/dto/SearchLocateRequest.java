@@ -5,6 +5,13 @@ import java.math.BigDecimal;
 public record SearchLocateRequest(
         BigDecimal latitude,
         BigDecimal longitude,
-        BigDecimal range
+        BigDecimal range,
+        Boolean status,
+        Boolean opened,
+        Boolean closed,
+        Boolean hygiene,
+        Boolean indoor,
+        Boolean outdoor,
+        Boolean chair
 ) {
 }

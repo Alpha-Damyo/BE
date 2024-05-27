@@ -5,7 +5,7 @@ public record SearchQueryRequest(
         Boolean status,
         Boolean opened,
         Boolean closed,
-        Boolean hygeine,
+        Boolean hygiene,
         Boolean airOut,
         Boolean indoor,
         Boolean outdoor,

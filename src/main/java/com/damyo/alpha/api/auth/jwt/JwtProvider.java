@@ -26,7 +26,7 @@ public class JwtProvider {
 
     @Value("${jwt.secret}")
     private String secret;
-    private static final int EXPIRED_DURATION = 20 * 60 * 60 * 1000;
+    private static final int EXPIRED_DURATION = 24;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "Bearer ";
     private Key key;
