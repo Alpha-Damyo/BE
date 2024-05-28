@@ -17,6 +17,9 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
 
+guest:
+  uuid: ${GUEST_UUID}
+
 cloud:
   aws:
     s3:
@@ -29,6 +32,8 @@ cloud:
       auto: false
     stack:
       auto: false
+    cloudfront:
+      dmain: ${CLOUDFRONT_DOMAIN}
 
 springdoc:
   swagger-ui:

@@ -1,9 +1,11 @@
 package com.damyo.alpha.api.smokingarea.controller;
 
+import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
+import com.damyo.alpha.api.user.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -12,10 +14,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +32,9 @@ import java.util.UUID;
 public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
     private final PictureService pictureService;
+
+    @Value("${guest.uuid}")
+    private String guestUUID;
 
     // 전체구역
     @GetMapping("/all")
@@ -45,12 +54,20 @@ public class SmokingAreaController {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 제보에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<SmokingAreaDetailResponse> postSmokingArea(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "흡얀구역 정보 요청사항", in = ParameterIn.DEFAULT)
             @RequestBody SmokingAreaRequest areaRequest){
         SmokingArea area =  smokingAreaService.addSmokingArea(areaRequest);
 
-        UUID temp = UUID.randomUUID();
-        pictureService.uploadPicture(temp, area.getId(),areaRequest.url());
+        if(areaRequest.url() != null) {
+            if(userDetails != null) {
+                pictureService.uploadPicture(userDetails.getUser().getId(), area.getId(), areaRequest.url());
+            }
+            else{
+                pictureService.uploadPicture(UUID.fromString(guestUUID), area.getId(), areaRequest.url());
+            }
+        }
+
         return ResponseEntity
                 .ok(area.toDTO());
     }
@@ -76,8 +93,8 @@ public class SmokingAreaController {
     })
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(
             @Parameter(description = "기준 날짜", in = ParameterIn.DEFAULT)
-            @RequestBody LocalDateTime createdAt){
-        List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(createdAt);
+            @RequestBody LocalDate createdAt){
+        List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(LocalDateTime.of(createdAt, LocalTime.MIN));
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
@@ -109,7 +126,7 @@ public class SmokingAreaController {
     })
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(
             @Parameter(description = "검색 지역", in = ParameterIn.DEFAULT)
-            @RequestBody String region){
+            @RequestParam String region){
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }

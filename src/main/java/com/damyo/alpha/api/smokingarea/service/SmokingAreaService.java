@@ -79,16 +79,16 @@ public class SmokingAreaService {
     private String makeAreaIdByAddress(String address){
         String[] adr = address.split(" ");
         String areaName = adr[0].substring(0, 2) + "-" + adr[1].substring(0, 2);
-        SmokingArea lastArea = smokingAreaRepository.findSmokingAreaIdByAreaName(areaName).get();
+        StringBuffer tmp = new StringBuffer();
+        tmp.append(areaName);
 
-        if(lastArea.getId() == null){
-            return areaName + "-0001";
-        }
+        smokingAreaRepository.findSmokingAreaIdByAreaName(areaName)
+                .ifPresentOrElse(
+                        v ->  tmp.append(String.format("-%04d", Integer.parseInt(v.getId().substring(6, 10)) + 1)),
+                        () -> tmp.append("-0001")
+                );
 
-        Integer number = Integer.parseInt(lastArea.getId().substring(6, 10)) + 1;
-        String areaNumber = String.format("%04d", number);
-
-        return areaName + "-" + areaNumber;
+        return tmp.toString();
     }
 
     public List<SmokingAreaSummaryResponse> findAreaByCoordinate(SearchLocateRequest request) {
