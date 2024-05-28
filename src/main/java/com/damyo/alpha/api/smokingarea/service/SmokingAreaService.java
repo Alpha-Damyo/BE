@@ -21,54 +21,56 @@ public class SmokingAreaService {
     private final SmokingAreaRepository smokingAreaRepository;
     private final InfoService infoService;
 
-    public List<SmokingAreaResponse> findAreaAll(){
+    public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
-        List<SmokingAreaResponse> areaResponses = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
 
         for(SmokingArea area : areas) {
-            areaResponses.add(area.toDTO());
+            areaResponses.add(area.toSUM());
         }
 
         return areaResponses;
     }
 
-    public SmokingAreaResponse findAreaById(String smokingAreaId) {
+    public SmokingAreaDetailResponse findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId);
         return area.toDTO();
     }
 
-    public List<SmokingAreaResponse> findAreaByCreatedAt(LocalDateTime createdAt) {
+    public List<SmokingAreaSummaryResponse> findAreaByCreatedAt(LocalDateTime createdAt) {
         List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByCreatedAt(createdAt);
-        List<SmokingAreaResponse> areaResponses = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
 
         for(SmokingArea area : areas) {
-            areaResponses.add(area.toDTO());
+            areaResponses.add(area.toSUM());
         }
 
         return areaResponses;
     }
 
-    public List<SmokingAreaResponse> findAreaByName(String name) {
+    public List<SmokingAreaSummaryResponse> findAreaByName(String name) {
         List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName(name);
-        List<SmokingAreaResponse> areaResponses = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
 
         for(SmokingArea area : areas) {
-            areaResponses.add(area.toDTO());
+            areaResponses.add(area.toSUM());
         }
 
         return areaResponses;
     }
 
-    public void addSmokingArea(SmokingAreaListRequest areaListRequest) {
-        for(SmokingAreaRequest area : areaListRequest.areaRequests()){
-            String areaId = makeAreaIdByAddress(area.address());
-            smokingAreaRepository.save(SmokingArea.builder().id(areaId).name(area.name()).latitude(area.latitude())
-                    .longitude(area.longitude()).createdAt(area.createdAt()).status(true).address(area.address())
-                    .description(area.description()).score(area.score()).opened(area.opened()).closed(area.closed())
-                    .hygiene(area.hygiene()).dirty(area.dirty()).airOut(area.airOut()).noExist(false).indoor(area.indoor())
-                    .outdoor(area.outdoor()).big(area.big()).small(area.small()).crowded(area.crowded()).quite(area.quite())
-                    .chair(area.chair()).build());
-        }
+    public SmokingArea addSmokingArea(SmokingAreaRequest area) {
+        LocalDateTime current = LocalDateTime.now();
+
+        String areaId = makeAreaIdByAddress(area.address());
+        SmokingArea smokingArea =  smokingAreaRepository.save(SmokingArea.builder().id(areaId).name(area.name()).latitude(area.latitude())
+                .longitude(area.longitude()).createdAt(current).status(true).address(area.address())
+                .description(area.description()).score(area.score()).opened(area.opened()).closed(area.closed())
+                .hygiene(null).dirty(null).airOut(null).noExist(false).indoor(area.indoor())
+                .outdoor(area.outdoor()).big(null).small(null).crowded(null).quite(null)
+                .chair(null).build());
+
+        return smokingArea;
     }
 
     private String makeAreaIdByAddress(String address){
@@ -86,7 +88,7 @@ public class SmokingAreaService {
         return areaName + "-" + areaNumber;
     }
 
-    public List<SmokingAreaResponse> findAreaByCoordinate(SearchLocateRequest request) {
+    public List<SmokingAreaSummaryResponse> findAreaByCoordinate(SearchLocateRequest request) {
         BigDecimal minLatitude, maxLatitude, minLongitude, maxLongitude;
 
         minLatitude = request.latitude().subtract(request.range());
@@ -98,25 +100,25 @@ public class SmokingAreaService {
                 minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
                 request.indoor(), request.outdoor(), request.hygiene(), request.chair());
 
-        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
-            areaResponseList.add(area.toDTO());
+            areaResponseList.add(area.toSUM());
         }
         return areaResponseList;
     }
 
-    public List<SmokingAreaResponse> findAreaByRegion(String region) {
+    public List<SmokingAreaSummaryResponse> findAreaByRegion(String region) {
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByRegion(region);
-        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
-            areaResponseList.add(area.toDTO());
+            areaResponseList.add(area.toSUM());
         }
         return areaResponseList;
     }
 
-    public List<SmokingAreaResponse> findAreaByQuery(SearchQueryRequest query) {
+    public List<SmokingAreaSummaryResponse> findAreaByQuery(SearchQueryRequest query) {
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(
                 query.word(),
                 query.status(),
@@ -131,10 +133,10 @@ public class SmokingAreaService {
                 query.crowded(),
                 query.quite(),
                 query.chair());
-        List<SmokingAreaResponse> areaResponseList = new ArrayList<>();
+        List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
-            areaResponseList.add(area.toDTO());
+            areaResponseList.add(area.toSUM());
         }
         return areaResponseList;
     }
