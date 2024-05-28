@@ -19,7 +19,7 @@ public class InfoService {
     private final SmokingAreaRepository smokingAreaRepository;
 
     public void updateInfo(UpdateInfoRequest updateInfoRequest) {
-        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId());
+        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId()).get();
         infoRepository.save(updateInfoRequest.toEntity(sa));
     }
 

@@ -8,6 +8,8 @@ import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.auth.service.AuthService;
 import com.damyo.alpha.global.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +36,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "A101", description = "이미 가입된 계정이 존재할 때(email 중복)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<TokenResponse> signUp(
+            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest);
         User user = authService.login(signUpRequest);
         String token = authService.generateToken(user);
@@ -48,7 +52,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "A102", description = "해당 이메일이 DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<TokenResponse> login(
+            @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @RequestBody LoginRequest loginRequest) {
         User user = authService.login(loginRequest);
         String token = authService.generateToken(user);
         return ResponseEntity.ok().body(new TokenResponse(token));
