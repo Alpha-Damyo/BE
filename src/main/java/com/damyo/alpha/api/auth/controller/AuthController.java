@@ -1,6 +1,7 @@
 package com.damyo.alpha.api.auth.controller;
 
 
+import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.auth.controller.dto.LoginRequest;
 import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
@@ -16,11 +17,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -29,17 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final S3ImageService s3ImageService;
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "회원가입", description = "토큰을 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "A101", description = "이미 가입된 계정이 존재할 때(email 중복)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> signUp(
-            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT, required = true)
-            @RequestBody SignUpRequest signUpRequest) {
-        authService.signUp(signUpRequest);
+            @Parameter(description = "프로필 사진", in = ParameterIn.DEFAULT)
+            @RequestPart(value = "image") MultipartFile image,
+            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT)
+            @RequestPart SignUpRequest signUpRequest) {
+        String profileUrl = s3ImageService.upload(image);
+        authService.signUp(signUpRequest, profileUrl);
         User user = authService.login(signUpRequest);
         String token = authService.generateToken(user);
         return ResponseEntity.ok().body(new TokenResponse(token));

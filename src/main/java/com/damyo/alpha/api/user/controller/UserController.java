@@ -1,10 +1,13 @@
 package com.damyo.alpha.api.user.controller;
 
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
+import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.user.controller.dto.UserResponse;
 import com.damyo.alpha.api.user.service.UserService;
 import com.damyo.alpha.global.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,9 +15,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -25,6 +30,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final S3ImageService s3ImageService;
 
     @Operation(summary = "유저 정보 조회", description = "유저의 정보를 반환한다.")
     @ApiResponses(value = {
@@ -58,9 +64,12 @@ public class UserController {
             @ApiResponse(responseCode = "A103", description = "토큰이 만료됐을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "A104", description = "토큰이 유효하지 않을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PutMapping("/update/profile")
-    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "변경할 프로필 url") @RequestParam String profileUrl) {
-        userService.updateProfile(details, profileUrl);
+    @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateProfile(@Parameter(description = "변경할 프로필 사진", in = ParameterIn.DEFAULT) @RequestPart(value = "image") MultipartFile profile,
+                                           @AuthenticationPrincipal UserDetailsImpl details) {
+        String profileUrl = s3ImageService.upload(profile);
+        String prevUrl = userService.updateProfile(details, profileUrl);
+        s3ImageService.deleteImageFromS3(prevUrl);
         return ResponseEntity.ok().body("프로필 변경 완료");
     }
 
