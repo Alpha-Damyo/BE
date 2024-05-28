@@ -41,7 +41,6 @@ public class StarController {
     }
     // 사용자의 즐겨찾기 목록 조회
     @Operation(summary = "사용자 즐겨찾기 목록 조회", description = "현재 로그인된 사용자의 즐겨찾기들을 리스트로 반환한다")
-
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "즐겨찾기 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StarResponse.class)))),
             @ApiResponse(responseCode = "A103", description = "토큰이 만료됐을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -62,8 +61,8 @@ public class StarController {
             @ApiResponse(responseCode = "A103", description = "토큰이 만료됐을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "A104", description = "토큰이 유효하지 않을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteStar(@AuthenticationPrincipal UserDetailsImpl details, @RequestParam Long starId) {
+    @DeleteMapping("/delete/{starId}")
+    public ResponseEntity<?> deleteStar(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "삭제할 즐겨찾기의 id(pk)값") @PathVariable Long starId) {
         starService.deleteStar(starId, details.getId());
         return ResponseEntity.ok().body("즐겨찾기 제거 완료");
     }
