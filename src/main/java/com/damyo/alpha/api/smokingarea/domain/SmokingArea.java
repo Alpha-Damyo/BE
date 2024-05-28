@@ -2,9 +2,10 @@ package com.damyo.alpha.api.smokingarea.domain;
 
 import com.damyo.alpha.api.info.domain.Info;
 import com.damyo.alpha.api.picture.domain.Picture;
+import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaSummaryResponse;
 import com.damyo.alpha.api.smokingdata.domain.SmokingData;
 import com.damyo.alpha.api.star.domain.Star;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaResponse;
+import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaDetailResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -110,10 +111,14 @@ public class SmokingArea {
     @ToString.Exclude
     private List<Star> staredList = new ArrayList<>();
 
-    public SmokingAreaResponse toDTO(){
-        return new SmokingAreaResponse(id, name, latitude, longitude,
+    public SmokingAreaDetailResponse toDTO(){
+        return new SmokingAreaDetailResponse(id, name, latitude, longitude,
                 address, createdAt, status, description, score, opened,
                 closed, hygiene, dirty, airOut, noExist, indoor, outdoor,
                 big, small, crowded, quite, chair);
+    }
+
+    public SmokingAreaSummaryResponse toSUM(){
+        return new SmokingAreaSummaryResponse(id, name, latitude, longitude, address, description, score);
     }
 }

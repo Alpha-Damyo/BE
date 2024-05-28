@@ -24,7 +24,7 @@ public class SmokingDataService {
     public void addSmokingData(SmokingDataListRequest dataListRequest) {
         List<SmokingDataRequest> smokingDataRequests = dataListRequest.dataRequests();
         for(SmokingDataRequest dataRequest : smokingDataRequests) {
-            SmokingArea area = smokingAreaRepository.findSmokingAreaById(dataRequest.smokingAreaId());
+            SmokingArea area = smokingAreaRepository.findSmokingAreaById(dataRequest.smokingAreaId()).get();
             User user = userRepository.findUserByEmail(dataRequest.email()).get();
             smokingDataRepository.save(SmokingData.builder().user(user).createdAt(dataRequest.createdAt()).smokingArea(area).build());
         }

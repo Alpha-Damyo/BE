@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String> {
@@ -23,7 +24,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
 
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id = :id")
-    SmokingArea findSmokingAreaById(@Param("id") String id);
+    Optional<SmokingArea> findSmokingAreaById(@Param("id") String id);
 
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.createdAt >= :localDate")
@@ -34,7 +35,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.id LIKE %:areaName% " +
             "ORDER BY sa.createdAt DESC " +
             "LIMIT 1")
-    SmokingArea findSmokingAreaIdByAreaName(@Param("areaName") String areaName);
+    Optional<SmokingArea> findSmokingAreaIdByAreaName(@Param("areaName") String areaName);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.name = :name " +

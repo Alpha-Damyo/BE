@@ -1,6 +1,7 @@
 package com.damyo.alpha.api.star.domain;
 
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
+import com.damyo.alpha.api.star.controller.dto.AddStarRequest;
 import com.damyo.alpha.api.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,4 +40,8 @@ public class Star {
 
     @ManyToOne
     private User user;
+
+    public Star(AddStarRequest request, SmokingArea smokingArea, User user) {
+        this(null, request.customName(), request.groupName(), null, smokingArea, user);
+    }
 }

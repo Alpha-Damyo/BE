@@ -15,13 +15,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findUserByEmail(String email);
     Optional<User> findUserById(UUID id);
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.name = :name where u.email = :email")
-    void updateNameByEmail(String name, String email);
+    @Query("update User u set u.name = :name where u.id = :id")
+    void updateNameById(String name, UUID id);
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.profileUrl = :profileUrl where u.email = :email")
-    void updateProfileUrlByEmail(String profileUrl, String email);
+    @Query("update User u set u.profileUrl = :profileUrl where u.id = :id")
+    void updateProfileUrlById(String profileUrl, UUID id);
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.contribution = u.contribution + :increment where u.email = :email")
-    void updateContributionByEmail(int increment, String email);
+    @Query("update User u set u.contribution = u.contribution + :increment where u.id = :id")
+    void updateContributionById(int increment, UUID id);
     void deleteUserById(UUID id);
 }

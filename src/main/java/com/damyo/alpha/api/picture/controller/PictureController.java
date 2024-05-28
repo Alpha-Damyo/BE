@@ -4,6 +4,16 @@ import com.damyo.alpha.api.picture.controller.dto.UploadPictureRequest;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.picture.service.S3ImageService;
+import com.damyo.alpha.api.star.controller.dto.StarResponse;
+import com.damyo.alpha.global.exception.error.ErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,33 +33,67 @@ public class PictureController {
     private final S3ImageService s3ImageService;
 
     @GetMapping("/single/{id}")
-    public ResponseEntity<PictureResponse> getPicture(@PathVariable Long id) {
+    @Operation(summary="사진 정보 반환", description = "해당 ID의 사진 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<PictureResponse> getPicture(
+            @Parameter(description = "사진 ID", in = ParameterIn.PATH)
+            @PathVariable Long id) {
         PictureResponse picture = pictureService.getPicture(id);
         return ResponseEntity.ok().body(picture);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<PictureResponse>> getPicturesByUser(@PathVariable UUID id) {
+    @Operation(summary="사진 정보 반환", description = "해당 유저 ID의 사진 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<List<PictureResponse>> getPicturesByUser(
+            @Parameter(description = "유저 ID", in = ParameterIn.PATH)
+            @PathVariable UUID id) {
         List<PictureResponse> pictureList = pictureService.getPicturesByUser(id);
         return ResponseEntity.ok().body(pictureList);
     }
 
     @GetMapping("/sa/{id}")
-    public ResponseEntity<List<PictureResponse>> getPicturesBySmokingArea(@PathVariable String id) {
-        List<PictureResponse> pictureList = pictureService.getPicturesBySmokingArea(id);
+    @Operation(summary="사진 정보 반환", description = "해당 흡연구역 ID의 사진 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<List<PictureResponse>> getPicturesBySmokingArea(
+            @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
+            @PathVariable String id,
+            @Parameter(description = "반환할 사진 수", in = ParameterIn.DEFAULT)
+            @RequestParam Long count) {
+        List<PictureResponse> pictureList = pictureService.getPicturesBySmokingArea(id, count);
         return ResponseEntity.ok().body(pictureList);
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> Upload(@RequestPart(value = "dto") UploadPictureRequest dto, @RequestPart(value = "image") MultipartFile image){
+    @Operation(summary="사진 업로드", description = "사진을 업로드 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 업로드에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<?> Upload(
+            @Parameter(description = "업로드할 사진의 요청 사항", in = ParameterIn.DEFAULT)
+            @RequestPart(value = "dto") UploadPictureRequest dto,
+            @Parameter(description = "업로드할 사진", in = ParameterIn.DEFAULT)
+            @RequestPart(value = "image") MultipartFile image){
         String url = s3ImageService.upload(image);
-        pictureService.uploadPicture(dto, url);
+        pictureService.uploadPicture(dto.userId(), dto.smokingAreaId(), url);
 
         return ResponseEntity.ok(url);
     }
 
+    @Operation(summary="사진 삭제", description = "사진을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 삭제에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
     @GetMapping("/delete")
-    public ResponseEntity<?> s3delete(@RequestParam String addr){
+    public ResponseEntity<?> s3delete(
+            @Parameter(description = "삭제할 사진 주소", in = ParameterIn.DEFAULT)
+            @RequestParam String addr){
         s3ImageService.deleteImageFromS3(addr);
         return ResponseEntity.ok(null);
     }
