@@ -2,6 +2,7 @@ package com.damyo.alpha.api.auth.domain;
 
 import com.damyo.alpha.api.user.domain.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,6 +30,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public UUID getId() { return user.getId(); }
+    public String getName() { return user.getName(); }
+    public String getProfileUrl() { return user.getProfileUrl(); }
+    public int getContribution() { return user.getContribution(); }
 
     @Override
     public boolean isAccountNonExpired() {
