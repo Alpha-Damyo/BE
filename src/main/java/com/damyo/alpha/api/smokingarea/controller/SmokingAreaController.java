@@ -1,18 +1,19 @@
 package com.damyo.alpha.api.smokingarea.controller;
 
-import com.damyo.alpha.api.smokingarea.controller.dto.SearchLocateRequest;
-import com.damyo.alpha.api.smokingarea.controller.dto.SearchQueryRequest;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaListRequest;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaResponse;
-import com.damyo.alpha.api.smokingarea.controller.dto.SmokingAreaListResponse;
+import com.damyo.alpha.api.smokingarea.controller.dto.*;
+import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,28 +26,52 @@ public class SmokingAreaController {
 
     // 전체구역
     @GetMapping("/all")
+    @Operation(summary="모든 흡연구역 반환", description = "모든 흡연구역 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
-        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaAll();
+        List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaAll();
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
     // 제보된 흡연구역 추가 기능
     @PostMapping("/postArea")
-    public void postSmokingArea(@RequestBody SmokingAreaListRequest areaListRequest){
-        smokingAreaService.addSmokingArea(areaListRequest);
+    @Operation(summary="흡연구역 제보", description = "흡연구역 정보를 제보합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 제보에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaDetailResponse> postSmokingArea(
+            @Parameter(description = "흡얀구역 정보 요청사항", in = ParameterIn.DEFAULT)
+            @RequestBody SmokingAreaRequest areaListRequest){
+        SmokingArea area =  smokingAreaService.addSmokingArea(areaListRequest);
+        return ResponseEntity
+                .ok(area.toDTO());
     }
 
     // 아이디로 구역정보 불러오기
     @GetMapping("/{smokingAreaId}")
-    public ResponseEntity<SmokingAreaResponse> getSmokingAreaById(@PathVariable String smokingAreaId){
-        SmokingAreaResponse areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+    @Operation(summary="흡연구역 상세정보", description = "흡연구역 ID의 상세정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaDetailResponse> getSmokingAreaById(
+            @Parameter(description = "흡얀구역 ID", in = ParameterIn.PATH)
+            @PathVariable String smokingAreaId){
+        SmokingAreaDetailResponse areaResponse = smokingAreaService.findAreaById(smokingAreaId);
         return ResponseEntity.ok(areaResponse);
     }
 
     // 특정날짜이후 추가된 구역찾기
     @GetMapping("/dateSearch")
-    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(@RequestBody LocalDateTime createdAt){
-        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(createdAt);
+    @Operation(summary="흡연구역 날짜 검색", description = "특정 날짜 이후에 추가된 흡연구역 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(
+            @Parameter(description = "기준 날짜", in = ParameterIn.DEFAULT)
+            @RequestBody LocalDateTime createdAt){
+        List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(createdAt);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
@@ -59,22 +84,40 @@ public class SmokingAreaController {
 
     // 위도 경도에 따른 검색
     @GetMapping("/locateSearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(@RequestBody SearchLocateRequest coordinate){
-        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(coordinate);
+    @Operation(summary="흡연구역 좌표 검색", description = "특정 좌표 구역의 흡연구역 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(
+            @Parameter(description = "좌표 검색 요청사항", in = ParameterIn.DEFAULT)
+            @RequestBody SearchLocateRequest coordinate){
+        List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(coordinate);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
     // 주소구역에 따른 검색
     @GetMapping("/regionSearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(@RequestBody String region){
-        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
+    @Operation(summary="흡연구역 지역 검색", description = "특정 지역의 흡연구역 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(
+            @Parameter(description = "검색 지역", in = ParameterIn.DEFAULT)
+            @RequestBody String region){
+        List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 
     // 특정 퀴리에 따른 검색
     @GetMapping("/querySearch")
-    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(@RequestBody SearchQueryRequest query){
-        List<SmokingAreaResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
+    @Operation(summary="흡연구역 검색어 검색", description = "특정 검색어로 검색한 흡연구역 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(
+            @Parameter(description = "검색어 검색 요청사항", in = ParameterIn.DEFAULT)
+            @RequestBody SearchQueryRequest query){
+        List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
 

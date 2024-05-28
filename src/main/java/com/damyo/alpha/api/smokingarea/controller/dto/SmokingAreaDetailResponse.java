@@ -2,9 +2,8 @@ package com.damyo.alpha.api.smokingarea.controller.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public record SmokingAreaResponse(
+public record SmokingAreaDetailResponse(
         String areaId,
         String name,
         BigDecimal latitude,

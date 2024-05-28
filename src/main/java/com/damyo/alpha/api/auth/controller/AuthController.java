@@ -7,6 +7,8 @@ import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
 import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +34,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공하였습니다.", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "1001", description = "이미 가입된 계정이 존재합니다.", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<TokenResponse> signUp(
+            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest);
         User user = authService.login(signUpRequest);
         String token = authService.generateToken(user);
@@ -46,7 +50,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공하였습니다.", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "1002", description = "해당 이메일이 존재하지 않습니다.", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<TokenResponse> login(
+            @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @RequestBody LoginRequest loginRequest) {
         User user = authService.login(loginRequest);
         String token = authService.generateToken(user);
         return ResponseEntity.ok().body(new TokenResponse(token));
