@@ -13,5 +13,4 @@ public interface PictureRepository extends JpaRepository<Picture, Long>, Picture
     void deletePictureById(Long id);
 
     List<Picture> findPicturesByUser_id(UUID id);
-    List<Picture> findPicturesBySmokingArea_Id(String id);
 }

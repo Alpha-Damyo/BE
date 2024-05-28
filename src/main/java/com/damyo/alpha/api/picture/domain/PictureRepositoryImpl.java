@@ -54,6 +54,19 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
 
     }
 
+    @Override
+    public List<Picture> findPicturesBySmokingArea_Id(String areaId, Long count) {
+        List<Picture> pictureList = jpaQueryFactory
+                .selectFrom(picture)
+                .innerJoin(picture.smokingArea, smokingArea)
+                .where(areaEq(areaId))
+                .orderBy(picture.createdAt.asc())
+                .limit(count)
+                .fetch();
+
+        return pictureList;
+    }
+
     private BooleanExpression cursorId(Long cursorId) {
         return cursorId == null ? null : picture.id.gt(cursorId);
     }
@@ -61,6 +74,13 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
     private BooleanExpression regionEq(String region) {
         if(StringUtils.hasText(region)){
             return picture.smokingArea.id.like(region);
+        }
+        return null;
+    }
+
+    private BooleanExpression areaEq(String areaId) {
+        if(StringUtils.hasText(areaId)){
+            return picture.smokingArea.id.eq(areaId);
         }
         return null;
     }

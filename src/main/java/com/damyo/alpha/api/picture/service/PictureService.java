@@ -37,8 +37,8 @@ public class PictureService {
         return getPictureListResponse(pictures);
     }
 
-    public List<PictureResponse> getPicturesBySmokingArea(String id) {
-        List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(id);
+    public List<PictureResponse> getPicturesBySmokingArea(String id, Long count) {
+        List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(id, count);
         return getPictureListResponse(pictures);
     }
 
