@@ -29,6 +29,7 @@ public class StarService {
     private final SmokingAreaRepository smokingAreaRepository;
 
     public void addStar(AddStarRequest request, UserDetailsImpl details) {
+        // 예외 처리 해야함
         SmokingArea smokingArea = smokingAreaRepository.findSmokingAreaById(request.saId());
         User user = details.getUser();
         Star saved = starRepository.save(new Star(request, smokingArea, user));

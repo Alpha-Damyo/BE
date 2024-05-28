@@ -6,8 +6,10 @@ import com.damyo.alpha.api.auth.controller.dto.LoginRequest;
 import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
 import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.auth.service.AuthService;
+import com.damyo.alpha.global.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,8 +31,8 @@ public class AuthController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "토큰을 반환한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입에 성공하였습니다.", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "1001", description = "이미 가입된 계정이 존재합니다.", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "A101", description = "이미 가입된 계정이 존재할 때(email 중복)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest);
@@ -43,8 +45,8 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "토큰을 반환한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입에 성공하였습니다.", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "1002", description = "해당 이메일이 존재하지 않습니다.", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "A102", description = "해당 이메일이 DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         User user = authService.login(loginRequest);
