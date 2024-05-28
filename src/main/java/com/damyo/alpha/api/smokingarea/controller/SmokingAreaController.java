@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.smokingarea.controller;
 
+import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ import java.util.List;
 @Tag(name = "SmokingAreaController")
 public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
+    private final PictureService pictureService;
 
     // 전체구역
     @GetMapping("/all")
@@ -43,8 +46,11 @@ public class SmokingAreaController {
     })
     public ResponseEntity<SmokingAreaDetailResponse> postSmokingArea(
             @Parameter(description = "흡얀구역 정보 요청사항", in = ParameterIn.DEFAULT)
-            @RequestBody SmokingAreaRequest areaListRequest){
-        SmokingArea area =  smokingAreaService.addSmokingArea(areaListRequest);
+            @RequestBody SmokingAreaRequest areaRequest){
+        SmokingArea area =  smokingAreaService.addSmokingArea(areaRequest);
+
+        UUID temp = UUID.randomUUID();
+        pictureService.uploadPicture(temp, area.getId(),areaRequest.url());
         return ResponseEntity
                 .ok(area.toDTO());
     }

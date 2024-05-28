@@ -56,9 +56,9 @@ public class PictureService {
         return pictureList;
     }
 
-    public void uploadPicture(UploadPictureRequest uploadPictureRequest, String url) {
-        User user = userRepository.findUserById(uploadPictureRequest.userId()).get();
-        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(uploadPictureRequest.smokingAreaId());
+    public void uploadPicture(UUID userId, String areaId, String url) {
+        User user = userRepository.findUserById(userId).get();
+        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(areaId).get();
         pictureRepository.save(
                 Picture.builder().
                         pictureUrl(url).

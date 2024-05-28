@@ -81,7 +81,7 @@ public class PictureController {
             @Parameter(description = "업로드할 사진", in = ParameterIn.DEFAULT)
             @RequestPart(value = "image") MultipartFile image){
         String url = s3ImageService.upload(image);
-        pictureService.uploadPicture(dto, url);
+        pictureService.uploadPicture(dto.userId(), dto.smokingAreaId(), url);
 
         return ResponseEntity.ok(url);
     }

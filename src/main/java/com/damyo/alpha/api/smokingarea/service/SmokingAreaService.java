@@ -5,6 +5,8 @@ import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.info.service.InfoService;
+import com.damyo.alpha.api.smokingarea.exception.AreaErrorCode;
+import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,8 @@ public class SmokingAreaService {
     }
 
     public SmokingAreaDetailResponse findAreaById(String smokingAreaId) {
-        SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId);
+        SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
+                .orElseThrow(() -> new AreaException(AreaErrorCode.NOT_FOUND_ID));
         return area.toDTO();
     }
 
@@ -76,7 +79,7 @@ public class SmokingAreaService {
     private String makeAreaIdByAddress(String address){
         String[] adr = address.split(" ");
         String areaName = adr[0].substring(0, 2) + "-" + adr[1].substring(0, 2);
-        SmokingArea lastArea = smokingAreaRepository.findSmokingAreaIdByAreaName(areaName);
+        SmokingArea lastArea = smokingAreaRepository.findSmokingAreaIdByAreaName(areaName).get();
 
         if(lastArea.getId() == null){
             return areaName + "-0001";

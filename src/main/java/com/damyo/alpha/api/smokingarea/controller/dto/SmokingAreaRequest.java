@@ -13,6 +13,7 @@ public record SmokingAreaRequest(
         Boolean opened,
         Boolean closed,
         Boolean indoor,
-        Boolean outdoor
+        Boolean outdoor,
+        String url
 ) {
 }
