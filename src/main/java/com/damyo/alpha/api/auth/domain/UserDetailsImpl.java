@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @AllArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private User user;
@@ -31,8 +32,6 @@ public class UserDetailsImpl implements UserDetails {
 
     public UUID getId() { return user.getId(); }
     public String getName() { return user.getName(); }
-    public String getProfileUrl() { return user.getProfileUrl(); }
-    public int getContribution() { return user.getContribution(); }
 
     @Override
     public boolean isAccountNonExpired() {

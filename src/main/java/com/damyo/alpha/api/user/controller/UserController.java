@@ -43,7 +43,7 @@ public class UserController {
             @ApiResponse(responseCode = "U102", description = "기존 이름과 변경하려는 이름이 동일한 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/update/name")
-    public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetailsImpl details, @RequestParam String name) {
+    public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "변경할 이름") @RequestParam String name) {
         userService.updateName(details, name);
         return ResponseEntity.ok().body("이름 변경 완료");
     }
@@ -53,7 +53,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "프로필 변경에 성공", content = @Content(schema = @Schema(implementation = String.class))),
     })
     @PutMapping("/update/profile")
-    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal UserDetailsImpl details, @RequestParam String profileUrl) {
+    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "변경할 프로필 url") @RequestParam String profileUrl) {
         userService.updateProfile(details, profileUrl);
         return ResponseEntity.ok().body("프로필 변경 완료");
     }
@@ -63,7 +63,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "기여도 변경에 성공", content = @Content(schema = @Schema(implementation = String.class))),
     })
     @PutMapping("/update/score")
-    public ResponseEntity<?> updateScore(@AuthenticationPrincipal UserDetailsImpl details, @RequestParam int increment) {
+    public ResponseEntity<?> updateScore(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "기여도 증가량") @RequestParam int increment) {
         userService.updateContribution(details.getId(), increment);
         return ResponseEntity.ok().body("기여도 변경 완료");
     }
