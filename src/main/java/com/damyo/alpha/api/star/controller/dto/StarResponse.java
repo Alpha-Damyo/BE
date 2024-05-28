@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StarResponse(
         @Schema(description = "DB에 저장된 즐겨찾기의 id(pk)값", example = "1")
         Long id,
-        @Schema(description = "해당 즐겨찾기의 흡연구역 id(pk)값", example = "")
+        @Schema(description = "해당 즐겨찾기의 흡연구역 id(pk)값", example = "서울-성북-0001")
         String saId,
         @Schema(description = "사용자가 직접 입력한 즐겨찾기의 이름", example = "내집 앞")
         String customName,
