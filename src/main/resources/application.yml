@@ -11,7 +11,6 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 0B
-      location: /users/charming/temp
       max-file-size: 100MB
       max-request-size: 100MB
 

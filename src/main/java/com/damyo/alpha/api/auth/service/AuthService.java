@@ -22,11 +22,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    public void signUp(SignUpRequest signUpRequest) {
+    public void signUp(SignUpRequest signUpRequest, String profileUrl) {
         if (userRepository.findUserByEmail(signUpRequest.email()).isPresent()) {
             throw new AuthException(EMAIL_ALREADY_EXIST);
         }
-        userRepository.save(new User(signUpRequest));
+        userRepository.save(new User(signUpRequest, profileUrl));
     }
 
     public User login(LoginRequest loginRequest) {

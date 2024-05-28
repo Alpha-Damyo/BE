@@ -10,8 +10,6 @@ public record SignUpRequest (
         @Email String email,
         @Schema(description = "사용자의 이름, 실명은 아니고 서비스에서 사용할 이름", example = "홍길동")
         @NotBlank String name,
-        @Schema(description = "프로필 url", example = "profile-url")
-        String profileUrl,
         @Schema(description = "사용자의 성별", example = "남자")
         String gender,
         @Schema(description = "사용자의 나이", example = "33")
