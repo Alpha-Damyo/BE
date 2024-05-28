@@ -34,5 +34,6 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+    persist-authorization: true
   paths-to-match:
     - /api/**
