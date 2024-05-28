@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum AreaErrorCode implements ErrorCode {
 
-    NOT_FOUND_ID(HttpStatus.NOT_FOUND, 1001, "요청하신 ID의 흡연구역을 찾을 수 없습니다.");
+    NOT_FOUND_ID(HttpStatus.NOT_FOUND, "SA101", "요청하신 ID의 흡연구역을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
-    private final Integer exceptionCode;
+    private final String exceptionCode;
     private final String message;
 }

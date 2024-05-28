@@ -12,11 +12,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
-    USER_NOT_FOUND(NOT_FOUND, 401, "해당 유저를 찾을 수 없습니다."),
-    INVALID_NAME(BAD_REQUEST, 402, "변경하려는 이름이 기존과 동일합니다.")
+    USER_NOT_FOUND(NOT_FOUND, "U101", "해당 유저를 찾을 수 없습니다."),
+    INVALID_NAME(BAD_REQUEST, "U102", "변경하려는 이름이 기존과 동일합니다.")
     ;
 
     private final HttpStatus httpStatus;
-    private final Integer exceptionCode;
+    private final String exceptionCode;
     private final String message;
 }
