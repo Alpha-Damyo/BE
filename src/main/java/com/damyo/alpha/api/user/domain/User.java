@@ -39,11 +39,11 @@ public class User {
     @Column(name = "profile_url")
     private String profileUrl;
     @Column(name = "contribution")
-    private Integer contribution;
+    private int contribution;
     @Column(name = "gender")
     private String gender;
     @Column(name = "age")
-    private Integer age;
+    private int age;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Picture> pictures = new ArrayList<>();

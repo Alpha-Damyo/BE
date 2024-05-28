@@ -1,6 +1,8 @@
 package com.damyo.alpha.api.picture.service;
 
 import com.damyo.alpha.api.picture.domain.Picture;
+import com.damyo.alpha.api.picture.exception.PictureErrorCode;
+import com.damyo.alpha.api.picture.exception.PictureException;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.picture.controller.dto.UploadPictureRequest;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.damyo.alpha.api.picture.exception.PictureErrorCode.PICTURE_NOT_FOUND;
+
 @RequiredArgsConstructor
 @Service
 public class PictureService {
@@ -25,7 +29,9 @@ public class PictureService {
     private final SmokingAreaRepository smokingAreaRepository;
 
     public PictureResponse getPicture(Long id) {
-        Picture picture = pictureRepository.findPictureById(id).orElseThrow(null);
+        Picture picture = pictureRepository.findPictureById(id).orElseThrow(
+                () -> new PictureException(PICTURE_NOT_FOUND)
+        );
         return new PictureResponse(picture);
     }
 
