@@ -5,7 +5,7 @@ import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
-import com.damyo.alpha.api.user.domain.User;
+import com.damyo.alpha.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,15 +27,18 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/area")
 @Tag(name = "SmokingAreaController")
 public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
     private final PictureService pictureService;
+    private final UserService userService;
 
     @Value("${guest.uuid}")
     private String guestUUID;
+    private static final int POST_SA_CONTRIBUTION_INCREMENT = 20;
 
     // 전체구역
     @GetMapping("/all")
@@ -61,7 +65,8 @@ public class SmokingAreaController {
 
         if(areaRequest.url() != null) {
             if(userDetails != null) {
-                pictureService.uploadPicture(userDetails.getUser().getId(), area.getId(), areaRequest.url());
+                pictureService.uploadPicture(userDetails.getId(), area.getId(), areaRequest.url());
+                userService.updateContribution(userDetails.getId(), POST_SA_CONTRIBUTION_INCREMENT);
             }
             else{
                 pictureService.uploadPicture(UUID.fromString(guestUUID), area.getId(), areaRequest.url());
