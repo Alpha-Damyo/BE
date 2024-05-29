@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.user.domain;
 
+import com.damyo.alpha.api.info.domain.Info;
 import com.damyo.alpha.api.picture.domain.Picture;
 import com.damyo.alpha.api.smokingdata.domain.SmokingData;
 import com.damyo.alpha.api.star.domain.Star;
@@ -54,8 +55,11 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Star> starList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Info> infoList = new ArrayList<>();
+
     public User(SignUpRequest signUpDto, String profileUrl) {
-        this(null, signUpDto.name(), signUpDto.email(), null, profileUrl,
-                0, signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        this(null, signUpDto.name(), signUpDto.email(), null, profileUrl, 0, signUpDto.gender(), signUpDto.age(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 }
