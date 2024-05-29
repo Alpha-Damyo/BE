@@ -1,7 +1,7 @@
 package com.damyo.alpha.global.exception.error;
 
 public record ErrorResponse(
-        Integer code,
+        String code,
         String message
 ) {
 }

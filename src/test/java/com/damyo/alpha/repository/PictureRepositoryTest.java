@@ -109,8 +109,8 @@ public class PictureRepositoryTest {
     @Test
     @DisplayName("흡연구역 사진 목록 조회O")
     void findPicturesBySmokingArea_Id() {
-        SmokingArea area2 = smokingAreaRepository.findSmokingAreaById("area3");
-        List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(area2.getId());
+        SmokingArea area2 = smokingAreaRepository.findSmokingAreaById("area3").get();
+        List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(area2.getId(), 1L);
         int idx = 11;
         for (Picture picture : pictures) {
             Assertions.assertThat(picture.getPictureUrl()).isEqualTo("url" + idx);

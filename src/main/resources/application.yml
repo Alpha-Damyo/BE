@@ -11,12 +11,14 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 0B
-      location: /users/charming/temp
       max-file-size: 100MB
       max-request-size: 100MB
 
 jwt:
   secret: ${JWT_SECRET}
+
+guest:
+  uuid: ${GUEST_UUID}
 
 cloud:
   aws:
@@ -30,10 +32,13 @@ cloud:
       auto: false
     stack:
       auto: false
+    cloudfront:
+      dmain: ${CLOUDFRONT_DOMAIN}
 
 springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+    persist-authorization: true
   paths-to-match:
     - /api/**

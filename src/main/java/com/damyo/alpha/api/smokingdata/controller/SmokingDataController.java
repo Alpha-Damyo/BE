@@ -4,6 +4,12 @@ import com.damyo.alpha.api.smokingdata.controller.dto.SmokingDataListRequest;
 import com.damyo.alpha.api.smokingdata.controller.dto.StatisticsDateResponse;
 import com.damyo.alpha.api.smokingdata.controller.dto.StatisticsRegionResponse;
 import com.damyo.alpha.api.smokingdata.service.SmokingDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +25,22 @@ public class SmokingDataController {
 
     // 데이터 추가 기능
     @PostMapping("/postData")
-    public void postSmokingData(@RequestBody SmokingDataListRequest dataListRequest){
+    @Operation(summary="흡연데이터 추가", description = "흡연데이터를 추가합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연데이터 추가에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public void postSmokingData(
+            @Parameter(description = "흡연데이터 요청사항", in = ParameterIn.DEFAULT)
+            @RequestBody SmokingDataListRequest dataListRequest){
         smokingDataService.addSmokingData(dataListRequest);
     }
 
     // 데이터 구역별 통계 반환
     @GetMapping("/regionStatics")
+    @Operation(summary="주소 관련 통계", description = "주소 관련 통계를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연 통계 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
     public ResponseEntity<StatisticsRegionResponse> getSmokingDataStaticsByArea(){
         StatisticsRegionResponse regionResponse = smokingDataService.getStatisticsByRegion();
         return ResponseEntity.ok(regionResponse);
@@ -32,6 +48,10 @@ public class SmokingDataController {
 
     // 데이터 시간별 통계 반환
     @GetMapping("/dateStatics")
+    @Operation(summary="시간 관련 통계", description = "시간 관련 통계를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연 통계 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
     public ResponseEntity<StatisticsDateResponse> getSmokingDateStaticsByDate(){
         StatisticsDateResponse dateResponse = smokingDataService.getStatisticsByDate();
         return ResponseEntity.ok(dateResponse);

@@ -13,11 +13,11 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RequiredArgsConstructor
 public enum StarErrorCode implements ErrorCode {
 
-    STAR_NOT_FOUND(NOT_FOUND, 501, "해당 즐겨찾기를 찾을 수 없습니다."),
-    UNAUTHORIZED_ACTION(UNAUTHORIZED, 502, "즐겨찾기와 로그인의 정보가 맞지 않습니다.")
+    STAR_NOT_FOUND(NOT_FOUND, "S101", "해당 즐겨찾기를 찾을 수 없습니다."),
+    UNAUTHORIZED_ACTION(UNAUTHORIZED, "S102", "즐겨찾기와 로그인의 정보가 맞지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;
-    private final Integer exceptionCode;
+    private final String exceptionCode;
     private final String message;
 }

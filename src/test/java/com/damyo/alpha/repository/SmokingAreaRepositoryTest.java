@@ -47,7 +47,7 @@ public class SmokingAreaRepositoryTest {
     @DisplayName("updateSmokingAreaNameById")
     void updateAreaNameById(){
         smokingAreaRepository.updateSmokingAreaNameById("국민대 미래관", "1");
-        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1").get();
         Assertions.assertThat(area.getName()).isEqualTo("국민대 미래관");
     }
 
@@ -55,7 +55,7 @@ public class SmokingAreaRepositoryTest {
     @DisplayName("updateSmokingAreaStatusById")
     void updateAreaStatusById(){
         smokingAreaRepository.updateSmokingAreaStatusById("1");
-        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1").get();
         Assertions.assertThat(area.isStatus()).isEqualTo(false);
     }
 
@@ -63,7 +63,7 @@ public class SmokingAreaRepositoryTest {
     @DisplayName("updateSmokingAreaAddressById")
     void updateSmokingAreaAddressById(){
         smokingAreaRepository.updateSmokingAreaAddressById("서울특별시 성북구 정릉로 77","1");
-        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1").get();
         Assertions.assertThat(area.getAddress()).isEqualTo("서울특별시 성북구 정릉로 77");
     }
 
@@ -71,7 +71,7 @@ public class SmokingAreaRepositoryTest {
     @DisplayName("updateSmokingAreaDescriptionById")
     void updateSmokingAreaDescriptionById(){
         smokingAreaRepository.updateSmokingAreaDescriptionById("미래관 3층","1");
-        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1");
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById("1").get();
         Assertions.assertThat(area.getDescription()).isEqualTo("미래관 3층");
     }
 
