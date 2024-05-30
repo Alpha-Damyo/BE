@@ -34,10 +34,10 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
-    public SmokingAreaDetailResponse findAreaById(String smokingAreaId) {
+    public SmokingArea findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
                 .orElseThrow(() -> new AreaException(AreaErrorCode.NOT_FOUND_ID));
-        return area.toDTO();
+        return area;
     }
 
     public List<SmokingAreaSummaryResponse> findAreaByCreatedAt(LocalDateTime createdAt) {

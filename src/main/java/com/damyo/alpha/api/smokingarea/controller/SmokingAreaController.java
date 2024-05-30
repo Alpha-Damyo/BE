@@ -73,16 +73,28 @@ public class SmokingAreaController {
     }
 
     // 아이디로 구역정보 불러오기
-    @GetMapping("/{smokingAreaId}")
+    @GetMapping("/details/{smokingAreaId}")
     @Operation(summary="흡연구역 상세정보", description = "흡연구역 ID의 상세정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<SmokingAreaDetailResponse> getSmokingAreaById(
-            @Parameter(description = "흡얀구역 ID", in = ParameterIn.PATH)
+    public ResponseEntity<SmokingAreaDetailResponse> getSmokingAreaDetailsById(
+            @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
-        SmokingAreaDetailResponse areaResponse = smokingAreaService.findAreaById(smokingAreaId);
-        return ResponseEntity.ok(areaResponse);
+        SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+        return ResponseEntity.ok(areaResponse.toDTO());
+    }
+
+    @GetMapping("/summary/{smokingAreaId}")
+    @Operation(summary="흡연구역 요약정보", description = "흡연구역 ID의 요약정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<SmokingAreaSummaryResponse> getSmokingAreaSummaryById(
+            @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
+            @PathVariable String smokingAreaId){
+        SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+        return ResponseEntity.ok(areaResponse.toSUM());
     }
 
     // 특정날짜이후 추가된 구역찾기
