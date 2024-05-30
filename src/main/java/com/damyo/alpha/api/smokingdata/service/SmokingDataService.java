@@ -38,15 +38,15 @@ public class SmokingDataService {
 
     //TODO 전체 지역 통계 기능
     private AllRegionStatisticsResponse getAllRegion(List<Object[]> list) {
-        Map<String, Integer> allRegion = new HashMap<>();
+        Map<String, Long> allRegion = new HashMap<>();
 
         for(Object[] area : list){
             String name = ((String) area[0]).substring(0, 5);
-            Integer count = (Integer) area[1];
+            Long count = (Long) area[1];
             allRegion.compute(name, (k, v) -> (v == null) ? count : v + count);
         }
 
-        List<Map.Entry<String, Integer>> allRegionList = new ArrayList<>(allRegion.entrySet());
+        List<Map.Entry<String, Long>> allRegionList = new ArrayList<>(allRegion.entrySet());
 
         Collections.sort(allRegionList, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
@@ -65,7 +65,7 @@ public class SmokingDataService {
     }
 
     private HourlyStatisticsResponse getHourlyStatistics(List<SmokingData> dataList, Integer peopleSum) {
-        Double[] time = new Double[9];
+        double[] time = new double[9];
 
         for(SmokingData data : dataList){
             int h = data.getCreatedAt().getHour();
@@ -87,7 +87,7 @@ public class SmokingDataService {
     }
 
     private DailyStatisticsResponse getDailyStatistics(List<SmokingData> dataList, Integer peopleSum) {
-        Double[] days = new Double[32];
+        double[] days = new double[32];
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
@@ -102,7 +102,7 @@ public class SmokingDataService {
     }
 
     private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList, Integer peopleSum) {
-        Double[] weeks = new Double[5];
+        double[] weeks = new double[5];
 
         for(SmokingData data : dataList) {
             int d = data.getCreatedAt().getDayOfMonth();
@@ -121,7 +121,7 @@ public class SmokingDataService {
     }
 
     private MonthlyStatisticsResponse getMonthlyStatistics(List<SmokingData> dataList, Integer peopleSum) {
-        Double[] month = new Double[13];
+        double[] month = new double[13];
 
         for(SmokingData data : dataList) {
             int m = data.getCreatedAt().getMonthValue();
@@ -136,7 +136,7 @@ public class SmokingDataService {
     }
 
     private DayOfWeekStatisticsResponse getDayWeekStatistics(List<SmokingData> dataList, Integer peopleSum) {
-        Double[] dayWeek = new Double[8];
+        double[] dayWeek = new double[8];
 
         for(SmokingData data : dataList){
             int d = data.getCreatedAt().getDayOfWeek().getValue();
