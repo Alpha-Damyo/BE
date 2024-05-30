@@ -21,13 +21,10 @@ public class SmokingDataService {
     private final SmokingAreaRepository smokingAreaRepository;
     private final UserRepository userRepository;
 
-    public void addSmokingData(SmokingDataListRequest dataListRequest) {
-        List<SmokingDataRequest> smokingDataRequests = dataListRequest.dataRequests();
-        for(SmokingDataRequest dataRequest : smokingDataRequests) {
-            SmokingArea area = smokingAreaRepository.findSmokingAreaById(dataRequest.smokingAreaId()).get();
-            User user = userRepository.findUserByEmail(dataRequest.email()).get();
-            smokingDataRepository.save(SmokingData.builder().user(user).createdAt(dataRequest.createdAt()).smokingArea(area).build());
-        }
+    public void addSmokingData(UUID userId, String areaId) {
+        SmokingArea area = smokingAreaRepository.findSmokingAreaById(areaId).get();
+        User user = userRepository.findUserById(userId).get();
+        smokingDataRepository.save(SmokingData.builder().user(user).createdAt(LocalDateTime.now()).smokingArea(area).build());
     }
 
     //TODO 지역활용 통계
