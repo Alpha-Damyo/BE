@@ -34,10 +34,10 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
-    public SmokingAreaDetailResponse findAreaById(String smokingAreaId) {
+    public SmokingArea findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
                 .orElseThrow(() -> new AreaException(AreaErrorCode.NOT_FOUND_ID));
-        return area.toDTO();
+        return area;
     }
 
     public List<SmokingAreaSummaryResponse> findAreaByCreatedAt(LocalDateTime createdAt) {
@@ -79,16 +79,16 @@ public class SmokingAreaService {
     private String makeAreaIdByAddress(String address){
         String[] adr = address.split(" ");
         String areaName = adr[0].substring(0, 2) + "-" + adr[1].substring(0, 2);
-        SmokingArea lastArea = smokingAreaRepository.findSmokingAreaIdByAreaName(areaName).get();
+        StringBuffer tmp = new StringBuffer();
+        tmp.append(areaName);
 
-        if(lastArea.getId() == null){
-            return areaName + "-0001";
-        }
+        smokingAreaRepository.findSmokingAreaIdByAreaName(areaName)
+                .ifPresentOrElse(
+                        v ->  tmp.append(String.format("-%04d", Integer.parseInt(v.getId().substring(6, 10)) + 1)),
+                        () -> tmp.append("-0001")
+                );
 
-        Integer number = Integer.parseInt(lastArea.getId().substring(6, 10)) + 1;
-        String areaNumber = String.format("%04d", number);
-
-        return areaName + "-" + areaNumber;
+        return tmp.toString();
     }
 
     public List<SmokingAreaSummaryResponse> findAreaByCoordinate(SearchLocateRequest request) {
@@ -101,7 +101,8 @@ public class SmokingAreaService {
 
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude,
                 minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
-                request.indoor(), request.outdoor(), request.hygiene(), request.chair());
+                request.indoor(), request.outdoor(), request.hygiene(), request.dirty(), request.airOut(), request.noExist(),
+                request.big(), request.small(), request.crowded(), request.quite(), request.chair());
 
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
@@ -125,17 +126,19 @@ public class SmokingAreaService {
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(
                 query.word(),
                 query.status(),
+                query.airOut(),
                 query.opened(),
                 query.closed(),
                 query.hygiene(),
-                query.airOut(),
+                query.dirty(),
                 query.indoor(),
                 query.outdoor(),
                 query.big(),
                 query.small(),
                 query.crowded(),
                 query.quite(),
-                query.chair());
+                query.chair(),
+                query.noExist());
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){

@@ -32,6 +32,7 @@ public class UserDetailsImpl implements UserDetails {
 
     public UUID getId() { return user.getId(); }
     public String getName() { return user.getName(); }
+    public String getProfileUrl() { return user.getProfileUrl(); }
 
     @Override
     public boolean isAccountNonExpired() {

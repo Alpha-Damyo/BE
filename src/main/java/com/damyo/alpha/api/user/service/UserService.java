@@ -39,8 +39,10 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProfile(UserDetailsImpl details, String profileUrl) {
+    public String updateProfile(UserDetailsImpl details, String profileUrl) {
+        String prevUrl = details.getProfileUrl();
         userRepository.updateProfileUrlById(profileUrl, details.getId());
+        return prevUrl;
     }
 
     @Transactional
