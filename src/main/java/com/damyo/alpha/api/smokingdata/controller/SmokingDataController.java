@@ -1,6 +1,6 @@
 package com.damyo.alpha.api.smokingdata.controller;
 
-import com.damyo.alpha.api.smokingdata.controller.dto.SmokingDataListRequest;
+import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.smokingdata.controller.dto.StatisticsDateResponse;
 import com.damyo.alpha.api.smokingdata.controller.dto.StatisticsRegionResponse;
 import com.damyo.alpha.api.smokingdata.service.SmokingDataService;
@@ -13,8 +13,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +32,11 @@ public class SmokingDataController {
             @ApiResponse(responseCode = "200", description = "흡연데이터 추가에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public void postSmokingData(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "흡연데이터 요청사항", in = ParameterIn.DEFAULT)
-            @RequestBody SmokingDataListRequest dataListRequest){
-        smokingDataService.addSmokingData(dataListRequest);
+            @RequestParam String areaId){
+        UUID userId = userDetails.getId();
+        smokingDataService.addSmokingData(userId, areaId);
     }
 
     // 데이터 구역별 통계 반환
