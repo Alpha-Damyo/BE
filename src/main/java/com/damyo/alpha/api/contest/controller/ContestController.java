@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.contest.controller;
 
+import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,10 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RequestMapping("/api/contest")
 @RequiredArgsConstructor
@@ -40,4 +41,33 @@ public class ContestController {
                 .ok(contestResponse);
     }
 
+    @PutMapping("/like")
+    @Operation()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<?> likeContestPicture(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam Long pictureId) {
+        UUID userId = userDetails.getId();
+
+        contestService.likeContestPicture(userId, pictureId);
+        pictureService.increaseLikeCount(pictureId);
+
+        return ResponseEntity
+                .ok(200);
+    }
+
+    @PutMapping("/unlike")
+    @Operation()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<?> unlikeContestPicture(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam Long pictureId) {
+        UUID userId = userDetails.getId();
+
+        contestService.unlikeContestPicture(userId, pictureId);
+        pictureService.decreaseLikeCount(pictureId);
+
+        return ResponseEntity
+                .ok(200);
+    }
 }
