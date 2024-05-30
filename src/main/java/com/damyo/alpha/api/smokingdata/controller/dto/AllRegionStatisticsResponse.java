@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 public record AllRegionStatisticsResponse(
-    List<Map.Entry<String, Integer>> allRegion
+    List<Map.Entry<String, Long>> allRegion
 ) {
 }
