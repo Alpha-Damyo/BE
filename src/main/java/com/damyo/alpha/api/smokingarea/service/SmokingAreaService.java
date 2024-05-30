@@ -101,7 +101,8 @@ public class SmokingAreaService {
 
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude,
                 minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
-                request.indoor(), request.outdoor(), request.hygiene(), request.chair());
+                request.indoor(), request.outdoor(), request.hygiene(), request.dirty(), request.airOut(), request.noExist(),
+                request.big(), request.small(), request.crowded(), request.quite(), request.chair());
 
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
@@ -125,17 +126,19 @@ public class SmokingAreaService {
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(
                 query.word(),
                 query.status(),
+                query.airOut(),
                 query.opened(),
                 query.closed(),
                 query.hygiene(),
-                query.airOut(),
+                query.dirty(),
                 query.indoor(),
                 query.outdoor(),
                 query.big(),
                 query.small(),
                 query.crowded(),
                 query.quite(),
-                query.chair());
+                query.chair(),
+                query.noExist());
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){

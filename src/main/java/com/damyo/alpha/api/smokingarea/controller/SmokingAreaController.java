@@ -93,12 +93,12 @@ public class SmokingAreaController {
     })
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(
             @Parameter(description = "기준 날짜", in = ParameterIn.DEFAULT)
-            @RequestBody LocalDate createdAt){
+            @RequestParam LocalDate createdAt){
         List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(LocalDateTime.of(createdAt, LocalTime.MIN));
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
 
-    // 검색어로 구역찾기
+//    검색어로 구역찾기
 //    @GetMapping("/area/nameSearch")
 //    public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByName(@RequestBody String name){
 //        List<SmokingAreaResponse> areaResponses = smokingAreaService.findAreaByName(name);
