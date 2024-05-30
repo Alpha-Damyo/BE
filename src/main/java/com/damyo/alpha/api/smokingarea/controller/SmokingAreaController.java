@@ -118,7 +118,7 @@ public class SmokingAreaController {
 //    }
 
     // 위도 경도에 따른 검색
-    @GetMapping("/locateSearch")
+    @PostMapping("/locateSearch")
     @Operation(summary="흡연구역 좌표 검색", description = "특정 좌표 구역의 흡연구역 정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
@@ -144,7 +144,7 @@ public class SmokingAreaController {
     }
 
     // 특정 퀴리에 따른 검색
-    @GetMapping("/querySearch")
+    @PostMapping("/querySearch")
     @Operation(summary="흡연구역 검색어 검색", description = "특정 검색어로 검색한 흡연구역 정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
