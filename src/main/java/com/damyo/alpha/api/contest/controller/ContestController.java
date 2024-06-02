@@ -45,9 +45,4 @@ public class ContestController {
                 .ok(contestResponse);
     }
 
-    @GetMapping("/finish")
-    public void calculateContribution() throws Exception {
-        jobLauncher.run(job, new JobParameters());
-    }
-
 }
