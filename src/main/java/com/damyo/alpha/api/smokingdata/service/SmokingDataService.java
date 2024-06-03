@@ -27,13 +27,11 @@ public class SmokingDataService {
         smokingDataRepository.save(SmokingData.builder().user(user).createdAt(LocalDateTime.now()).smokingArea(area).build());
     }
 
-    //TODO 지역활용 통계
     public StatisticsRegionResponse getStatisticsByRegion() {
         List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
         return new StatisticsRegionResponse(getAllRegion(list), getAreaTop(list));
     }
 
-    //TODO 전체 지역 통계 기능
     private AllRegionStatisticsResponse getAllRegion(List<Object[]> list) {
         Map<String, Long> allRegion = new HashMap<>();
 
