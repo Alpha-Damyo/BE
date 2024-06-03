@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("update User u set u.contribution = u.contribution + :increment where u.id = :id")
     void updateContributionById(int increment, UUID id);
     void deleteUserById(UUID id);
+
+    @Query("select round(round(percent_rank() over(order by u.contribution), 3) * 100, 2) from User u where u.id = :id")
+    float getPercentageByContribution(UUID id);
 }

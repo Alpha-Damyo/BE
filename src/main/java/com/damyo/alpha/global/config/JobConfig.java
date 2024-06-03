@@ -82,7 +82,7 @@ public class JobConfig {
         return chunk -> {
             for (ContestContributionInfo info : chunk) {
                 log.info("name: " + info.getUser().getName() + "  sum of contribution: " + info.getContestContribution());
-                //  userService.updateContribution(info.getUserId(), info.getContestContribution());
+                // userService.updateContribution(info.getUserId(), info.getContestContribution());
             }
         };
     }

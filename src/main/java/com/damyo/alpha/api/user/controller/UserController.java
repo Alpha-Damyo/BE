@@ -3,6 +3,8 @@ package com.damyo.alpha.api.user.controller;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.user.controller.dto.UserResponse;
+import com.damyo.alpha.api.user.domain.User;
+import com.damyo.alpha.api.user.domain.UserRepository;
 import com.damyo.alpha.api.user.service.UserService;
 import com.damyo.alpha.global.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +33,7 @@ public class UserController {
 
     private final UserService userService;
     private final S3ImageService s3ImageService;
+    private final UserRepository userRepository;
 
     @Operation(summary = "유저 정보 조회", description = "유저의 정보를 반환한다.")
     @ApiResponses(value = {
@@ -95,6 +98,12 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl details) {
         userService.deleteUser(details.getId());
         return ResponseEntity.ok().body("회원 삭제 완료");
+    }
+
+    @GetMapping("/test")
+    public void test(@AuthenticationPrincipal UserDetailsImpl details) {
+        float f = userRepository.getPercentageByContribution(details.getId());
+        System.out.println(f);
     }
 
 }

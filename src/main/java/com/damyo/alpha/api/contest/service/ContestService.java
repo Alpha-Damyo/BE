@@ -27,7 +27,7 @@ public class ContestService {
     private final PictureRepository pictureRepository;
     private final UserService userService;
 
-    @Scheduled(cron = "0 18 18 2 6 ?", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 1 1,4,7,10 ?", zone = "Asia/Seoul")
     public void calculateContribution() throws Exception {
         LocalDate now = LocalDate.now();
         int endYear = now.getYear();
@@ -35,7 +35,7 @@ public class ContestService {
         int startYear = endMonth == 1 ? endYear - 1 : endYear;
         int startMonth = (endMonth + 9) % 12;
         LocalDateTime startDate = LocalDateTime.of(startYear, startMonth, 1, 0, 0, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, 3, 0, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, 1, 0, 0, 0, 0);
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("start_date", startDate)
                 .addLocalDateTime("end_date", endDate)
@@ -43,9 +43,9 @@ public class ContestService {
                 .toJobParameters();
         jobLauncher.run(job, jobParameters);
 
-        List<Picture> top3Pictures = pictureRepository.findTop2ByCreatedAtBetweenOrderByLikesDesc(startDate, endDate);
+        List<Picture> top3Pictures = pictureRepository.findTop3ByCreatedAtBetweenOrderByLikesDesc(startDate, endDate);
         userService.updateContribution(top3Pictures.get(0).getUser().getId(), 300);
         userService.updateContribution(top3Pictures.get(1).getUser().getId(), 150);
-        // userService.updateContribution(top3Pictures.get(2).getUser().getId(), 50);
+        userService.updateContribution(top3Pictures.get(2).getUser().getId(), 50);
     }
 }

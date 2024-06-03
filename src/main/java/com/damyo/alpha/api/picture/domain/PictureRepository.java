@@ -14,5 +14,5 @@ public interface PictureRepository extends JpaRepository<Picture, Long>, Picture
     void deletePictureById(Long id);
 
     List<Picture> findPicturesByUser_id(UUID id);
-    List<Picture> findTop2ByCreatedAtBetweenOrderByLikesDesc(LocalDateTime startDate, LocalDateTime endDate);
+    List<Picture> findTop3ByCreatedAtBetweenOrderByLikesDesc(LocalDateTime startDate, LocalDateTime endDate);
 }
