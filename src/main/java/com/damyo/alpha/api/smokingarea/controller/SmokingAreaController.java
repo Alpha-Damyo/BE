@@ -1,6 +1,8 @@
 package com.damyo.alpha.api.smokingarea.controller;
 
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
+import com.damyo.alpha.api.info.controller.dto.InfoResponse;
+import com.damyo.alpha.api.info.service.InfoService;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
@@ -32,6 +34,7 @@ import java.util.UUID;
 public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
     private final PictureService pictureService;
+    private final InfoService infoService;
 
     @Value("${guest.uuid}")
     private String guestUUID;
@@ -73,6 +76,8 @@ public class SmokingAreaController {
     }
 
     // 아이디로 구역정보 불러오기
+    // TODO 상세정보 -> 태그 총합 반환
+    // TODO 사진 URL 전송
     @GetMapping("/details/{smokingAreaId}")
     @Operation(summary="흡연구역 상세정보", description = "흡연구역 ID의 상세정보를 반환합니다.")
     @ApiResponses(value = {
@@ -82,9 +87,11 @@ public class SmokingAreaController {
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
         SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+        InfoResponse infoResponse = infoService.getInfo(smokingAreaId);
         return ResponseEntity.ok(areaResponse.toDTO());
     }
 
+    //TODO 사진 URL 전송
     @GetMapping("/summary/{smokingAreaId}")
     @Operation(summary="흡연구역 요약정보", description = "흡연구역 ID의 요약정보를 반환합니다.")
     @ApiResponses(value = {

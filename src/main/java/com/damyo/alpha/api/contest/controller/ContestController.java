@@ -26,6 +26,7 @@ public class ContestController {
     private final PictureService pictureService;
     private final ContestService contestService;
 
+    // TODO 페이지네이션에 좋아요 여부 적용
     @GetMapping("/page")
     @Operation(summary="사진 콘테스트의 사진 반환", description = "페이지네이션을 적용한 사진 URL 리스트가 반환됩니다.")
     @ApiResponses(value = {
@@ -72,7 +73,4 @@ public class ContestController {
         return ResponseEntity
                 .ok(200);
     }
-
-    // TODO 통계 Map으로 통일
-    // TODO 상세정보 -> 태그 총합 반환
 }

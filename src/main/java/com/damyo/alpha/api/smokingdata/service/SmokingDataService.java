@@ -37,7 +37,7 @@ public class SmokingDataService {
     private AllRegionStatisticsResponse getAllRegion(List<Object[]> list) {
         Map<String, Long> allRegion = new HashMap<>();
 
-        for(Object[] area : list){
+        for(Object[] area : list) {
             String name = ((String) area[0]).substring(0, 5);
             Long count = (Long) area[1];
             allRegion.compute(name, (k, v) -> (v == null) ? count : v + count);
@@ -51,8 +51,17 @@ public class SmokingDataService {
     }
 
     private AreaTopResponse getAreaTop(List<Object[]> list) {
-        if(list.size() < 3) return new AreaTopResponse(list);
-        return  new AreaTopResponse(list.subList(0, 3));
+
+        List<Map<String, Long>> areaTopList = new ArrayList<>();
+
+        for(Object[] area : list) {
+            String name = (String) area[0];
+            Long count =  (Long) area[1];
+            areaTopList.add(Map.of(name, count));
+            if(areaTopList.size() == 3) break;
+        }
+
+        return  new AreaTopResponse(areaTopList);
     }
 
     public StatisticsDateResponse getStatisticsByDate() {
