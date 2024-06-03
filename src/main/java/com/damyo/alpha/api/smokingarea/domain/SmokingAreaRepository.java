@@ -30,7 +30,6 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.createdAt >= :localDate")
     List<SmokingArea> findSmokingAreaByCreatedAt(@Param("localDate")LocalDateTime date);
 
-    // TODO 추후 개선 고민
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:areaName% " +
             "ORDER BY sa.createdAt DESC " +
