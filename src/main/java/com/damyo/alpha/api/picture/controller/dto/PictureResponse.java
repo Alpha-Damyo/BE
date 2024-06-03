@@ -7,7 +7,7 @@ public record PictureResponse (
         Long id,
         String pictureUrl,
         LocalDateTime createdAt,
-        Integer likes
+        Long likes
 ) {
     public PictureResponse(Picture picture) {
         this(picture.getId(), picture.getPictureUrl(), picture.getCreatedAt(), picture.getLikes());

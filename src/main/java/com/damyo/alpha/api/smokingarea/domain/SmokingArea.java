@@ -30,10 +30,10 @@ public class SmokingArea {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "latitude")
+    @Column(name = "latitude", precision = 15, scale = 10)
     private BigDecimal latitude;
 
-    @Column(name = "longitude")
+    @Column(name = "longitude", precision = 15, scale = 10)
     private BigDecimal longitude;
 
     @CreatedDate
