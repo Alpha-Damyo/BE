@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class AlphaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AlphaApplication.class, args);
 	}
