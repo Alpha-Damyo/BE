@@ -12,14 +12,17 @@ import com.damyo.alpha.api.picture.domain.PictureRepository;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.damyo.alpha.api.picture.exception.PictureErrorCode.PICTURE_NOT_FOUND;
 
@@ -30,6 +33,9 @@ public class PictureService {
     private final PictureRepository pictureRepository;
     private final UserRepository userRepository;
     private final SmokingAreaRepository smokingAreaRepository;
+
+    @Autowired
+    private RedisTemplate<String, Object> countTemplate;
 
     public PictureResponse getPicture(Long id) {
         Picture picture = pictureRepository.findPictureById(id).orElseThrow(
@@ -64,7 +70,7 @@ public class PictureService {
                         pictureUrl(url).
                         user(user).
                         smokingArea(sa).
-                        likes(0).
+                        likes(0L).
                         createdAt(LocalDateTime.now()).
                         build());
     }
@@ -77,4 +83,51 @@ public class PictureService {
         return pictureSliceResponse;
     }
 
+    @Transactional
+    public void increaseLikeCount(Long pictureId) {
+        HashOperations<String, String, Object> hashOperations = countTemplate.opsForHash();
+        String key = "likeId::" + pictureId.toString();
+        String hashKey = "likes";
+
+        if(hashOperations.get(key, hashKey) == null) {
+            hashOperations.put(key, hashKey, pictureRepository.getLikeCountById(pictureId));
+        }
+        hashOperations.increment(key, hashKey, 1L);
+        System.out.println(hashOperations.get(key, hashKey));
+    }
+
+    @Transactional
+    public void decreaseLikeCount(Long pictureId) {
+        HashOperations<String, String, Object> hashOperations = countTemplate.opsForHash();
+        String key = "likeId::" + pictureId.toString();
+        String hashKey = "likes";
+
+        if(hashOperations.get(key, hashKey) == null) {
+            hashOperations.put(key, hashKey, pictureRepository.getLikeCountById(pictureId));
+        }
+        hashOperations.increment(key, hashKey, -1L);
+        System.out.println(hashOperations.get(key, hashKey));
+    }
+
+    @Scheduled(fixedDelay = 1000L * 30L)
+    @Transactional
+    public void updateLikeCount() {
+        String hashKey = "likes";
+        Set<String> RedisKey = countTemplate.keys("likeId*");
+        Iterator<String> it = RedisKey.iterator();
+
+        while(it.hasNext() == true) {
+            String data = it.next();
+            Long pictureId = Long.parseLong(data.split("::")[1]);
+            if(countTemplate.opsForHash().get(data, hashKey) == null){
+                break;
+            }
+            Long likeCount = Long.parseLong((String.valueOf(countTemplate.opsForHash().get(data, hashKey))));
+            pictureRepository.findById(pictureId).ifPresent(p -> {
+                p.updateLikeCount(likeCount);
+            });
+            countTemplate.opsForHash().delete(data, hashKey);
+        }
+        System.out.println("likes update complete");
+    }
 }
