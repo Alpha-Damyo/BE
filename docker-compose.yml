@@ -3,7 +3,7 @@ services:
   redis:
     image: redis:7.2.0-alpine
     container_name: redis
-    hostname: redis
+    hostname: wjdwlghkscodnjsckschldudfkr
     restart: unless-stopped
     environment:
       TZ: "Asia/Seoul"
