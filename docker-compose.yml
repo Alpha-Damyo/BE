@@ -1,20 +1,5 @@
 version: '3.8'
 services:
-  redis:
-    image: redis:7.2.0-alpine
-    container_name: redis
-    hostname: wjdwlghkscodnjsckschldudfkr
-    restart: unless-stopped
-    environment:
-      TZ: "Asia/Seoul"
-    ports:
-      - 6379:6379
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
   spring:
     container_name: spring
     restart: "no"
@@ -23,6 +8,3 @@ services:
       - .env
     ports:
       - 8080:8080
-    depends_on:
-      redis:
-        condition: service_healthy

@@ -67,17 +67,6 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
         return pictureList;
     }
 
-    @Override
-    public Long getLikeCountById(Long id) {
-        Long count = jpaQueryFactory
-                .select(picture.likes)
-                .from(picture)
-                .where(picture.id.eq(id))
-                .fetchOne();
-
-        return count;
-    }
-
     private BooleanExpression cursorId(Long cursorId) {
         return cursorId == null ? null : picture.id.gt(cursorId);
     }
