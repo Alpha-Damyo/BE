@@ -69,8 +69,8 @@ public class JobConfig {
                 .queryString("select new com.damyo.alpha.api.contest.domain.ContestContributionInfo(user, sum(p.likes), p) " +
                              "from Picture p " +
                              "inner join p.user user " +
-                             // "where p.likes > 0 " +
-                             "where p.createdAt > : start_date " +
+                             "where p.likes > 0 " +
+                             "and p.createdAt > : start_date " +
                              "and p.createdAt < : finish_date " +
                              "group by user.id")
                 .parameterValues(paramValues)
@@ -82,7 +82,7 @@ public class JobConfig {
         return chunk -> {
             for (ContestContributionInfo info : chunk) {
                 log.info("name: " + info.getUser().getName() + "  sum of contribution: " + info.getContestContribution());
-                // userService.updateContribution(info.getUserId(), info.getContestContribution());
+                userService.updateContribution(info.getUser().getId(), Math.toIntExact(info.getContestContribution()));
             }
         };
     }
