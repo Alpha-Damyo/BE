@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.info.controller;
 
+import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.info.controller.dto.UpdateInfoRequest;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.info.service.InfoService;
@@ -12,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,8 +29,9 @@ public class InfoController {
     })
     public ResponseEntity<?> postInfo(
             @Parameter(description = "리뷰 작성 요청사항", in = ParameterIn.DEFAULT, required = true)
-            @RequestBody UpdateInfoRequest updateInfoRequest) {
-        infoService.updateInfo(updateInfoRequest);
+            @RequestBody UpdateInfoRequest updateInfoRequest,
+            @AuthenticationPrincipal UserDetailsImpl details) {
+        infoService.updateInfo(updateInfoRequest, details);
         return ResponseEntity.ok().body("정보 변경 완료");
     }
 
