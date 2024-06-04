@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.damyo.alpha.api.user.exception.UserErrorCode.INVALID_NAME;
@@ -27,7 +28,9 @@ public class UserService {
         User user = userRepository.findUserById(id).orElseThrow(
                 () -> new UserException(USER_NOT_FOUND)
         );
-        return new UserResponse(user);
+        float percentage = userRepository.getPercentageByContribution(id);
+        int top1Contribution = userRepository.getTop1Contribution();
+        return new UserResponse(user, percentage, top1Contribution - user.getContribution());
     }
 
     @Transactional

@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @Tag(name = "UserController")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -99,11 +101,4 @@ public class UserController {
         userService.deleteUser(details.getId());
         return ResponseEntity.ok().body("회원 삭제 완료");
     }
-
-    @GetMapping("/test")
-    public void test(@AuthenticationPrincipal UserDetailsImpl details) {
-        float f = userRepository.getPercentageByContribution(details.getId());
-        System.out.println(f);
-    }
-
 }
