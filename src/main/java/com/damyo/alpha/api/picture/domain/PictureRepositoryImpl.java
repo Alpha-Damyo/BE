@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.picture.domain;
 
+import com.damyo.alpha.api.contest.domain.QContestLike;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 import com.damyo.alpha.api.smokingarea.domain.QSmokingArea;
@@ -13,15 +14,17 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class PictureRepositoryImpl implements PictureCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private QPicture picture = QPicture.picture;
     private QSmokingArea smokingArea = QSmokingArea.smokingArea;
+    private QContestLike contestLike = QContestLike.contestLike;
 
     @Override
-    public PictureSliceResponse getPictureListByPaging(Long cursorId, Long pageSize, String sortBy, String region) {
+    public PictureSliceResponse getPictureListByPaging(Long cursorId, Long pageSize, String sortBy, String region, UUID userId) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(sortBy);
 
         List<PictureResponse> pictureList = jpaQueryFactory
@@ -32,10 +35,14 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
                 )
                 .from(picture)
                 .innerJoin(picture.smokingArea, smokingArea)
+                .leftJoin(contestLike)
+                .on(picture.id.eq(contestLike.pictureId),
+                        contestLike.userId.eq(userId))
                 .where(cursorId(cursorId),
                         regionEq(region))
                 .orderBy(orderSpecifiers)
                 .limit(pageSize + 1)
+                .distinct()
                 .fetch();
 
         boolean hasNext = false;

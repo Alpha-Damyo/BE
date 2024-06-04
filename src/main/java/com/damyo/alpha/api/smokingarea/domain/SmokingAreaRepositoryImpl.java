@@ -85,7 +85,7 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
 
     private BooleanExpression wordEq(String word) {
         if(StringUtils.hasText(word)) {
-            return smokingArea.name.like(word);
+            return smokingArea.name.like(word+"%");
         }
         return null;
     }

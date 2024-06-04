@@ -28,7 +28,8 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
 
     @Query("SELECT sd FROM SmokingData sd " +
             "WHERE sd.createdAt >= :startTime " +
-            "AND sd.createdAt <= :endTime")
+            "AND sd.createdAt <= :endTime " +
+            "ORDER BY sd.createdAt")
     List<SmokingData> findSmokingDataByCreateAt(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     @Query("SELECT COUNT(DISTINCT sd.user.id) FROM SmokingData sd JOIN sd.user " +

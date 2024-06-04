@@ -26,19 +26,19 @@ public class InfoService {
     public InfoResponse getInfo(String smokingAreaId) {
         List<Info> infos = infoRepository.findInfosBySmokingAreaId(smokingAreaId);
         Float scoreSum = 0F;
-        Integer openedSum = 0;
-        Integer closedSum = 0;
-        Integer notExistSum = 0;
-        Integer airOutSum = 0;
-        Integer hygieneSum = 0;
-        Integer dirtySum = 0;
-        Integer indoorSum = 0;
-        Integer outdoorSum = 0;
-        Integer bigSum = 0;
-        Integer smallSum = 0;
-        Integer crowdedSum = 0;
-        Integer quiteSum = 0;
-        Integer chairSum = 0;
+        Long openedSum = 0L;
+        Long closedSum = 0L;
+        Long notExistSum = 0L;
+        Long airOutSum = 0L;
+        Long hygieneSum = 0L;
+        Long dirtySum = 0L;
+        Long indoorSum = 0L;
+        Long outdoorSum = 0L;
+        Long bigSum = 0L;
+        Long smallSum = 0L;
+        Long crowdedSum = 0L;
+        Long quiteSum = 0L;
+        Long chairSum = 0L;
         for (Info info : infos){
             scoreSum += info.getScore();
             openedSum += info.getOpened()? 1 : 0;

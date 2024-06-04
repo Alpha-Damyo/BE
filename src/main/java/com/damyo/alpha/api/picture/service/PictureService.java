@@ -75,10 +75,10 @@ public class PictureService {
                         build());
     }
 
-    public PictureSliceResponse getPageContestPicture(Long cursorId, String sortBy, String region) {
+    public PictureSliceResponse getPageContestPicture(Long cursorId, String sortBy, String region, UUID userId) {
         Long pageSize = 24L;
         if(cursorId == 0) cursorId = null;
-        PictureSliceResponse pictureSliceResponse = pictureRepository.getPictureListByPaging(cursorId, pageSize, sortBy, region);
+        PictureSliceResponse pictureSliceResponse = pictureRepository.getPictureListByPaging(cursorId, pageSize, sortBy, region, userId);
 
         return pictureSliceResponse;
     }

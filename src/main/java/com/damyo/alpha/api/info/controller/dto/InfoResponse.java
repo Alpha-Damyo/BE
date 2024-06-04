@@ -3,18 +3,18 @@ package com.damyo.alpha.api.info.controller.dto;
 public record InfoResponse(
         Integer size,
         Float score,
-        Integer opened,
-        Integer closed,
-        Integer notExist,
-        Integer airOut,
-        Integer hygiene,
-        Integer dirty,
-        Integer indoor,
-        Integer outdoor,
-        Integer big,
-        Integer small,
-        Integer crowded,
-        Integer quite,
-        Integer chair
+        Long opened,
+        Long closed,
+        Long notExist,
+        Long airOut,
+        Long hygiene,
+        Long dirty,
+        Long indoor,
+        Long outdoor,
+        Long big,
+        Long small,
+        Long crowded,
+        Long quite,
+        Long chair
 ) {
 }

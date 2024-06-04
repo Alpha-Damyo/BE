@@ -65,7 +65,11 @@ public class SmokingDataService {
     public StatisticsDateResponse getStatisticsByDate() {
         List<SmokingData> dataList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
         Integer peopleSum = smokingDataRepository.findUserNumberByCreateAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
-        return new StatisticsDateResponse(getHourlyStatistics(dataList, peopleSum), getDailyStatistics(dataList, peopleSum), getWeeklyStatistics(dataList, peopleSum), getMonthlyStatistics(dataList, peopleSum), getDayWeekStatistics(dataList, peopleSum));
+
+        List<SmokingData> dataMonthList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+        Integer peopleMonth = smokingDataRepository.findUserNumberByCreateAt(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+
+        return new StatisticsDateResponse(getHourlyStatistics(dataList, peopleSum), getDailyStatistics(dataList, peopleSum), getWeeklyStatistics(dataMonthList, peopleMonth), getMonthlyStatistics(dataList, peopleSum), getDayWeekStatistics(dataList, peopleSum));
     }
 
     private HourlyStatisticsResponse getHourlyStatistics(List<SmokingData> dataList, Integer peopleSum) {
@@ -105,6 +109,7 @@ public class SmokingDataService {
         return new DailyStatisticsResponse(days);
     }
 
+    //TODO 주단위 변별
     private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList, Integer peopleSum) {
         double[] weeks = new double[5];
 
