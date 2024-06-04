@@ -1,6 +1,7 @@
 package com.damyo.alpha.api.info.domain;
 
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
+import com.damyo.alpha.api.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,11 @@ public class Info {
     @JoinColumn(name = "smoking_area_Id")
     @ToString.Exclude
     private SmokingArea smokingArea;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
 
     @Column(name = "score")
     private Integer score;

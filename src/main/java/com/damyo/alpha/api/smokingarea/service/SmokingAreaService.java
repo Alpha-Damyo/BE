@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.smokingarea.service;
 
+import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
@@ -9,6 +10,7 @@ import com.damyo.alpha.api.smokingarea.exception.AreaErrorCode;
 import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

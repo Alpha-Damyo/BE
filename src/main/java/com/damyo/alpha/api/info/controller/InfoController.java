@@ -15,7 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+<<<<<<< HEAD
 import org.springframework.stereotype.Controller;
+=======
+>>>>>>> 9869a81749aa3112642b0189a95e4e63a23a1ae5
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,11 +35,11 @@ public class InfoController {
             @ApiResponse(responseCode = "200", description = "리뷰 작성에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<?> postInfo(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "리뷰 작성 요청사항", in = ParameterIn.DEFAULT, required = true)
-            @RequestBody UpdateInfoRequest updateInfoRequest) {
-        infoService.updateInfo(updateInfoRequest);
-        return ResponseEntity.ok().body("리뷰 작성 완료");
+            @RequestBody UpdateInfoRequest updateInfoRequest,
+            @AuthenticationPrincipal UserDetailsImpl details) {
+        infoService.updateInfo(updateInfoRequest, details);
+        return ResponseEntity.ok().body("정보 변경 완료");
     }
 
     @GetMapping("/{saId}")

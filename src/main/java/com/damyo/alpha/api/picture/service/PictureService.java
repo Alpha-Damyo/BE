@@ -128,6 +128,6 @@ public class PictureService {
             });
             countTemplate.opsForHash().delete(data, hashKey);
         }
-        System.out.println("likes update complete");
+        // System.out.println("likes update complete");
     }
 }
