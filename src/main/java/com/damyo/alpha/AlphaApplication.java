@@ -11,9 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableBatchProcessing
 @SpringBootApplication
 public class AlphaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AlphaApplication.class, args);
 	}
-
 }

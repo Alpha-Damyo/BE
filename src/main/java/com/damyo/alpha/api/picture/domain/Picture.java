@@ -29,7 +29,7 @@ public class Picture {
     private LocalDateTime createdAt;
 
     @Column(name = "likes")
-    private Integer likes;
+    private Long likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -37,4 +37,8 @@ public class Picture {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SmokingArea smokingArea;
+
+    public void updateLikeCount(Long likeCount) {
+        this.likes = likeCount;
+    }
 }
