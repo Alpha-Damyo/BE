@@ -1,9 +1,12 @@
 package com.damyo.alpha.api.picture.domain;
 
 import com.damyo.alpha.api.contest.domain.QContestLike;
+import com.damyo.alpha.api.picture.controller.dto.LikesRankResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 import com.damyo.alpha.api.smokingarea.domain.QSmokingArea;
+import com.damyo.alpha.api.user.domain.QUser;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -15,6 +18,8 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 public class PictureRepositoryImpl implements PictureCustomRepository {
@@ -22,6 +27,7 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
     private QPicture picture = QPicture.picture;
     private QSmokingArea smokingArea = QSmokingArea.smokingArea;
     private QContestLike contestLike = QContestLike.contestLike;
+    private QUser user = QUser.user;
 
     @Override
     public PictureSliceResponse getPictureListByPaging(Long cursorId, Long pageSize, String sortBy, String region, UUID userId) {
@@ -86,19 +92,26 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
     }
 
     @Override
-    public void getTopRanking() {
-        jpaQueryFactory
-                .select(picture.user.id, picture.likes.sum())
-                .from(picture)
+    public List<LikesRankResponse> getRanking() {
+        List<Tuple> result = jpaQueryFactory
+                .select(user.id, user.name, user.profileUrl, picture.likes.sum())
+                .from(user)
+                .leftJoin(picture)
+                .on(user.eq(picture.user))
+                .groupBy(user.id, user.name, user.profileUrl)
+                .orderBy(picture.likes.sum().desc().nullsLast())
                 .fetch();
-    }
 
-    @Override
-    public void getNearRanking(UUID userId) {
-        jpaQueryFactory
-                .select(picture.user.id, picture.likes.sum())
-                .from(picture)
-                .fetch();
+        List<LikesRankResponse> rankedUsers = IntStream.range(0, result.size())
+                .mapToObj(i -> new LikesRankResponse(
+                        result.get(i).get(user.id),
+                        result.get(i).get(user.name),
+                        result.get(i).get(user.profileUrl),
+                        result.get(i).get(picture.likes.sum()),
+                        i + 1L))
+                .collect(Collectors.toList());
+
+        return rankedUsers;
     }
 
     private BooleanExpression cursorId(Long cursorId) {

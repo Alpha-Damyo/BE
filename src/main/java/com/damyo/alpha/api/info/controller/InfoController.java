@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class InfoController {
     private final InfoService infoService;
 
-    //TODO 리뷰 작성시 사진 저장
+    // TODO 리뷰 작성시 사진 저장
     @PostMapping("/postInfo")
     @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.")
     @ApiResponses(value = {
