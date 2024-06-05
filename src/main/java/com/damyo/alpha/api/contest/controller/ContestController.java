@@ -2,6 +2,7 @@ package com.damyo.alpha.api.contest.controller;
 
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.contest.service.ContestService;
+import com.damyo.alpha.api.picture.controller.dto.AllRankResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,17 +79,16 @@ public class ContestController {
                 .ok(200);
     }
 
-    //TODO 챌린지 랭킹 기능
-    @PutMapping("/ranking")
+    @GetMapping("/ranking")
     @Operation()
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "랭킹 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<?> unlikeContestPicture(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         UUID userId = userDetails.getId();
-        pictureService.getContestRanking(userId);
+        AllRankResponse response = pictureService.getContestRanking(userId);
 
         return ResponseEntity
-                .ok(200);
+                .ok(response);
     }
 }

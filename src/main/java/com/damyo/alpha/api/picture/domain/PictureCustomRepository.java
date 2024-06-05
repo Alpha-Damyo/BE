@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.picture.domain;
 
+import com.damyo.alpha.api.picture.controller.dto.LikesRankResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
 
 import java.util.List;
@@ -10,6 +11,5 @@ public interface PictureCustomRepository {
     List<Picture> findPicturesBySmokingArea_Id(String areaId, Long count);
     Long getLikeCountById(Long id);
 
-    void getTopRanking();
-    void getNearRanking(UUID userID);
+    List<LikesRankResponse> getRanking();
 }
