@@ -39,11 +39,18 @@ public class AuthController {
     })
     public ResponseEntity<TokenResponse> signUp(
             @Parameter(description = "프로필 사진", in = ParameterIn.DEFAULT)
-            @RequestPart(value = "image") MultipartFile image,
-            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT)
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT, required = true)
             @RequestPart SignUpRequest signUpRequest) {
-        String profileUrl = s3ImageService.upload(image);
-        authService.signUp(signUpRequest, profileUrl);
+
+        if(image != null) {
+            String profileUrl = s3ImageService.upload(image);
+            authService.signUp(signUpRequest, profileUrl);
+        }
+        else {
+            authService.signUp(signUpRequest, null);
+        }
+
         User user = authService.login(signUpRequest);
         String token = authService.generateToken(user);
         return ResponseEntity.ok().body(new TokenResponse(token));

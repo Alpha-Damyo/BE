@@ -3,6 +3,7 @@ package com.damyo.alpha.api.smokingarea.controller;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.info.service.InfoService;
+import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -80,23 +82,27 @@ public class SmokingAreaController {
                 .ok(area.toDTO());
     }
 
-    // 아이디로 구역정보 불러오기
-    // TODO 상세정보 -> 태그 총합 반환
-    // TODO 사진 URL 전송
     @GetMapping("/details/{smokingAreaId}")
     @Operation(summary="흡연구역 상세정보", description = "흡연구역 ID의 상세정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<SmokingAreaDetailResponse> getSmokingAreaDetailsById(
+    public ResponseEntity<SmokingAreaAllResponse> getSmokingAreaDetailsById(
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
-        SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
-        InfoResponse infoResponse = infoService.getInfo(smokingAreaId);
-        return ResponseEntity.ok(areaResponse.toDTO());
+        SmokingAreaDetailResponse area = smokingAreaService.findAreaById(smokingAreaId).toDTO();
+        InfoResponse info = infoService.getInfo(smokingAreaId);
+        List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
+
+        SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
+                area.createdAt(), area.description(), area.score(), area.status(), Map.of(area.opened(), info.opened()), Map.of(area.closed(), info.closed()),
+                Map.of(area.hygiene(), info.hygiene()), Map.of(area.dirty(), info.dirty()), Map.of(area.airOut(), info.airOut()), Map.of(area.noExist(), info.notExist()),
+                Map.of(area.indoor(), info.indoor()), Map.of(area.outdoor(), info.outdoor()), Map.of(area.big(), info.big()), Map.of(area.small(), info.small()),
+                Map.of(area.crowded(), info.crowded()), Map.of(area.quite(), info.quite()), Map.of(area.chair(), info.chair()), picList);
+
+        return ResponseEntity.ok(response);
     }
 
-    //TODO 사진 URL 전송
     @GetMapping("/summary/{smokingAreaId}")
     @Operation(summary="흡연구역 요약정보", description = "흡연구역 ID의 요약정보를 반환합니다.")
     @ApiResponses(value = {
@@ -106,6 +112,7 @@ public class SmokingAreaController {
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
         SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+
         return ResponseEntity.ok(areaResponse.toSUM());
     }
 

@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "InfoController")
 public class InfoController {
     private final InfoService infoService;
+
+    //TODO 리뷰 작성시 사진 저장
     @PostMapping("/postInfo")
     @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.")
     @ApiResponses(value = {
