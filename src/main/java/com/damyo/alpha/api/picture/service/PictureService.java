@@ -1,13 +1,11 @@
 package com.damyo.alpha.api.picture.service;
 
-import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
+import com.damyo.alpha.api.picture.controller.dto.*;
 import com.damyo.alpha.api.picture.domain.Picture;
 import com.damyo.alpha.api.picture.exception.PictureErrorCode;
 import com.damyo.alpha.api.picture.exception.PictureException;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.user.domain.User;
-import com.damyo.alpha.api.picture.controller.dto.UploadPictureRequest;
-import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.domain.PictureRepository;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
@@ -23,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.damyo.alpha.api.picture.exception.PictureErrorCode.PICTURE_NOT_FOUND;
 
@@ -83,9 +83,30 @@ public class PictureService {
         return pictureSliceResponse;
     }
 
-    public void getContestRanking(UUID userId) {
-        pictureRepository.getTopRanking();
-        pictureRepository.getNearRanking(userId);
+    public AllRankResponse getContestRanking(UUID userId) {
+        List<LikesRankResponse> rank =  pictureRepository.getRanking();
+
+        int targetIdx = IntStream.range(0, rank.size())
+                .filter(i -> rank.get(i).userId().equals(userId))
+                .findFirst()
+                .orElse(-1);
+
+        if (targetIdx == -1) {
+            throw new IllegalArgumentException("User ID not found");
+        }
+
+        int startIndex = Math.max(0, targetIdx - 3);
+        int endIndex = Math.min(rank.size(), targetIdx + 4);
+
+        List<LikesRankResponse> topUsers = IntStream.range(0, 4)
+                .mapToObj(rank::get)
+                .collect(Collectors.toList());
+
+        List<LikesRankResponse> surroundingUsers = IntStream.range(startIndex, endIndex)
+                .mapToObj(rank::get)
+                .collect(Collectors.toList());
+
+        return new AllRankResponse(topUsers, surroundingUsers);
     }
 
     @Transactional
