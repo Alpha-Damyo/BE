@@ -4,6 +4,7 @@ import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.info.controller.dto.UpdateInfoRequest;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.info.service.InfoService;
+import com.damyo.alpha.api.picture.service.PictureService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,14 +19,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/info")
 @Tag(name = "InfoController")
 public class InfoController {
     private final InfoService infoService;
+    private final PictureService pictureService;
 
-    // TODO 리뷰 작성시 사진 저장
     @PostMapping("/postInfo")
     @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.")
     @ApiResponses(value = {
@@ -36,6 +39,11 @@ public class InfoController {
             @RequestBody UpdateInfoRequest updateInfoRequest,
             @AuthenticationPrincipal UserDetailsImpl details) {
         infoService.updateInfo(updateInfoRequest, details);
+
+        if(updateInfoRequest.url() != null) {
+             pictureService.uploadPicture(details.getId(), updateInfoRequest.smokingAreaId(), updateInfoRequest.url());
+        }
+
         return ResponseEntity.ok().body("정보 변경 완료");
     }
 
