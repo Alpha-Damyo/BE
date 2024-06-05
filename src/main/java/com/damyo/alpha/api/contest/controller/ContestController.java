@@ -29,20 +29,21 @@ public class ContestController {
     private final PictureService pictureService;
     private final ContestService contestService;
 
-    // TODO 페이지네이션에 좋아요 여부 적용
     @GetMapping("/page")
     @Operation(summary="사진 콘테스트의 사진 반환", description = "페이지네이션을 적용한 사진 URL 리스트가 반환됩니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<PictureSliceResponse> getPageContestPicture(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "페이지네이션 위치를 위한 커서", in = ParameterIn.DEFAULT, required = true)
             @RequestParam Long cursorId,
             @Parameter(description = "정렬 기준", in = ParameterIn.DEFAULT)
             @RequestParam(required = false) String sortBy,
             @Parameter(description = "검색 지역", in = ParameterIn.DEFAULT)
             @RequestParam(required = false) String region) {
-        PictureSliceResponse contestResponse = pictureService.getPageContestPicture(cursorId, sortBy, region);
+        UUID userId = userDetails.getId();
+        PictureSliceResponse contestResponse = pictureService.getPageContestPicture(cursorId, sortBy, region, userId);
         return ResponseEntity
                 .ok(contestResponse);
     }
@@ -72,6 +73,20 @@ public class ContestController {
 
         contestService.unlikeContestPicture(userId, pictureId);
         pictureService.decreaseLikeCount(pictureId);
+
+        return ResponseEntity
+                .ok(200);
+    }
+
+    //TODO 챌린지 랭킹 기능
+    @PutMapping("/ranking")
+    @Operation()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<?> unlikeContestPicture(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UUID userId = userDetails.getId();
+        pictureService.getContestRanking(userId);
 
         return ResponseEntity
                 .ok(200);
