@@ -96,8 +96,9 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
         List<Tuple> result = jpaQueryFactory
                 .select(user.id, user.name, user.profileUrl, picture.likes.sum())
                 .from(user)
-                .leftJoin(user, picture.user)
-                .groupBy(user.id, user.name)
+                .leftJoin(picture)
+                .on(user.eq(picture.user))
+                .groupBy(user.id, user.name, user.profileUrl)
                 .orderBy(picture.likes.sum().desc().nullsLast())
                 .fetch();
 

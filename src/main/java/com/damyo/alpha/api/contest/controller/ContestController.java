@@ -79,7 +79,7 @@ public class ContestController {
                 .ok(200);
     }
 
-    @PutMapping("/ranking")
+    @GetMapping("/ranking")
     @Operation()
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "랭킹 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
