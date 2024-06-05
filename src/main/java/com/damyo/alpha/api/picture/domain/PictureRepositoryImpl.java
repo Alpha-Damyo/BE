@@ -85,6 +85,22 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
         return count;
     }
 
+    @Override
+    public void getTopRanking() {
+        jpaQueryFactory
+                .select(picture.user.id, picture.likes.sum())
+                .from(picture)
+                .fetch();
+    }
+
+    @Override
+    public void getNearRanking(UUID userId) {
+        jpaQueryFactory
+                .select(picture.user.id, picture.likes.sum())
+                .from(picture)
+                .fetch();
+    }
+
     private BooleanExpression cursorId(Long cursorId) {
         return cursorId == null ? null : picture.id.gt(cursorId);
     }

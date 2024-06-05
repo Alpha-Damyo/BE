@@ -83,6 +83,11 @@ public class PictureService {
         return pictureSliceResponse;
     }
 
+    public void getContestRanking(UUID userId) {
+        pictureRepository.getTopRanking();
+        pictureRepository.getNearRanking(userId);
+    }
+
     @Transactional
     public void increaseLikeCount(Long pictureId) {
         HashOperations<String, String, Object> hashOperations = countTemplate.opsForHash();

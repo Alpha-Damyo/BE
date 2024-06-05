@@ -109,7 +109,6 @@ public class SmokingDataService {
         return new DailyStatisticsResponse(days);
     }
 
-    //TODO 주단위 변별
     private  WeeklyStatisticsResponse getWeeklyStatistics(List<SmokingData> dataList, Integer peopleSum) {
         double[] weeks = new double[5];
 

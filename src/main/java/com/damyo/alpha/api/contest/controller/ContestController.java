@@ -79,4 +79,16 @@ public class ContestController {
     }
 
     //TODO 챌린지 랭킹 기능
+    @PutMapping("/ranking")
+    @Operation()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사진 URL 리스트 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+    })
+    public ResponseEntity<?> unlikeContestPicture(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UUID userId = userDetails.getId();
+        pictureService.getContestRanking(userId);
+
+        return ResponseEntity
+                .ok(200);
+    }
 }

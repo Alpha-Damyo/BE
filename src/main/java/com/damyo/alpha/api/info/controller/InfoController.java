@@ -15,10 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
-=======
->>>>>>> 9869a81749aa3112642b0189a95e4e63a23a1ae5
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
