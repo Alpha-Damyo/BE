@@ -22,7 +22,8 @@ public record UpdateInfoRequest(
         Boolean small,
         Boolean crowded,
         Boolean quite,
-        Boolean chair
+        Boolean chair,
+        String url
 ) {
         public Info toEntity(SmokingArea smokingArea, User user) {
                 return Info.builder().
