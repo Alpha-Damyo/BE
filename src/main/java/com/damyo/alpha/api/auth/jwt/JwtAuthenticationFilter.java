@@ -3,6 +3,7 @@ package com.damyo.alpha.api.auth.jwt;
 import com.damyo.alpha.api.auth.exception.AuthException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", new AuthException(EXPIRED_TOKEN));
-        } catch (Exception e) {
+        } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             request.setAttribute("exception", new AuthException(INVALID_TOKEN));
         }
 
