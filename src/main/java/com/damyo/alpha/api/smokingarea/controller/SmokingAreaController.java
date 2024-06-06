@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -95,10 +96,10 @@ public class SmokingAreaController {
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
-                area.createdAt(), area.description(), area.score(), area.status(), Map.of(area.opened(), info.opened()), Map.of(area.closed(), info.closed()),
-                Map.of(area.hygiene(), info.hygiene()), Map.of(area.dirty(), info.dirty()), Map.of(area.airOut(), info.airOut()), Map.of(area.noExist(), info.notExist()),
-                Map.of(area.indoor(), info.indoor()), Map.of(area.outdoor(), info.outdoor()), Map.of(area.big(), info.big()), Map.of(area.small(), info.small()),
-                Map.of(area.crowded(), info.crowded()), Map.of(area.quite(), info.quite()), Map.of(area.chair(), info.chair()), picList);
+                area.createdAt(), area.description(), area.score(), area.status(), area.opened(), info.opened(), area.closed(), info.closed(),
+                area.hygiene(), info.hygiene(), area.dirty(), info.dirty(), area.airOut(), info.airOut(), area.noExist(), info.notExist(),
+                area.indoor(), info.indoor(), area.outdoor(), info.outdoor(), area.big(), info.big(), area.small(), info.small(),
+                area.crowded(), info.crowded(), area.quite(), info.quite(), area.chair(), info.chair(), picList);
 
         return ResponseEntity.ok(response);
     }
