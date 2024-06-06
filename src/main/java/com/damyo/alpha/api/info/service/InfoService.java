@@ -33,6 +33,7 @@ public class InfoService {
                 () -> new AreaException(NOT_FOUND_ID)
         );
         User user = details.getUser();
+        infoRepository.save(updateInfoRequest.toEntity(sa, user));
         userService.updateContribution(user.getId(), POST_INFO_CONTRIBUTION_INCREMENT);
     }
 
