@@ -5,6 +5,6 @@ import java.util.List;
 public record PictureSliceResponse(
         Long lastCursorId,
         Boolean hasNest,
-        List<PictureResponse> pictureList
+        List<ContestResponse> pictureList
 ) {
 }
