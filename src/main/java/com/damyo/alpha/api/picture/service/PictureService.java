@@ -98,7 +98,7 @@ public class PictureService {
 
         int startIndex = Math.max(0, targetIdx - 3);
         int endIndex = Math.min(rank.size(), targetIdx + 4);
-        int topIndex = Math.min(4, rank.size());
+        int topIndex = Math.min(3, rank.size());
 
         List<LikesRankResponse> topUsers = IntStream.range(0, topIndex)
                 .mapToObj(rank::get)
