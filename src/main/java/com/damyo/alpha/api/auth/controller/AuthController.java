@@ -22,6 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+import java.util.UUID;
+
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
@@ -43,21 +46,18 @@ public class AuthController {
             @Parameter(description = "회원가입 요청사항", in = ParameterIn.DEFAULT, required = true)
             @RequestPart SignUpRequest signUpRequest) {
 
-        if(image != null) {
-            String profileUrl = s3ImageService.upload(image);
-            authService.signUp(signUpRequest, profileUrl);
-        }
-        else {
-            authService.signUp(signUpRequest, null);
+        String profileUrl = null;
+        if (image != null) {
+            profileUrl = s3ImageService.upload(image);
         }
 
-        User user = authService.login(signUpRequest);
-        String token = authService.generateToken(user);
-        return ResponseEntity.ok().body(new TokenResponse(token));
+        User user = authService.signUp(signUpRequest, profileUrl);
+        String jwt = authService.generateToken(user.getId());
+        return ResponseEntity.ok().body(new TokenResponse(jwt));
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/login/{provider}")
     @Operation(summary = "로그인", description = "토큰을 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
@@ -65,9 +65,13 @@ public class AuthController {
     })
     public ResponseEntity<TokenResponse> login(
             @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
-            @RequestBody LoginRequest loginRequest) {
-        User user = authService.login(loginRequest);
-        String token = authService.generateToken(user);
-        return ResponseEntity.ok().body(new TokenResponse(token));
+            @RequestParam String token,
+            @PathVariable String provider) {
+
+        Map<String, Object> userInfo = authService.getUserInfo(provider, token);
+        String providerId = authService.getAttributesId(provider, userInfo);
+        UUID id = authService.checkIsMember(providerId);
+        String jwt = authService.generateToken(id);
+        return ResponseEntity.ok().body(new TokenResponse(jwt));
     }
 }

@@ -18,6 +18,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,9 +39,9 @@ public class JwtProvider {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generate(String email) {
+    public String generate(UUID id) {
         Claims claims = Jwts.claims();
-        claims.put("email", email);
+        claims.put("id", id);
         return generateToken(claims);
     }
 
@@ -71,17 +72,17 @@ public class JwtProvider {
         return null;
     }
 
-    public String validateTokenAndGetEmail(String token) {
+    public UUID validateTokenAndGetId(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("email", String.class);
+                .get("id", UUID.class);
     }
 
-    public Authentication createAuthentication(String email) {
-        UserDetails userDetails = userDetailService.loadUserByUsername(email);
+    public Authentication createAuthentication(UUID id) {
+        UserDetails userDetails = userDetailService.loadUserByUsername(id.toString());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

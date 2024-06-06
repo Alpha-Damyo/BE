@@ -34,6 +34,10 @@ public class User {
     private String name;
     @Column(name = "email")
     private String email;
+    @Column(name = "provider")
+    private String provider;
+    @Column(name = "provider_id")
+    private String providerId;
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -58,8 +62,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Info> infoList = new ArrayList<>();
 
-    public User(SignUpRequest signUpDto, String profileUrl) {
-        this(null, signUpDto.name(), signUpDto.email(), null, profileUrl, 0, signUpDto.gender(), signUpDto.age(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    public User(SignUpRequest signUpDto, String profileUrl, String providerId, String email) {
+        this(null, signUpDto.name(), email, signUpDto.provider(), providerId, null, profileUrl, 0,
+                signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 }
