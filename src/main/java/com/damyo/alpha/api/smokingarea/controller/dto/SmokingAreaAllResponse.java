@@ -4,6 +4,7 @@ import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,19 +18,32 @@ public record SmokingAreaAllResponse(
         String description,
         Float score,
         Boolean status,
-        Map<Boolean, Long> opened,
-        Map<Boolean, Long> closed,
-        Map<Boolean, Long> hygiene,
-        Map<Boolean, Long> dirty,
-        Map<Boolean, Long> air_out,
-        Map<Boolean, Long> no_exist,
-        Map<Boolean, Long> indoor,
-        Map<Boolean, Long> outdoor,
-        Map<Boolean, Long> big,
-        Map<Boolean, Long> small,
-        Map<Boolean, Long> crowded,
-        Map<Boolean, Long> quite,
-        Map<Boolean, Long> chair,
+        Boolean opened,
+        Long openedCount,
+        Boolean closed,
+        Long closedCount,
+        Boolean hygiene,
+        Long hygieneCount,
+        Boolean dirty,
+        Long dirtyCount,
+        Boolean airOut,
+        Long airOutCount,
+        Boolean noExist,
+        Long noExistCount,
+        Boolean indoor,
+        Long indoorCount,
+        Boolean outdoor,
+        Long outdoorCount,
+        Boolean big,
+        Long bigCount,
+        Boolean small,
+        Long smallCount,
+        Boolean crowded,
+        Long crowdedCount,
+        Boolean quite,
+        Long quiteCount,
+        Boolean chair,
+        Long chairCount,
         List<PictureResponse> pictureList
 ) {
 }
