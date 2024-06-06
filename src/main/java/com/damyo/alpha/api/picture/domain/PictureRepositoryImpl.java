@@ -1,6 +1,7 @@
 package com.damyo.alpha.api.picture.domain;
 
 import com.damyo.alpha.api.contest.domain.QContestLike;
+import com.damyo.alpha.api.picture.controller.dto.ContestResponse;
 import com.damyo.alpha.api.picture.controller.dto.LikesRankResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.controller.dto.PictureSliceResponse;
@@ -33,10 +34,11 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
     public PictureSliceResponse getPictureListByPaging(Long cursorId, Long pageSize, String sortBy, String region, UUID userId) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(sortBy);
 
-        List<PictureResponse> pictureList = jpaQueryFactory
+        List<ContestResponse> pictureList = jpaQueryFactory
                 .select(Projections.constructor(
-                        PictureResponse.class,
-                        picture.id, picture.pictureUrl, picture.createdAt, picture.likes
+                        ContestResponse.class,
+                        picture.id, picture.pictureUrl, picture.createdAt,
+                        picture.likes, contestLike.isLike.coalesce(false).as("likeCheck")
                         )
                 )
                 .from(picture)
@@ -120,7 +122,7 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
 
     private BooleanExpression regionEq(String region) {
         if(StringUtils.hasText(region)){
-            return picture.smokingArea.id.like(region);
+            return picture.smokingArea.id.like("%"+region+"%");
         }
         return null;
     }
