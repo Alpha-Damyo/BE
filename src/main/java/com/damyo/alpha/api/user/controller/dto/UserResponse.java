@@ -25,11 +25,15 @@ public record UserResponse (
         @Schema(example = "34.2", description = "유저의 기여도 상위 백분위")
         float percentage,
         @Schema(example = "40", description = "기여도 1등과의 기여도 차이")
-        int gap
+        int gap,
+        @Schema(example = "kakao", description = "인증 제공자")
+        String provider,
+        @Schema(description = "인증 서버에서 제공하는 고유한 id값")
+        String providerId
 
 ) {
     public UserResponse(User user, float percentage, int gap) {
-        this(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(),
-                user.getProfileUrl(), user.getContribution(), user.getGender(), user.getAge(), percentage, gap);
+        this(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(), user.getProfileUrl(), user.getContribution(),
+                user.getGender(), user.getAge(), percentage, gap, user.getProvider(), user.getProviderId());
     }
 }

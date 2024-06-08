@@ -40,4 +40,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                    "order by contribution desc " +
                    "limit 1", nativeQuery = true)
     int getTop1Contribution();
+
+    Optional<User> findUserByProviderId(String providerId);
 }
