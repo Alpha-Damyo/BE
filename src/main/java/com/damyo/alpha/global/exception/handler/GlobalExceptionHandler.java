@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleUserException(BaseException e) {
+    public ResponseEntity<ErrorResponse> handleBaseException(BaseException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getHttpStatus()).body(new ErrorResponse(errorCode.getExceptionCode(), errorCode.getMessage()));
     }

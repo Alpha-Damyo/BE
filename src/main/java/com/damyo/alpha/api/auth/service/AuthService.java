@@ -15,6 +15,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -109,8 +110,12 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
-        ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
-        return exchange.getBody();
+        try {
+            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+            return exchange.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new AuthException(FAIL_GET_INFO);
+        }
     }
 
     public UUID checkIsMember(String providerId) {

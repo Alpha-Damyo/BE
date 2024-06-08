@@ -15,7 +15,8 @@ public enum AuthErrorCode implements ErrorCode {
     EXPIRED_TOKEN(UNAUTHORIZED, "A103", "이미 만료된 토큰입니다"),
     INVALID_TOKEN(UNAUTHORIZED, "A104", "토큰이 유효하지 않습니다"),
     INVALID_PROVIDER(BAD_REQUEST, "A105", "인증 제공자가 올바르지 않습니다."),
-    UNKNOWN_ERROR(BAD_REQUEST, "A106", "예상하지 못한 에러입니다.")
+    FAIL_GET_INFO(BAD_REQUEST, "A106", "OAuth 토큰이 잘못되었거나 만료되었습니다."),
+    UNKNOWN_ERROR(BAD_REQUEST, "A107", "예상하지 못한 에러입니다.")
     ;
 
     private final HttpStatus httpStatus;

@@ -36,7 +36,6 @@ public class AuthController {
 
     private final AuthService authService;
     private final S3ImageService s3ImageService;
-    private final UserRepository userRepository;
 
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "회원가입", description = "토큰을 반환한다.")
