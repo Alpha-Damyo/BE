@@ -19,6 +19,7 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -35,18 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtProvider.resolveToken(request);
-        if (StringUtils.hasText(token)) {
-            try {
-                String id = jwtProvider.validateTokenAndGetId(token);
-                Authentication authentication = jwtProvider.createAuthentication(UUID.fromString(id));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (ExpiredJwtException e) {
-                request.setAttribute("exception", EXPIRED_TOKEN);
-            } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-                request.setAttribute("exception", INVALID_TOKEN);
-            } catch (Exception e) {
-                request.setAttribute("exception", UNKNOWN_ERROR);
-            }
+        log.info(request.getRequestURI());
+        try {
+            String id = jwtProvider.validateTokenAndGetId(token);
+            Authentication authentication = jwtProvider.createAuthentication(UUID.fromString(id));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (ExpiredJwtException e) {
+            request.setAttribute("exception", EXPIRED_TOKEN);
+        } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+            log.info(e.getMessage());
+            request.setAttribute("exception", INVALID_TOKEN);
+        } catch (Exception e) {
+            request.setAttribute("exception", UNKNOWN_ERROR);
         }
         filterChain.doFilter(request, response);
     }

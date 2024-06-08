@@ -21,14 +21,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint entryPoint;
     private static final String[] ALLOWED_URLS = {
             "/api/auth/**", "/api/area/**", "/api/info/{saId}",
-            "/swagger-ui/**", "/v3/**", "/favicon.ico"
+            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error"
     };
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequest ->
-                authorizeRequest.requestMatchers(ALLOWED_URLS).permitAll()
-                        .anyRequest().authenticated())
+                authorizeRequest.requestMatchers(ALLOWED_URLS).permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
