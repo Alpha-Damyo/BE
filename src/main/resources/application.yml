@@ -50,14 +50,3 @@ springdoc:
     persist-authorization: true
   paths-to-match:
     - /api/**
-
-provider:
-  google:
-    user_info_uri: https://www.googleapis.com/oauth2/v1/userinfo
-    method: get
-  naver:
-    user_info_uri: https://openapi.naver.com/v1/nid/me
-    method: get
-  kakao:
-    user_info_uri: https://kapi.kakao.com/v2/user/me
-    method: get
