@@ -7,6 +7,7 @@ import com.damyo.alpha.api.auth.controller.dto.LoginRequest;
 import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
 import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.auth.service.AuthService;
+import com.damyo.alpha.api.user.domain.UserRepository;
 import com.damyo.alpha.global.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,12 +36,13 @@ public class AuthController {
 
     private final AuthService authService;
     private final S3ImageService s3ImageService;
+    private final UserRepository userRepository;
 
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "회원가입", description = "토큰을 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
-            @ApiResponse(responseCode = "A101", description = "이미 가입된 계정이 존재할 때(email 중복)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "A101", description = "이미 가입된 계정이 존재할 때(providerId 중복)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> signUp(
             @Parameter(description = "프로필 사진", in = ParameterIn.DEFAULT)
@@ -63,17 +65,23 @@ public class AuthController {
     @Operation(summary = "로그인", description = "토큰을 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
-            @ApiResponse(responseCode = "A102", description = "해당 이메일이 DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "A102", description = "해당 토큰으로 받아온 providerId DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> login(
             @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
             @RequestParam String token,
             @PathVariable String provider) {
-
         Map<String, Object> userInfo = authService.getUserInfo(provider, token);
-        log.info(userInfo.toString());
         String providerId = authService.getAttributesId(provider, userInfo);
-        log.info(providerId);
+        UUID id = authService.checkIsMember(providerId);
+        String jwt = authService.generateToken(id);
+        return ResponseEntity.ok().body(new TokenResponse(jwt));
+    }
+
+    @GetMapping("/token")
+    @Operation(summary = "소셜 로그인 생략하고 토큰 발급받기(테스트용)", description = "바뀐 로그인 방식으로 회원가입된 3개의 계정에 대해 토큰을 발급받는다." +
+            "'106362899132468449802', '3399007981', 'tmO5sDw_IaLlon7-M7CesK43rgFDdAnogEKq-ubl_9c' 중에 하나를 골라 providerId에 넣는다")
+    public ResponseEntity<TokenResponse> getToken(@RequestParam String providerId) {
         UUID id = authService.checkIsMember(providerId);
         String jwt = authService.generateToken(id);
         return ResponseEntity.ok().body(new TokenResponse(jwt));
