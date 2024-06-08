@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @Tag(name = "AuthController")
 public class AuthController {
 
@@ -69,7 +71,9 @@ public class AuthController {
             @PathVariable String provider) {
 
         Map<String, Object> userInfo = authService.getUserInfo(provider, token);
+        log.info(userInfo.toString());
         String providerId = authService.getAttributesId(provider, userInfo);
+        log.info(providerId);
         UUID id = authService.checkIsMember(providerId);
         String jwt = authService.generateToken(id);
         return ResponseEntity.ok().body(new TokenResponse(jwt));

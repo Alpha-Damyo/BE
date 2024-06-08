@@ -1,9 +1,8 @@
 package com.damyo.alpha.global.config;
 
 import com.damyo.alpha.api.auth.jwt.JwtAuthenticationEntryPoint;
-import com.damyo.alpha.api.auth.jwt.JwtAuthenticationFilter;
+import com.damyo.alpha.api.auth.jwt.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

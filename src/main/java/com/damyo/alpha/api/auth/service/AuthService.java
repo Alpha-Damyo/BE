@@ -57,28 +57,43 @@ public class AuthService {
     public Map<String, Object> getUserInfo(String provider, String providerToken) {
         return loadUserAttributes(provider, providerToken);
     }
-
+    @SuppressWarnings("unchecked")
     public String getAttributesId(String provider, Map<String, Object> userAttributes) {
-        return switch (provider) {
-            case PROVIDER_GOOGLE -> (String) userAttributes.get("id");
-            case PROVIDER_NAVER -> null;
-            case PROVIDER_KAKAO -> null;
-            default -> null;
-        };
+        switch (provider) {
+            case PROVIDER_GOOGLE -> {
+                return (String) userAttributes.get("id");
+            }
+            case PROVIDER_NAVER -> {
+                Map<String, Object> responseAttribute = (Map<String, Object>) userAttributes.get("response");
+                return (String) responseAttribute.get("id");
+            }
+            case PROVIDER_KAKAO -> {
+                return userAttributes.get("id").toString();
+            }
+            default -> throw new AuthException(INVALID_PROVIDER);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private String getAttributesEmail(String provider, Map<String, Object> userAttributes) {
-        return switch (provider) {
-            case PROVIDER_GOOGLE -> (String) userAttributes.get("email");
-            case PROVIDER_NAVER -> null;
-            case PROVIDER_KAKAO -> "kakao";
-            default -> null;
-        };
+        switch (provider) {
+            case PROVIDER_GOOGLE -> {
+                return (String) userAttributes.get("email");
+            }
+            case PROVIDER_NAVER -> {
+                Map<String, Object> responseAttribute = (Map<String, Object>) userAttributes.get("response");
+                return (String) responseAttribute.get("email");
+            }
+            case PROVIDER_KAKAO -> {
+                return PROVIDER_KAKAO;
+            }
+            default -> throw new AuthException(INVALID_PROVIDER);
+        }
     }
 
     @Transactional
     public String generateToken(UUID id) {
-        return jwtProvider.generate(id);
+        return jwtProvider.generate(id.toString());
     }
 
     private Map<String, Object> loadUserAttributes(String provider, String token) {
@@ -87,9 +102,7 @@ public class AuthService {
             case PROVIDER_GOOGLE -> GOOGLE_USER_INFO_URI;
             case PROVIDER_NAVER -> NAVER_USER_INFO_URI;
             case PROVIDER_KAKAO -> KAKAO_USER_INFO_URI;
-            default ->
-                // 예외 처리 하기
-                    "null";
+            default -> throw new AuthException(INVALID_PROVIDER);
         };
         URI uri = UriComponentsBuilder
                 .fromUriString(url)

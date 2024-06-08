@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "회원가입 시 요청으로 오는 DTO")
 public record SignUpRequest (
-        @Schema(description = "소셜 로그인 후 발급 받은 토큰", example = "waiting@gmail.com")
+        @Schema(description = "소셜 로그인 후 발급 받은 토큰", example = "이거 지우고 소셜에서 받은 토큰 복붙하기")
         @Email String token,
         @Schema(description = "소셜 로그인 인증 제공자 (google, naver, kakao)", example = "kakao")
         String provider,
