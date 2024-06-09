@@ -70,6 +70,7 @@ public class AuthController {
             @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
             @RequestParam String token,
             @PathVariable String provider) {
+        log.info("Oauth token: " + token);
         Map<String, Object> userInfo = authService.getUserInfo(provider, token);
         String providerId = authService.getAttributesId(provider, userInfo);
         UUID id = authService.checkIsMember(providerId);

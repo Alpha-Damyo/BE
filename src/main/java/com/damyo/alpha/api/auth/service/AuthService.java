@@ -110,12 +110,14 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
-        try {
-            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
-            return exchange.getBody();
-        } catch (HttpClientErrorException e) {
-            throw new AuthException(FAIL_GET_INFO);
-        }
+//        try {
+//            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+//            return exchange.getBody();
+//        } catch (HttpClientErrorException e) {
+//            throw new AuthException(FAIL_GET_INFO);
+//        }
+        ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+        return exchange.getBody();
     }
 
     public UUID checkIsMember(String providerId) {
