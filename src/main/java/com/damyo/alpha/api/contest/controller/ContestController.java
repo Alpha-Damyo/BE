@@ -39,8 +39,8 @@ public class ContestController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "페이지네이션 위치를 위한 커서", in = ParameterIn.DEFAULT, required = true)
             @RequestParam Long cursorId,
-            @Parameter(description = "정렬 기준", in = ParameterIn.DEFAULT)
-            @RequestParam(required = false) String sortBy,
+            @Parameter(description = "정렬 기준 date 혹은 like 입력", in = ParameterIn.DEFAULT, required = true)
+            @RequestParam String sortBy,
             @Parameter(description = "검색 지역", in = ParameterIn.DEFAULT)
             @RequestParam(required = false) String region) {
         UUID userId = userDetails.getId();
