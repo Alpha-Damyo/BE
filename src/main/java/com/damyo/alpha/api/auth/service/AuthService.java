@@ -9,10 +9,7 @@ import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
@@ -110,14 +107,12 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
-//        try {
-//            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
-//            return exchange.getBody();
-//        } catch (HttpClientErrorException e) {
-//            throw new AuthException(FAIL_GET_INFO);
-//        }
-        ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
-        return exchange.getBody();
+        try {
+            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+            return exchange.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new AuthException(FAIL_GET_INFO);
+        }
     }
 
     public UUID checkIsMember(String providerId) {
