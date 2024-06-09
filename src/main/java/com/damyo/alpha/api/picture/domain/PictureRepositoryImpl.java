@@ -96,7 +96,7 @@ public class PictureRepositoryImpl implements PictureCustomRepository {
     @Override
     public List<LikesRankResponse> getRanking() {
         List<Tuple> result = jpaQueryFactory
-                .select(user.id, user.name, user.profileUrl, picture.likes.sum())
+                .select(user.id, user.name, user.profileUrl, picture.likes.coalesce(0L).sum())
                 .from(user)
                 .leftJoin(picture)
                 .on(user.eq(picture.user))
