@@ -37,6 +37,8 @@ public class S3ImageService {
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
+    @Value("${cloud.aws.s3.cloudfront.domain}")
+    private String cloudFront;
 
     public String upload(MultipartFile image) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
@@ -95,7 +97,7 @@ public class S3ImageService {
         }
 
 //        pictureRepository.save(Picture.builder().pictureUrl(amazonS3.getUrl(bucketName, s3FileName).toString())..build())
-        return amazonS3.getUrl(bucketName, s3FileName).toString();
+        return cloudFront + s3FileName;
     }
 
     public void deleteImageFromS3(String imageAddress){
