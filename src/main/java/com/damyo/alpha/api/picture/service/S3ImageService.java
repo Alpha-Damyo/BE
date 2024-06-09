@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -29,16 +30,16 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+@Service
 public class S3ImageService {
-
-    private final AmazonS3 amazonS3;
-    private final PictureRepository pictureRepository;
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
-    @Value("${cloud.aws.s3.cloudfront.domain}")
+    @Value("${cloud.aws.cloudfront.domain}")
     private String cloudFront;
+
+    private final AmazonS3 amazonS3;
+    private final PictureRepository pictureRepository;
 
     public String upload(MultipartFile image) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
