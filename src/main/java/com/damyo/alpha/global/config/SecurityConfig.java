@@ -1,9 +1,8 @@
 package com.damyo.alpha.global.config;
 
 import com.damyo.alpha.api.auth.jwt.JwtAuthenticationEntryPoint;
-import com.damyo.alpha.api.auth.jwt.JwtAuthenticationFilter;
+import com.damyo.alpha.api.auth.jwt.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,14 +21,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint entryPoint;
     private static final String[] ALLOWED_URLS = {
             "/api/auth/**", "/api/area/**", "/api/info/{saId}",
-            "/swagger-ui/**", "/v3/**", "/favicon.ico"
+            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error"
     };
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequest ->
-                authorizeRequest.requestMatchers(ALLOWED_URLS).permitAll()
-                        .anyRequest().authenticated())
+                authorizeRequest.requestMatchers(ALLOWED_URLS).permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

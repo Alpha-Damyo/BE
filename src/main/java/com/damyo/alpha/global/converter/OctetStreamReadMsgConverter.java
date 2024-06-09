@@ -1,4 +1,4 @@
-package com.damyo.alpha.global.coverter;
+package com.damyo.alpha.global.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

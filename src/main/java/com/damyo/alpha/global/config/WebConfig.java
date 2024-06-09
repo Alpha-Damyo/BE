@@ -1,6 +1,6 @@
 package com.damyo.alpha.global.config;
 
-import com.damyo.alpha.global.coverter.OctetStreamReadMsgConverter;
+import com.damyo.alpha.global.converter.OctetStreamReadMsgConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;

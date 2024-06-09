@@ -65,6 +65,8 @@ dependencies {
 
 	// spring batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 // QueryDSL setting ------------------------------------------------------------------------------------------------
 def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile
