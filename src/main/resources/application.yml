@@ -41,7 +41,7 @@ cloud:
     stack:
       auto: false
     cloudfront:
-      dmain: ${CLOUDFRONT_DOMAIN}
+      domain: ${CLOUDFRONT_DOMAIN}
 
 springdoc:
   swagger-ui:
