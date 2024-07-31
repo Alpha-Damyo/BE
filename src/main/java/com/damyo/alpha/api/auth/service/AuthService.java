@@ -41,25 +41,60 @@ public class AuthService {
     private static final String PROVIDER_KAKAO = "kakao";
     private static final ParameterizedTypeReference<Map<String, Object>> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<Map<String, Object>>() {
     };
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String CONTENT_HEADER = "Content-type";
+    private static final String GRANT_TYPE = "Bearer ";
+    private static final String FORM_TYPE = "application/x-www-form-urlencoded:utf-8";
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    public User signUp(SignUpRequest signUpRequest, String profileUrl) {
-        Map<String, Object> userInfo = getUserInfo(signUpRequest.provider(), signUpRequest.token());
-        String providerId = getAttributesId(signUpRequest.provider(), userInfo);
-        String email = getAttributesEmail(signUpRequest.provider(), userInfo);
-        if (userRepository.findUserByProviderId(providerId).isPresent()) {
-            throw new AuthException(ACCOUNT_ALREADY_EXIST);
-        }
-        return userRepository.save(new User(signUpRequest, profileUrl, providerId, email));
+    public String login(String token, String provider) {
+        Map<String, Object> userInfo = getUserInfo(token, provider);
+        String providerId = getAttributesId(userInfo, provider);
+        User user = findOrCreateUser(providerId, provider);
+        return jwtProvider.generate(user.getId().toString());
     }
 
-    public Map<String, Object> getUserInfo(String provider, String providerToken) {
-        return loadUserAttributes(provider, providerToken);
+    public String generateTestToken(String providerId) {
+        User user = userRepository.findUserByProviderId(providerId).orElseThrow(
+                () -> new AuthException(ACCOUNT_NOT_FOUND)
+        );
+        return jwtProvider.generate(user.getId().toString());
+    }
+
+    private Map<String, Object> getUserInfo(String token, String provider) {
+        return loadUserAttributes(token, provider);
+    }
+
+    private Map<String, Object> loadUserAttributes(String token, String provider) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = switch (provider) {
+            case PROVIDER_GOOGLE -> GOOGLE_USER_INFO_URI;
+            case PROVIDER_NAVER -> NAVER_USER_INFO_URI;
+            case PROVIDER_KAKAO -> KAKAO_USER_INFO_URI;
+            default -> throw new AuthException(INVALID_PROVIDER);
+        };
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .build()
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(CONTENT_HEADER, FORM_TYPE);
+        headers.add(AUTHORIZATION_HEADER, GRANT_TYPE + token);
+        RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+        try {
+            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+            return exchange.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new AuthException(FAIL_GET_INFO);
+        }
     }
     @SuppressWarnings("unchecked")
-    public String getAttributesId(String provider, Map<String, Object> userAttributes) {
+    private String getAttributesId(Map<String, Object> userAttributes, String provider) {
         switch (provider) {
             case PROVIDER_GOOGLE -> {
                 return (String) userAttributes.get("id");
@@ -75,59 +110,10 @@ public class AuthService {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private String getAttributesEmail(String provider, Map<String, Object> userAttributes) {
-        switch (provider) {
-            case PROVIDER_GOOGLE -> {
-                return (String) userAttributes.get("email");
-            }
-            case PROVIDER_NAVER -> {
-                Map<String, Object> responseAttribute = (Map<String, Object>) userAttributes.get("response");
-                return (String) responseAttribute.get("email");
-            }
-            case PROVIDER_KAKAO -> {
-                return PROVIDER_KAKAO;
-            }
-            default -> throw new AuthException(INVALID_PROVIDER);
-        }
-    }
-
-    @Transactional
-    public String generateToken(UUID id) {
-        return jwtProvider.generate(id.toString());
-    }
-
-    private Map<String, Object> loadUserAttributes(String provider, String token) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = switch (provider) {
-            case PROVIDER_GOOGLE -> GOOGLE_USER_INFO_URI;
-            case PROVIDER_NAVER -> NAVER_USER_INFO_URI;
-            case PROVIDER_KAKAO -> KAKAO_USER_INFO_URI;
-            default -> throw new AuthException(INVALID_PROVIDER);
-        };
-
-        URI uri = UriComponentsBuilder
-                .fromUriString(url)
-                .build()
-                .toUri();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded:utf-8");
-        headers.add("Authorization", "Bearer " + token);
-        RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
-
-        try {
-            ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
-            return exchange.getBody();
-        } catch (HttpClientErrorException e) {
-            throw new AuthException(FAIL_GET_INFO);
-        }
-    }
-
-    public UUID checkIsMember(String providerId) {
-        User user = userRepository.findUserByProviderId(providerId).orElseThrow(
-                () -> new AuthException(ACCOUNT_NOT_FOUND)
+    private User findOrCreateUser(String provider, String providerId) {
+        // TO DO: 기본 이름, 프로필 설정하기
+        return userRepository.findUserByProviderId(providerId).orElseGet(
+                () -> userRepository.save(new User("유저", provider, providerId, null))
         );
-        return user.getId();
     }
 }
