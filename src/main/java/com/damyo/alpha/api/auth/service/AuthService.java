@@ -52,7 +52,7 @@ public class AuthService {
     public String login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
         String providerId = getAttributesId(userInfo, provider);
-        User user = findOrCreateUser(providerId, provider);
+        User user = findOrCreateUser(provider, providerId);
         return jwtProvider.generate(user.getId().toString());
     }
 
