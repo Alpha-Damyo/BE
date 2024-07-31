@@ -67,8 +67,9 @@ public class AuthController {
             @ApiResponse(responseCode = "A102", description = "해당 토큰으로 받아온 providerId DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<TokenResponse> login(
-            @Parameter(description = "로그인 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @Parameter(description = "헤더에 위치한 인증 제공자에게 받은 토큰, 토큰 타입은 bearer", in = ParameterIn.DEFAULT, required = true)
             @RequestHeader("Authorization") String authorHeader,
+            @Parameter(description = "토큰을 제공한 인증 제공자(google, naver, kakao)", in = ParameterIn.DEFAULT, required = true)
             @PathVariable String provider) {
         String token = authorHeader.substring(7);
         Map<String, Object> userInfo = authService.getUserInfo(provider, token);
