@@ -12,6 +12,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +21,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 
@@ -100,13 +105,17 @@ public class AuthService {
             case PROVIDER_KAKAO -> KAKAO_USER_INFO_URI;
             default -> throw new AuthException(INVALID_PROVIDER);
         };
+
         URI uri = UriComponentsBuilder
                 .fromUriString(url)
                 .build()
                 .toUri();
+
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.add("Content-type", "application/x-www-form-urlencoded:utf-8");
+        headers.add("Authorization", "Bearer " + token);
         RequestEntity<?> request = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
         try {
             ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
             return exchange.getBody();
