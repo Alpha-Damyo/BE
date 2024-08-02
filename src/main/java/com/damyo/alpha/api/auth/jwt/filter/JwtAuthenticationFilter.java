@@ -44,7 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", EXPIRED_TOKEN);
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            log.info(e.getMessage());
             request.setAttribute("exception", INVALID_TOKEN);
         } catch (Exception e) {
             request.setAttribute("exception", UNKNOWN_ERROR);
