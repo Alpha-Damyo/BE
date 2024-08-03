@@ -23,7 +23,6 @@ import java.util.List;
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
-    private final InfoService infoService;
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -53,16 +52,16 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
-    public List<SmokingAreaSummaryResponse> findAreaByName(String name) {
-        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName(name);
-        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
-
-        for(SmokingArea area : areas) {
-            areaResponses.add(area.toSUM());
-        }
-
-        return areaResponses;
-    }
+//    public List<SmokingAreaSummaryResponse> findAreaByName(String name) {
+//        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName(name);
+//        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
+//
+//        for(SmokingArea area : areas) {
+//            areaResponses.add(area.toSUM());
+//        }
+//
+//        return areaResponses;
+//    }
 
     public SmokingArea addSmokingArea(SmokingAreaRequest area) {
         LocalDateTime current = LocalDateTime.now();
