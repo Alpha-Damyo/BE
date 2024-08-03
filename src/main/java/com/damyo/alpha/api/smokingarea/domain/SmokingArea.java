@@ -64,6 +64,9 @@ public class SmokingArea {
     @Column(name = "outdoor")
     private Boolean outdoor;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
