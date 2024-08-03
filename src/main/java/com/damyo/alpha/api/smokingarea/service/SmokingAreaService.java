@@ -23,7 +23,6 @@ import java.util.List;
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
-    private final InfoService infoService;
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -53,16 +52,16 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
-    public List<SmokingAreaSummaryResponse> findAreaByName(String name) {
-        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName(name);
-        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
-
-        for(SmokingArea area : areas) {
-            areaResponses.add(area.toSUM());
-        }
-
-        return areaResponses;
-    }
+//    public List<SmokingAreaSummaryResponse> findAreaByName(String name) {
+//        List<SmokingArea> areas = smokingAreaRepository.findSmokingAreaByName(name);
+//        List<SmokingAreaSummaryResponse> areaResponses = new ArrayList<>();
+//
+//        for(SmokingArea area : areas) {
+//            areaResponses.add(area.toSUM());
+//        }
+//
+//        return areaResponses;
+//    }
 
     public SmokingArea addSmokingArea(SmokingAreaRequest area) {
         LocalDateTime current = LocalDateTime.now();
@@ -71,9 +70,7 @@ public class SmokingAreaService {
         SmokingArea smokingArea =  smokingAreaRepository.save(SmokingArea.builder().id(areaId).name(area.name()).latitude(area.latitude())
                 .longitude(area.longitude()).createdAt(current).status(true).address(area.address())
                 .description(area.description()).score(area.score()).opened(area.opened()).closed(area.closed())
-                .hygiene(null).dirty(null).airOut(null).noExist(false).indoor(area.indoor())
-                .outdoor(area.outdoor()).big(null).small(null).crowded(null).quite(null)
-                .chair(null).build());
+                .indoor(area.indoor()).outdoor(area.outdoor()).build());
 
         return smokingArea;
     }
@@ -103,8 +100,7 @@ public class SmokingAreaService {
 
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByCoordinate(minLatitude, maxLatitude,
                 minLongitude, maxLongitude, request.status(), request.opened(), request.closed(),
-                request.indoor(), request.outdoor(), request.hygiene(), request.dirty(), request.airOut(), request.noExist(),
-                request.big(), request.small(), request.crowded(), request.quite(), request.chair());
+                request.indoor(), request.outdoor());
 
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
@@ -128,110 +124,15 @@ public class SmokingAreaService {
         List<SmokingArea> areaList = smokingAreaRepository.findSmokingAreaByQuery(
                 query.word(),
                 query.status(),
-                query.airOut(),
                 query.opened(),
                 query.closed(),
-                query.hygiene(),
-                query.dirty(),
                 query.indoor(),
-                query.outdoor(),
-                query.big(),
-                query.small(),
-                query.crowded(),
-                query.quite(),
-                query.chair(),
-                query.noExist());
+                query.outdoor());
         List<SmokingAreaSummaryResponse> areaResponseList = new ArrayList<>();
 
         for(SmokingArea area : areaList){
             areaResponseList.add(area.toSUM());
         }
         return areaResponseList;
-    }
-
-    @Scheduled(cron = "0 0 4 * * MON")
-    public void updateAllArea(){
-        List<SmokingArea> areas = smokingAreaRepository.findAll();
-        for(SmokingArea area : areas){
-            String id = area.getId();
-            updateAreaByInfo(id);
-        }
-    }
-
-    private void updateAreaByInfo(String id){
-        InfoResponse infoResponse = infoService.getInfo(id);
-
-        boolean isOpened;
-        if(infoResponse.opened() >= infoResponse.closed()){
-            isOpened = true;
-        }
-        else{
-            isOpened = false;
-        }
-
-        boolean isClean;
-        if(infoResponse.hygiene() >= infoResponse.dirty()){
-            isClean = true;
-        }
-        else{
-            isClean = false;
-        }
-
-        boolean isOut;
-        if(infoResponse.outdoor() >= infoResponse.indoor()){
-            isOut = true;
-        }
-        else{
-            isOut = false;
-        }
-
-        boolean isBig;
-        if(infoResponse.big() >= infoResponse.small()){
-            isBig = true;
-        }
-        else{
-            isBig = false;
-        }
-
-        boolean isQuite;
-        if(infoResponse.quite() >= infoResponse.crowded()){
-            isQuite = true;
-        }
-        else{
-            isQuite = false;
-        }
-
-        boolean isAir;
-        if(infoResponse.airOut() >= infoResponse.size() - infoResponse.airOut()){
-            isAir = true;
-        }
-        else{
-            isAir = false;
-        }
-
-        boolean isChair;
-        if(infoResponse.chair() >= infoResponse.size() - infoResponse.chair()){
-            isChair = true;
-        }
-        else{
-            isChair = false;
-        }
-
-        boolean noExist;
-        if(infoResponse.notExist() > 10){
-            noExist = true;
-        }
-        else{
-            noExist = false;
-        }
-
-        smokingAreaRepository.updateSmokingAreaInfoById(isOpened, isOpened,
-                                                        isClean, isClean,
-                                                        isAir , infoResponse.score(),
-                                                        isOut, isOut,
-                                                        isBig, isBig,
-                                                        isQuite, isQuite,
-                                                        isChair, noExist, id);
-
     }
 }

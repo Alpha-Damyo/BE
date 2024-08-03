@@ -97,9 +97,7 @@ public class SmokingAreaController {
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
                 area.createdAt(), area.description(), area.score(), area.status(), area.opened(), info.opened(), area.closed(), info.closed(),
-                area.hygiene(), info.hygiene(), area.dirty(), info.dirty(), area.airOut(), info.airOut(), area.noExist(), info.notExist(),
-                area.indoor(), info.indoor(), area.outdoor(), info.outdoor(), area.big(), info.big(), area.small(), info.small(),
-                area.crowded(), info.crowded(), area.quite(), info.quite(), area.chair(), info.chair(), picList);
+                area.indoor(), info.indoor(), area.outdoor(), info.outdoor(), picList);
 
         return ResponseEntity.ok(response);
     }

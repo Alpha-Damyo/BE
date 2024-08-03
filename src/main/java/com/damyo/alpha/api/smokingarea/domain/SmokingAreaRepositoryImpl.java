@@ -17,9 +17,7 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
     @Override
     public List<SmokingArea> findSmokingAreaByCoordinate(BigDecimal minLatitude, BigDecimal maxLatitude,
                                                          BigDecimal minLongitude, BigDecimal maxLongitude,
-                                                         Boolean status, Boolean open, Boolean close, Boolean indoor, Boolean outdoor,
-                                                         Boolean hygiene, Boolean dirty, Boolean airOut, Boolean noExist, Boolean big,
-                                                         Boolean small, Boolean crowded, Boolean quite, Boolean chair) {
+                                                         Boolean status, Boolean open, Boolean close, Boolean indoor, Boolean outdoor) {
 
         List<SmokingArea> areaList = jpaQueryFactory
                 .selectFrom(smokingArea)
@@ -30,16 +28,7 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
                         isClosed(close),
                         isIndoor(indoor),
                         isOutdoor(outdoor),
-                        isClean(hygiene),
-                        isDirty(dirty),
-                        isSmall(small),
-                        isBig(big),
-                        isCrowded(crowded),
-                        isQuite(quite),
-                        isChair(chair),
-                        isTemp(status),
-                        isAir(airOut),
-                        isExist(noExist)
+                        isTemp(status)
                 )
                 .fetch();
 
@@ -47,13 +36,9 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
     }
 
     @Override
-    public List<SmokingArea> findSmokingAreaByQuery(String word,  Boolean temp, Boolean airOut,
+    public List<SmokingArea> findSmokingAreaByQuery(String word,  Boolean temp,
                                                     Boolean opened,  Boolean closed,
-                                                    Boolean hygiene, Boolean dirty,
-                                                    Boolean indoor,  Boolean outdoor,
-                                                    Boolean big,  Boolean small,
-                                                    Boolean crowded,  Boolean quite,
-                                                    Boolean chair, Boolean noExist) {
+                                                    Boolean indoor,  Boolean outdoor) {
         List<SmokingArea> areaList = jpaQueryFactory
                 .selectFrom(smokingArea)
                 .where( wordEq(word),
@@ -61,16 +46,7 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
                         isClosed(closed),
                         isIndoor(indoor),
                         isOutdoor(outdoor),
-                        isClean(hygiene),
-                        isDirty(dirty),
-                        isSmall(small),
-                        isBig(big),
-                        isCrowded(crowded),
-                        isQuite(quite),
-                        isChair(chair),
-                        isTemp(temp),
-                        isAir(airOut),
-                        isExist(noExist))
+                        isTemp(temp))
                 .fetch();
         return areaList;
     }
@@ -114,63 +90,9 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
         }
         return null;
     }
-    private BooleanExpression isClean(Boolean clean) {
-        if(clean != null) {
-            return smokingArea.hygiene.eq(clean);
-        }
-        return null;
-    }
-    private BooleanExpression isDirty(Boolean dirty) {
-        if(dirty != null) {
-            return smokingArea.dirty.eq(dirty);
-        }
-        return null;
-    }
-    private BooleanExpression isBig(Boolean big) {
-        if(big != null) {
-            return smokingArea.big.eq(big);
-        }
-        return null;
-    }
-    private BooleanExpression isSmall(Boolean small) {
-        if(small != null) {
-            return smokingArea.small.eq(small);
-        }
-        return null;
-    }
-    private BooleanExpression isCrowded(Boolean crowded) {
-        if(crowded != null) {
-            return smokingArea.crowded.eq(crowded);
-        }
-        return null;
-    }
-    private BooleanExpression isQuite (Boolean quite) {
-        if(quite != null) {
-            return smokingArea.quite.eq(quite);
-        }
-        return null;
-    }
-    private BooleanExpression isChair(Boolean chair) {
-        if(chair != null) {
-            return smokingArea.chair.eq(chair);
-        }
-        return null;
-    }
     private BooleanExpression isTemp(Boolean status) {
         if(status != null) {
             return smokingArea.status.eq(status);
-        }
-        return null;
-    }
-    private BooleanExpression isAir(Boolean air) {
-        if(air != null) {
-            return smokingArea.airOut.eq(air);
-        }
-        return null;
-    }
-    private BooleanExpression isExist(Boolean exist) {
-        if(exist != null) {
-            return smokingArea.noExist.eq(exist);
         }
         return null;
     }
