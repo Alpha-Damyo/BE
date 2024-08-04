@@ -173,5 +173,16 @@ public class SmokingAreaController {
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
+    @GetMapping("/report/{smokingAreaId}")
+    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId) {
+        smokingAreaService.reportSmokingArea(smokingAreaId);
+        return ResponseEntity.ok().body("신고 완료");
+    }
+
+    @GetMapping("/report/test")
+    public ResponseEntity<?> testReport() {
+        smokingAreaService.updateSmokingAreaByReport();
+        return null;
+    }
 
 }

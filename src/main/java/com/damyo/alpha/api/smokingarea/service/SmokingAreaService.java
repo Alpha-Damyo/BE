@@ -9,20 +9,30 @@ import com.damyo.alpha.api.info.service.InfoService;
 import com.damyo.alpha.api.smokingarea.exception.AreaErrorCode;
 import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_ID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -37,7 +47,7 @@ public class SmokingAreaService {
 
     public SmokingArea findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
-                .orElseThrow(() -> new AreaException(AreaErrorCode.NOT_FOUND_ID));
+                .orElseThrow(() -> new AreaException(NOT_FOUND_ID));
         return area;
     }
 
@@ -70,7 +80,7 @@ public class SmokingAreaService {
         SmokingArea smokingArea =  smokingAreaRepository.save(SmokingArea.builder().id(areaId).name(area.name()).latitude(area.latitude())
                 .longitude(area.longitude()).createdAt(current).status(true).address(area.address())
                 .description(area.description()).score(area.score()).opened(area.opened()).closed(area.closed())
-                .indoor(area.indoor()).outdoor(area.outdoor()).build());
+                .indoor(area.indoor()).outdoor(area.outdoor()).isActive(true).build());
 
         return smokingArea;
     }
@@ -134,5 +144,35 @@ public class SmokingAreaService {
             areaResponseList.add(area.toSUM());
         }
         return areaResponseList;
+    }
+
+    @Transactional
+    public void reportSmokingArea(String smokingAreaId) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String key = "SA::" + smokingAreaId;
+        String hashKey = "report";
+        if (!hashOperations.hasKey(key, hashKey)) {
+            hashOperations.put(key, hashKey, 0L);
+        }
+        hashOperations.increment(key, hashKey, 1L);
+    }
+
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 1 ? ?", zone = "Asia/Seoul")
+    public void updateSmokingAreaByReport() {
+        Set<String> keys = redisTemplate.keys("SA*");
+        String hashKey = "report";
+        if (keys != null) {
+            HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+            for (String key : keys) {
+                String smokingAreaId = key.split("::")[1];
+                log.info(smokingAreaId);
+                if (Long.parseLong(String.valueOf(hashOperations.get(key, hashKey))) >= 5) {
+                    smokingAreaRepository.updateSmokingAreaActiveById(smokingAreaId);
+                    hashOperations.delete(key, hashKey);
+                }
+            }
+        }
     }
 }
