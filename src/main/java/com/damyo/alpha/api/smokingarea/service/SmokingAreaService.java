@@ -1,6 +1,10 @@
 package com.damyo.alpha.api.smokingarea.service;
 
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
+import com.damyo.alpha.api.report.domain.Report;
+import com.damyo.alpha.api.report.domain.ReportRepository;
+import com.damyo.alpha.api.report.exception.ReportErrorCode;
+import com.damyo.alpha.api.report.exception.ReportException;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
@@ -19,11 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static com.damyo.alpha.api.report.exception.ReportErrorCode.ALREADY_REPORT;
 import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_ID;
 
 @Service
@@ -33,6 +35,7 @@ public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ReportRepository reportRepository;
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -147,7 +150,10 @@ public class SmokingAreaService {
     }
 
     @Transactional
-    public void reportSmokingArea(String smokingAreaId) {
+    public void reportSmokingArea(String smokingAreaId, UUID userId) {
+        if (reportRepository.findReportByUserIdAndSmokingAreaId(userId, smokingAreaId).isPresent()) {
+            throw new ReportException(ALREADY_REPORT);
+        }
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String key = "SA::" + smokingAreaId;
         String hashKey = "report";
@@ -155,11 +161,12 @@ public class SmokingAreaService {
             hashOperations.put(key, hashKey, 0L);
         }
         hashOperations.increment(key, hashKey, 1L);
+        reportRepository.save(new Report(userId, smokingAreaId));
     }
 
 
     @Transactional
-    @Scheduled(cron = "0 0 0 1 ? ?", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 1 * ?", zone = "Asia/Seoul")
     public void updateSmokingAreaByReport() {
         Set<String> keys = redisTemplate.keys("SA*");
         String hashKey = "report";

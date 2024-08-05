@@ -174,8 +174,8 @@ public class SmokingAreaController {
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
     @GetMapping("/report/{smokingAreaId}")
-    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId) {
-        smokingAreaService.reportSmokingArea(smokingAreaId);
+    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details) {
+        smokingAreaService.reportSmokingArea(smokingAreaId, details.getId());
         return ResponseEntity.ok().body("신고 완료");
     }
 
