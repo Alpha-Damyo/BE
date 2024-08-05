@@ -5,6 +5,7 @@ import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.info.service.InfoService;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
+import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
@@ -19,9 +20,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +44,7 @@ public class SmokingAreaController {
     private final PictureService pictureService;
     private final UserService userService;
     private final InfoService infoService;
+    private final S3ImageService s3ImageService;
 
     @Value("${guest.uuid}")
     private String guestUUID;
@@ -58,24 +62,28 @@ public class SmokingAreaController {
     }
 
     // 제보된 흡연구역 추가 기능
-    @PostMapping("/postArea")
+    @PostMapping(value="/postArea", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary="흡연구역 제보", description = "흡연구역 정보를 제보합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 제보에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<SmokingAreaDetailResponse> postSmokingArea(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Parameter(description = "흡얀구역 정보 요청사항", in = ParameterIn.DEFAULT)
-            @RequestBody SmokingAreaRequest areaRequest){
+            @Parameter(description = "흡얀구역 정보 요청사항", in = ParameterIn.DEFAULT, required = true)
+            @RequestPart SmokingAreaRequest areaRequest,
+            @Parameter(description = "제보 첨부 사진", in = ParameterIn.DEFAULT)
+            @RequestPart(required = false) MultipartFile imgFile
+            ){
         SmokingArea area =  smokingAreaService.addSmokingArea(areaRequest);
 
-        if(areaRequest.url() != null) {
+        if(imgFile != null) {
+            String imgUrl = s3ImageService.upload(imgFile);
             if(userDetails != null) {
-                pictureService.uploadPicture(userDetails.getId(), area.getId(), areaRequest.url());
+                pictureService.uploadPicture(userDetails.getId(), area.getId(), imgUrl);
                 userService.updateContribution(userDetails.getId(), POST_SA_CONTRIBUTION_INCREMENT);
             }
             else{
-                pictureService.uploadPicture(UUID.fromString(guestUUID), area.getId(), areaRequest.url());
+                pictureService.uploadPicture(UUID.fromString(guestUUID), area.getId(), imgUrl);
             }
         }
 
