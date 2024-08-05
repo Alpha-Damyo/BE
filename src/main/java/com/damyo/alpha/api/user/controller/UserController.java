@@ -70,8 +70,10 @@ public class UserController {
             @ApiResponse(responseCode = "A104", description = "토큰이 유효하지 않을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProfile(@Parameter(description = "변경할 프로필 사진", in = ParameterIn.DEFAULT) @RequestPart(value = "image") MultipartFile profile,
-                                           @AuthenticationPrincipal UserDetailsImpl details) {
+    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal UserDetailsImpl details,
+                                           @Parameter(description = "변경할 프로필 사진", in = ParameterIn.DEFAULT)
+                                           @RequestPart(value = "image") MultipartFile profile
+                                           ) {
         String profileUrl = s3ImageService.upload(profile);
         String prevUrl = userService.updateProfile(details, profileUrl);
         s3ImageService.deleteImageFromS3(prevUrl);

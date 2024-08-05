@@ -13,8 +13,7 @@ public record UpdateInfoRequest(
         Boolean opened,
         Boolean closed,
         Boolean indoor,
-        Boolean outdoor,
-        String url
+        Boolean outdoor
 ) {
         public Info toEntity(SmokingArea smokingArea, User user) {
                 return Info.builder().

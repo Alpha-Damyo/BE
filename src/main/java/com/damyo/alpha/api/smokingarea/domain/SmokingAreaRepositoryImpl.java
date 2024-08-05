@@ -28,7 +28,8 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
                         isClosed(close),
                         isIndoor(indoor),
                         isOutdoor(outdoor),
-                        isTemp(status)
+                        isTemp(status),
+                        isActive(true)
                 )
                 .fetch();
 
@@ -46,7 +47,8 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
                         isClosed(closed),
                         isIndoor(indoor),
                         isOutdoor(outdoor),
-                        isTemp(temp))
+                        isTemp(temp),
+                        isActive(true))
                 .fetch();
         return areaList;
     }
@@ -93,6 +95,12 @@ public class SmokingAreaRepositoryImpl implements SmokingAreaCustomRepository {
     private BooleanExpression isTemp(Boolean status) {
         if(status != null) {
             return smokingArea.status.eq(status);
+        }
+        return null;
+    }
+    private BooleanExpression isActive(Boolean active) {
+        if(active != null) {
+            return smokingArea.status.eq(active);
         }
         return null;
     }
