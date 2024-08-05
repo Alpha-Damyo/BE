@@ -62,8 +62,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Info> infoList = new ArrayList<>();
 
-    public User(SignUpRequest signUpDto, String profileUrl, String providerId, String email) {
-        this(null, signUpDto.name(), email, signUpDto.provider(), providerId, null, profileUrl, 0,
-                signUpDto.gender(), signUpDto.age(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    public User(String name, String provider, String providerId, String profileUrl) {
+        this(null, name, null, provider, providerId, null, profileUrl, 0,
+                null, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 }

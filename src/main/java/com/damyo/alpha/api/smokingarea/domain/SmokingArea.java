@@ -58,38 +58,14 @@ public class SmokingArea {
     @Column(name = "closed")
     private Boolean closed;
 
-    @Column(name = "hygiene")
-    private Boolean hygiene;
-
-    @Column(name = "dirty")
-    private Boolean dirty;
-
-    @Column(name = "air_out")
-    private Boolean airOut;
-
-    @Column(name = "no_exist")
-    private Boolean noExist;
-
     @Column(name = "indoor")
     private Boolean indoor;
 
     @Column(name = "outdoor")
     private Boolean outdoor;
 
-    @Column(name = "big")
-    private Boolean big;
-
-    @Column(name = "small")
-    private Boolean small;
-
-    @Column(name = "crowded")
-    private Boolean crowded;
-
-    @Column(name = "quite")
-    private Boolean quite;
-
-    @Column(name = "chair")
-    private Boolean chair;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
@@ -114,8 +90,7 @@ public class SmokingArea {
     public SmokingAreaDetailResponse toDTO(){
         return new SmokingAreaDetailResponse(id, name, latitude, longitude,
                 address, createdAt, status, description, score, opened,
-                closed, hygiene, dirty, airOut, noExist, indoor, outdoor,
-                big, small, crowded, quite, chair);
+                closed, indoor, outdoor);
     }
 
     public SmokingAreaSummaryResponse toSUM(){

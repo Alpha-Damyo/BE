@@ -35,7 +35,7 @@ public class StarController {
             @ApiResponse(responseCode = "A104", description = "토큰이 유효하지 않을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/add")
-    public ResponseEntity<?> addStar(@RequestBody AddStarRequest request, @AuthenticationPrincipal UserDetailsImpl details) {
+    public ResponseEntity<?> addStar(@AuthenticationPrincipal UserDetailsImpl details, @RequestBody AddStarRequest request) {
         starService.addStar(request, details);
         return ResponseEntity.ok().body("즐겨찾기 등록 완료");
     }
