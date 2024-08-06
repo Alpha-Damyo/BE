@@ -101,11 +101,12 @@ public class SmokingAreaController {
             @PathVariable String smokingAreaId){
         SmokingAreaDetailResponse area = smokingAreaService.findAreaById(smokingAreaId).toDTO();
         InfoResponse info = infoService.getInfo(smokingAreaId);
+        Float avgScore = Math.round((info.score() + area.score()) / (info.size()+1) * 10) / 10.0F;
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
-                area.createdAt(), area.description(), area.score(), area.status(), area.opened(), info.opened(), area.closed(), info.closed(),
-                area.indoor(), info.indoor(), area.outdoor(), info.outdoor(), picList);
+                area.createdAt(), area.description(), avgScore, area.status(), area.opened(), area.closed(),
+                area.indoor(), area.outdoor(), picList);
 
         return ResponseEntity.ok(response);
     }

@@ -27,16 +27,4 @@ public class Info {
 
     @Column(name = "score")
     private Integer score;
-
-    @Column(name = "opened")
-    private Boolean opened;
-
-    @Column(name = "closed")
-    private Boolean closed;
-
-    @Column(name = "indoor")
-    private Boolean indoor;
-
-    @Column(name = "outdoor")
-    private Boolean outdoor;
 }
