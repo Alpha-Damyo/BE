@@ -20,9 +20,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +48,7 @@ public class SmokingAreaController {
     private final UserService userService;
     private final InfoService infoService;
     private final S3ImageService s3ImageService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Value("${guest.uuid}")
     private String guestUUID;
@@ -181,16 +185,7 @@ public class SmokingAreaController {
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
-    @GetMapping("/report/{smokingAreaId}")
-    @Operation(summary = "흡연구역 신고", description = "흡연구역이 존재하지 않을 때 유저가 보내는 요청")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "흡연구역 신고 성공"),
-            @ApiResponse(responseCode = "R101", description = "이미 신고한 흡연구역을 다시 신고한 경우")
-    })
-    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details) {
-        smokingAreaService.reportSmokingArea(smokingAreaId, details.getId());
-        return ResponseEntity.ok().body("신고 완료");
-    }
+
     @GetMapping("/report/test")
     @Operation(summary = "흡연구역 비활성화", description = "흡연구역이 신고 N회 이상인 경우 흡연구역 비활성화(테스트용)")
     public ResponseEntity<?> testReport() {

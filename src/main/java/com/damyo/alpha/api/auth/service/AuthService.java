@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.auth.service;
 
+import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.auth.controller.dto.LoginRequest;
 import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
@@ -9,6 +10,8 @@ import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,15 +51,19 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public String login(String token, String provider) {
+    public TokenResponse login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
         String providerId = getAttributesId(userInfo, provider);
         User user = findOrCreateUser(provider, providerId);
-        return jwtProvider.generate(user.getId().toString());
+        String id = user.getId().toString();
+        TokenResponse tokenResponse = jwtProvider.generate(id);
+        saveRTK(id, tokenResponse.refreshToken());
+        return tokenResponse;
     }
 
-    public String generateTestToken(String providerId) {
+    public TokenResponse generateTestToken(String providerId) {
         User user = userRepository.findUserByProviderId(providerId).orElseThrow(
                 () -> new AuthException(ACCOUNT_NOT_FOUND)
         );
@@ -115,5 +122,25 @@ public class AuthService {
         return userRepository.findUserByProviderId(providerId).orElseGet(
                 () -> userRepository.save(new User("유저", provider, providerId, null))
         );
+    }
+
+    public TokenResponse reissue(String refreshToken) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        String id = jwtProvider.validateRefreshAndGetId(refreshToken);
+        String rtkInRedis = (String) valueOperations.get(id);
+        assert rtkInRedis != null;
+        if (!rtkInRedis.equals(refreshToken)) {
+            log.info("4-1");
+            redisTemplate.delete(id);
+            throw new AuthException(INVALID_REFRESH_TOKEN);
+        }
+        TokenResponse tokenResponse = jwtProvider.generate(id);
+        saveRTK(id, tokenResponse.refreshToken());
+        return tokenResponse;
+    }
+
+    private void saveRTK(String key, String rtk) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, rtk);
     }
 }

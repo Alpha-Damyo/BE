@@ -1,31 +1,21 @@
 package com.damyo.alpha.api.smokingarea.service;
 
-import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
-import com.damyo.alpha.api.report.domain.Report;
-import com.damyo.alpha.api.report.domain.ReportRepository;
-import com.damyo.alpha.api.report.exception.ReportErrorCode;
-import com.damyo.alpha.api.report.exception.ReportException;
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
-import com.damyo.alpha.api.info.controller.dto.InfoResponse;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
-import com.damyo.alpha.api.info.service.InfoService;
-import com.damyo.alpha.api.smokingarea.exception.AreaErrorCode;
 import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.damyo.alpha.api.report.exception.ReportErrorCode.ALREADY_REPORT;
+import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.ALREADY_REPORT;
 import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_ID;
 
 @Service
@@ -35,7 +25,6 @@ public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ReportRepository reportRepository;
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -149,35 +138,26 @@ public class SmokingAreaService {
         return areaResponseList;
     }
 
-    @Transactional
     public void reportSmokingArea(String smokingAreaId, UUID userId) {
-        if (reportRepository.findReportByUserIdAndSmokingAreaId(userId, smokingAreaId).isPresent()) {
-            throw new ReportException(ALREADY_REPORT);
-        }
-        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "SA::" + smokingAreaId;
-        String hashKey = "report";
-        if (!hashOperations.hasKey(key, hashKey)) {
-            hashOperations.put(key, hashKey, 0L);
+        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) {
+            throw new AreaException(ALREADY_REPORT);
         }
-        hashOperations.increment(key, hashKey, 1L);
-        reportRepository.save(new Report(userId, smokingAreaId));
+        setOperations.add(key, userId);
     }
 
 
-    @Transactional
     @Scheduled(cron = "0 0 0 1 * ?", zone = "Asia/Seoul")
     public void updateSmokingAreaByReport() {
         Set<String> keys = redisTemplate.keys("SA*");
-        String hashKey = "report";
         if (keys != null) {
-            HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+            SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
             for (String key : keys) {
                 String smokingAreaId = key.split("::")[1];
-                log.info(smokingAreaId);
-                if (Long.parseLong(String.valueOf(hashOperations.get(key, hashKey))) >= 5) {
+                if (setOperations.size(key) >= 5) {
                     smokingAreaRepository.updateSmokingAreaActiveById(smokingAreaId);
-                    hashOperations.delete(key, hashKey);
+                    redisTemplate.delete(key);
                 }
             }
         }
