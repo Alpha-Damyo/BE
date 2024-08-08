@@ -20,9 +20,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +48,7 @@ public class SmokingAreaController {
     private final UserService userService;
     private final InfoService infoService;
     private final S3ImageService s3ImageService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Value("${guest.uuid}")
     private String guestUUID;
