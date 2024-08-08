@@ -12,12 +12,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/data")
@@ -35,6 +37,7 @@ public class SmokingDataController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "흡연데이터 요청사항", in = ParameterIn.DEFAULT)
             @RequestParam String areaId){
+        log.info("[Data]: /postData/{}", areaId);
         UUID userId = userDetails.getId();
         smokingDataService.addSmokingData(userId, areaId);
     }
@@ -46,6 +49,7 @@ public class SmokingDataController {
             @ApiResponse(responseCode = "200", description = "흡연 통계 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<StatisticsRegionResponse> getSmokingDataStaticsByArea(){
+        log.info("[Data]: /regionStatics");
         StatisticsRegionResponse regionResponse = smokingDataService.getStatisticsByRegion();
         return ResponseEntity.ok(regionResponse);
     }
@@ -57,6 +61,7 @@ public class SmokingDataController {
             @ApiResponse(responseCode = "200", description = "흡연 통계 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<StatisticsDateResponse> getSmokingDateStaticsByDate(){
+        log.info("[Data]: /dateStatics");
         StatisticsDateResponse dateResponse = smokingDataService.getStatisticsByDate();
         return ResponseEntity.ok(dateResponse);
     }

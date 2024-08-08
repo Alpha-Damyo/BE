@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/info")
@@ -46,6 +48,7 @@ public class InfoController {
             @Parameter(description = "리뷰 첨부 사진", in = ParameterIn.DEFAULT)
             @RequestPart(required = false) MultipartFile imgFile
             ) {
+        log.info("[Info]: /postInfo | {}", updateInfoRequest);
         infoService.updateInfo(updateInfoRequest, details);
 
         if(imgFile != null) {
@@ -64,6 +67,7 @@ public class InfoController {
     public InfoResponse getInfo(
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH, required = true)
             @PathVariable String saId) {
+        log.info("[Info]: /saId/{}", saId);
         return infoService.getInfo(saId);
     }
 }

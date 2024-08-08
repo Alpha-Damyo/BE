@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/star")
@@ -36,6 +38,7 @@ public class StarController {
     })
     @PostMapping("/add")
     public ResponseEntity<?> addStar(@AuthenticationPrincipal UserDetailsImpl details, @RequestBody AddStarRequest request) {
+        log.info("[Star]: /add | {}", request);
         starService.addStar(request, details);
         return ResponseEntity.ok().body("즐겨찾기 등록 완료");
     }
@@ -48,6 +51,7 @@ public class StarController {
     })
     @GetMapping("/list")
     public ResponseEntity<List<StarResponse>> getStarList(@AuthenticationPrincipal UserDetailsImpl details) {
+        log.info("[Star]: /list");
         List<StarResponse> starResponseList = starService.getStarList(details);
         return ResponseEntity.ok().body(starResponseList);
     }
@@ -63,6 +67,7 @@ public class StarController {
     })
     @DeleteMapping("/delete/{starId}")
     public ResponseEntity<?> deleteStar(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "삭제할 즐겨찾기의 id(pk)값") @PathVariable Long starId) {
+        log.info("[Star]: /delete/{}", starId);
         starService.deleteStar(starId, details.getId());
         return ResponseEntity.ok().body("즐겨찾기 제거 완료");
     }

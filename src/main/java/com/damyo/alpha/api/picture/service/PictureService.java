@@ -10,6 +10,7 @@ import com.damyo.alpha.api.picture.domain.PictureRepository;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.stream.IntStream;
 
 import static com.damyo.alpha.api.picture.exception.PictureErrorCode.PICTURE_NOT_FOUND;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PictureService {
@@ -41,16 +43,19 @@ public class PictureService {
         Picture picture = pictureRepository.findPictureById(id).orElseThrow(
                 () -> new PictureException(PICTURE_NOT_FOUND)
         );
+        log.info("[Picture]: load picture by id | {}", id);
         return new PictureResponse(picture);
     }
 
     public List<PictureResponse> getPicturesByUser(UUID id) {
         List<Picture> pictures = pictureRepository.findPicturesByUser_id(id);
+        log.info("[Picture]: load pictures by user | {}", id);
         return getPictureListResponse(pictures);
     }
 
     public List<PictureResponse> getPicturesBySmokingArea(String id, Long count) {
         List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(id, count);
+        log.info("[Picture]: load pictures by area | {}", id);
         return getPictureListResponse(pictures);
     }
 
@@ -73,6 +78,7 @@ public class PictureService {
                         likes(0L).
                         createdAt(LocalDateTime.now()).
                         build());
+        log.info("[Picture]: upload picture complete");
     }
 
     public PictureSliceResponse getPageContestPicture(Long cursorId, String sortBy, String region, UUID userId) {
