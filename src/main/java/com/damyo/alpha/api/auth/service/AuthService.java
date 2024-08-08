@@ -1,5 +1,6 @@
 package com.damyo.alpha.api.auth.service;
 
+import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.auth.controller.dto.LoginRequest;
 import com.damyo.alpha.api.auth.controller.dto.SignUpRequest;
@@ -49,14 +50,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    public String login(String token, String provider) {
+    public TokenResponse login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
         String providerId = getAttributesId(userInfo, provider);
         User user = findOrCreateUser(provider, providerId);
         return jwtProvider.generate(user.getId().toString());
     }
 
-    public String generateTestToken(String providerId) {
+    public TokenResponse generateTestToken(String providerId) {
         User user = userRepository.findUserByProviderId(providerId).orElseThrow(
                 () -> new AuthException(ACCOUNT_NOT_FOUND)
         );
@@ -115,5 +116,9 @@ public class AuthService {
         return userRepository.findUserByProviderId(providerId).orElseGet(
                 () -> userRepository.save(new User("유저", provider, providerId, null))
         );
+    }
+
+    public TokenResponse reissue(String refreshToken, UUID id) {
+        return jwtProvider.reissueToken(refreshToken, id);
     }
 }
