@@ -67,6 +67,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	implementation 'com.jcraft:jsch:0.1.55'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 // QueryDSL setting ------------------------------------------------------------------------------------------------
 def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile

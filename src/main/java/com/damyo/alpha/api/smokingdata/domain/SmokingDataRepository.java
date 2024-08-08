@@ -40,6 +40,7 @@ public interface SmokingDataRepository extends JpaRepository<SmokingData, Long> 
     @Query("SELECT sa.id, COUNT(sd) FROM SmokingData sd JOIN sd.smokingArea sa " +
             "WHERE sd.createdAt >= :startTime " +
             "AND sd.createdAt <= :endTime " +
+            "AND sa.isActive = true " +
             "GROUP BY sa.id " +
             "ORDER BY COUNT(sd) DESC")
     List<Object[]> findAreaTopByCreatedAt(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
