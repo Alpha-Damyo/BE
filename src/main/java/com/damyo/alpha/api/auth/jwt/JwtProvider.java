@@ -33,8 +33,8 @@ public class JwtProvider {
     private String accessSecret;
     @Value("${secret.rt}")
     private String refreshSecret;
-    private static final int ACCESS_EXPIRED_DURATION = 60 * 60;
-    private static final int REFRESH_EXPIRED_DURATION = 60;
+    private static final int ACCESS_EXPIRED_DURATION = 60 * 60 * 24 * 7;
+    private static final int REFRESH_EXPIRED_DURATION = 60 * 60 * 24 * 365;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "Bearer ";
     private Key accessKey;

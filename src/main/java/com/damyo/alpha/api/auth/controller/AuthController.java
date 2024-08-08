@@ -54,6 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
+    @Operation(summary = "토큰 재발급", description = "갱신 토큰으로 접큰 토큰과 갱신 토큰을 재발급한다. 이 때 이전 갱신 토큰은 제 기능을 하지 못한다.")
     public ResponseEntity<TokenResponse> reissueToken(
             @RequestBody ReissueRequest reissueRequest
             ) {
