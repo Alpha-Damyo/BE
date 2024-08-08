@@ -10,6 +10,8 @@ import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,12 +51,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public TokenResponse login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
         String providerId = getAttributesId(userInfo, provider);
         User user = findOrCreateUser(provider, providerId);
-        return jwtProvider.generate(user.getId().toString());
+        String id = user.getId().toString();
+        TokenResponse tokenResponse = jwtProvider.generate(id);
+        saveRTK(id, tokenResponse.refreshToken());
+        return tokenResponse;
     }
 
     public TokenResponse generateTestToken(String providerId) {
@@ -118,7 +124,23 @@ public class AuthService {
         );
     }
 
-    public TokenResponse reissue(String refreshToken, UUID id) {
-        return jwtProvider.reissueToken(refreshToken, id);
+    public TokenResponse reissue(String refreshToken) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        String id = jwtProvider.validateRefreshAndGetId(refreshToken);
+        String rtkInRedis = (String) valueOperations.get(id);
+        assert rtkInRedis != null;
+        if (!rtkInRedis.equals(refreshToken)) {
+            log.info("4-1");
+            redisTemplate.delete(id);
+            throw new AuthException(INVALID_REFRESH_TOKEN);
+        }
+        TokenResponse tokenResponse = jwtProvider.generate(id);
+        saveRTK(id, tokenResponse.refreshToken());
+        return tokenResponse;
+    }
+
+    private void saveRTK(String key, String rtk) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, rtk);
     }
 }

@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("exception", INVALID_TOKEN);
         } catch (Exception e) {
             request.setAttribute("exception", UNKNOWN_ERROR);
+            log.info(e.getMessage());
         }
         filterChain.doFilter(request, response);
     }

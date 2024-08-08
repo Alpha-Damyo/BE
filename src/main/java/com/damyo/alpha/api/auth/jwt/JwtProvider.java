@@ -22,7 +22,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
-import static com.damyo.alpha.api.auth.exception.AuthErrorCode.INVALID_REFRESH_TOKEN;
+import static com.damyo.alpha.api.auth.exception.AuthErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,8 +33,8 @@ public class JwtProvider {
     private String accessSecret;
     @Value("${secret.rt}")
     private String refreshSecret;
-    private static final int ACCESS_EXPIRED_DURATION = 24;
-    private static final int REFRESH_EXPIRED_DURATION = 24 * 365;
+    private static final int ACCESS_EXPIRED_DURATION = 60 * 60;
+    private static final int REFRESH_EXPIRED_DURATION = 60;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "Bearer ";
     private Key accessKey;
@@ -47,19 +47,12 @@ public class JwtProvider {
         refreshKey = Keys.hmacShaKeyFor(refreshSecret.getBytes());
     }
 
-    public TokenResponse reissueToken(String refreshToken, UUID id) {
-        if (!validateRefresh(refreshToken)) {
-            throw new AuthException(INVALID_REFRESH_TOKEN);
-        }
-        return generate(id.toString());
-    }
-
     public TokenResponse generate(String id) {
         Claims claims = Jwts.claims();
         claims.put("id", id);
         return TokenResponse.builder()
                 .accessToken(generateAccessToken(claims))
-                .refreshToken(generateRefreshToken())
+                .refreshToken(generateRefreshToken(claims))
                 .build();
     }
 
@@ -72,8 +65,9 @@ public class JwtProvider {
                 .compact();
     }
 
-    private String generateRefreshToken() {
+    private String generateRefreshToken(Claims claims) {
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuedAt(issuedAt())
                 .setExpiration(refreshExpiredAt())
                 .signWith(refreshKey,SignatureAlgorithm.HS512)
@@ -82,12 +76,12 @@ public class JwtProvider {
 
     private Date accessExpiredAt() {
         LocalDateTime now = LocalDateTime.now();
-        return Date.from(now.plusHours(ACCESS_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(now.plusSeconds(ACCESS_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private Date refreshExpiredAt() {
         LocalDateTime now = LocalDateTime.now();
-        return Date.from(now.plusHours(REFRESH_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(now.plusSeconds(REFRESH_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private Date issuedAt() {
@@ -95,25 +89,25 @@ public class JwtProvider {
         return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    private boolean validateRefresh(String refreshToken) {
+    public String validateRefreshAndGetId(String refreshToken) {
         try {
-            Date expiration = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(refreshKey)
                     .build()
                     .parseClaimsJws(refreshToken)
                     .getBody()
-                    .getExpiration();
-            return !expiration.before(new Date());
+                    .get("id", String.class);
         } catch (Exception e) {
-            return false;
+            log.info("3-1");
+            throw new AuthException(INVALID_REFRESH_TOKEN);
         }
     }
 
-    public String validateAccessAndGetId(String token) {
+    public String validateAccessAndGetId(String accessToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(accessKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(accessToken)
                 .getBody()
                 .get("id", String.class);
     }
