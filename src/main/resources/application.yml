@@ -4,12 +4,6 @@ spring:
     url: jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  ssh:
-    ssh-host: ${EC2_HOST}
-    ssh-port: 22
-    ssh-user: ubuntu
-    local-port: ${DB_PORT}
-    private-key-path: ${KEY_PATH}
   data:
     redis:
       host: ${REDIS_HOST}
