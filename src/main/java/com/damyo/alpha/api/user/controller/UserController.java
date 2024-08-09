@@ -47,6 +47,7 @@ public class UserController {
     })
     @GetMapping("/info")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal UserDetailsImpl details) {
+        log.info("[User]: /info");
         UserResponse user = userService.getUser(details.getId());
         return ResponseEntity.ok().body(user);
     }
@@ -60,6 +61,7 @@ public class UserController {
     })
     @PutMapping("/update/name")
     public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "변경할 이름") @RequestParam String name) {
+        log.info("[User]: /update/name | {}", name);
         userService.updateName(details, name);
         return ResponseEntity.ok().body("이름 변경 완료");
     }
@@ -75,6 +77,7 @@ public class UserController {
                                            @Parameter(description = "변경할 프로필 사진", in = ParameterIn.DEFAULT)
                                            @RequestPart(value = "image") MultipartFile profile
                                            ) {
+        log.info("[User]: /update/profile");
         String profileUrl = s3ImageService.upload(profile);
         String prevUrl = userService.updateProfile(details, profileUrl);
         s3ImageService.deleteImageFromS3(prevUrl);
@@ -89,6 +92,7 @@ public class UserController {
     })
     @PutMapping("/update/score")
     public ResponseEntity<?> updateScore(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "기여도 증가량") @RequestParam int increment) {
+        log.info("[User]: /update/score");
         userService.updateContribution(details.getId(), increment);
         return ResponseEntity.ok().body("기여도 변경 완료");
     }
@@ -101,6 +105,7 @@ public class UserController {
     })
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl details) {
+        log.info("[User]: /delete");
         userService.deleteUser(details.getId());
         return ResponseEntity.ok().body("회원 삭제 완료");
     }
@@ -112,6 +117,7 @@ public class UserController {
             @ApiResponse(responseCode = "R101", description = "이미 신고한 흡연구역을 다시 신고한 경우")
     })
     public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details) {
+        log.info("[User]: /report/{}", smokingAreaId);
         smokingAreaService.reportSmokingArea(smokingAreaId, details.getId());
         return ResponseEntity.ok().body("신고 완료");
     }

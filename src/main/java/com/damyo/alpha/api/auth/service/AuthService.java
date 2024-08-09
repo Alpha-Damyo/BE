@@ -9,6 +9,7 @@ import com.damyo.alpha.api.auth.jwt.JwtProvider;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -53,6 +54,9 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RedisTemplate<String, Object> redisTemplate;
 
+    @Value("${guest.profile}")
+    private String guestProfile;
+
     public TokenResponse login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
         String providerId = getAttributesId(userInfo, provider);
@@ -60,17 +64,23 @@ public class AuthService {
         String id = user.getId().toString();
         TokenResponse tokenResponse = jwtProvider.generate(id);
         saveRTK(id, tokenResponse.refreshToken());
+        log.info("[Auth]: login complete");
         return tokenResponse;
     }
 
     public TokenResponse generateTestToken(String providerId) {
         User user = userRepository.findUserByProviderId(providerId).orElseThrow(
-                () -> new AuthException(ACCOUNT_NOT_FOUND)
+                () -> {
+                    log.info("[Auth]: account not found | {}", providerId);
+                    return new AuthException(ACCOUNT_NOT_FOUND);
+                }
         );
+        log.info("[Auth]: test token generate");
         return jwtProvider.generate(user.getId().toString());
     }
 
     private Map<String, Object> getUserInfo(String token, String provider) {
+        log.info("[Auth]: user info find complete");
         return loadUserAttributes(token, provider);
     }
 
@@ -80,7 +90,10 @@ public class AuthService {
             case PROVIDER_GOOGLE -> GOOGLE_USER_INFO_URI;
             case PROVIDER_NAVER -> NAVER_USER_INFO_URI;
             case PROVIDER_KAKAO -> KAKAO_USER_INFO_URI;
-            default -> throw new AuthException(INVALID_PROVIDER);
+            default -> {
+                log.error("[Auth]: invalid provider");
+                throw new AuthException(INVALID_PROVIDER);
+            }
         };
 
         URI uri = UriComponentsBuilder
@@ -97,6 +110,7 @@ public class AuthService {
             ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
             return exchange.getBody();
         } catch (HttpClientErrorException e) {
+            log.info("[Auth]: info find fail | {}", e);
             throw new AuthException(FAIL_GET_INFO);
         }
     }
@@ -104,23 +118,30 @@ public class AuthService {
     private String getAttributesId(Map<String, Object> userAttributes, String provider) {
         switch (provider) {
             case PROVIDER_GOOGLE -> {
+                log.info("[Auth]: google attribute find complete");
                 return (String) userAttributes.get("id");
             }
             case PROVIDER_NAVER -> {
                 Map<String, Object> responseAttribute = (Map<String, Object>) userAttributes.get("response");
+                log.info("[Auth]: naver attribute find complete");
                 return (String) responseAttribute.get("id");
             }
             case PROVIDER_KAKAO -> {
+                log.info("[Auth]: kakao attribute find complete");
                 return userAttributes.get("id").toString();
             }
-            default -> throw new AuthException(INVALID_PROVIDER);
+            default -> {
+                log.error("[Auth]: invalid provider");
+                throw new AuthException(INVALID_PROVIDER);
+            }
         }
     }
 
     private User findOrCreateUser(String provider, String providerId) {
         // TO DO: 기본 이름, 프로필 설정하기
+        log.info("[Auth]: user account create complete");
         return userRepository.findUserByProviderId(providerId).orElseGet(
-                () -> userRepository.save(new User("유저", provider, providerId, null))
+                () -> userRepository.save(new User("유저", provider, providerId, guestProfile))
         );
     }
 
@@ -130,17 +151,19 @@ public class AuthService {
         String rtkInRedis = (String) valueOperations.get(id);
         assert rtkInRedis != null;
         if (!rtkInRedis.equals(refreshToken)) {
-            log.info("4-1");
             redisTemplate.delete(id);
+            log.error("[Auth]: refresh token is invalid | {}", refreshToken);
             throw new AuthException(INVALID_REFRESH_TOKEN);
         }
         TokenResponse tokenResponse = jwtProvider.generate(id);
         saveRTK(id, tokenResponse.refreshToken());
+        log.info("[Auth]: reissue complete");
         return tokenResponse;
     }
 
     private void saveRTK(String key, String rtk) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, rtk);
+        log.info("[Auth]: refresh token save complete");
     }
 }

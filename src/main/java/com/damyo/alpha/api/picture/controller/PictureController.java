@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RequestMapping("/api/pic")
 @RequiredArgsConstructor
 @RestController
@@ -41,6 +43,7 @@ public class PictureController {
     public ResponseEntity<PictureResponse> getPicture(
             @Parameter(description = "사진 ID", in = ParameterIn.PATH)
             @PathVariable Long id) {
+        log.info("[Picture]: /single/{}", id);
         PictureResponse picture = pictureService.getPicture(id);
         return ResponseEntity.ok().body(picture);
     }
@@ -53,6 +56,7 @@ public class PictureController {
     public ResponseEntity<List<PictureResponse>> getPicturesByUser(
             @Parameter(description = "유저 ID", in = ParameterIn.PATH)
             @PathVariable UUID id) {
+        log.info("[Picture]: /user/{}", id);
         List<PictureResponse> pictureList = pictureService.getPicturesByUser(id);
         return ResponseEntity.ok().body(pictureList);
     }
@@ -67,6 +71,7 @@ public class PictureController {
             @PathVariable String id,
             @Parameter(description = "반환할 사진 수", in = ParameterIn.DEFAULT)
             @RequestParam Long count) {
+        log.info("[Picture]: /sa/{}", id);
         List<PictureResponse> pictureList = pictureService.getPicturesBySmokingArea(id, count);
         return ResponseEntity.ok().body(pictureList);
     }
@@ -81,6 +86,7 @@ public class PictureController {
             @RequestPart(value = "dto") UploadPictureRequest dto,
             @Parameter(description = "업로드할 사진", in = ParameterIn.DEFAULT)
             @RequestPart(value = "image") MultipartFile image){
+        log.info("[Picture]: /upload | {}", dto);
         String url = s3ImageService.upload(image);
         pictureService.uploadPicture(dto.userId(), dto.smokingAreaId(), url);
 
@@ -95,6 +101,7 @@ public class PictureController {
     public ResponseEntity<?> s3delete(
             @Parameter(description = "삭제할 사진 주소", in = ParameterIn.DEFAULT)
             @RequestParam String addr){
+        log.info("[Picture]: /delete | {}", addr);
         s3ImageService.deleteImageFromS3(addr);
         return ResponseEntity.ok(null);
     }
