@@ -43,6 +43,7 @@ public class S3ImageService {
 
     public String upload(MultipartFile image) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
+            log.error("[S3Image]: image file empty");
             throw new S3Exception(S3ErrorCode.EMPTY_FILE_EXCEPTION);
         }
         return this.uploadImage(image);
@@ -53,6 +54,7 @@ public class S3ImageService {
         try {
             return this.uploadImageToS3(image);
         } catch (IOException e) {
+            log.error("[S3Image]: I/O exception on image upload");
             throw new S3Exception(S3ErrorCode.IO_EXCEPTION_ON_IMAGE_UPLOAD);
         }
     }
@@ -60,6 +62,7 @@ public class S3ImageService {
     private void validateImageFileExtension(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
+            log.error("[S3Image]: file extension is not exist");
             throw new S3Exception(S3ErrorCode.NO_FILE_EXTENSION);
         }
 
@@ -67,6 +70,7 @@ public class S3ImageService {
         List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
         if (!allowedExtentionList.contains(extension)) {
+            log.error("[S3Image]: file extension is invalid");
             throw new S3Exception(S3ErrorCode.INVALID_FILE_EXTENSION);
         }
     }
@@ -91,12 +95,13 @@ public class S3ImageService {
                             .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest); // put image to S3
         }catch (Exception e){
+            log.error("[S3Image]: put object error");
             throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
         }finally {
             byteArrayInputStream.close();
             is.close();
         }
-
+        log.info("[S3Image]: image upload complete");
 //        pictureRepository.save(Picture.builder().pictureUrl(amazonS3.getUrl(bucketName, s3FileName).toString())..build())
         return cloudFront + s3FileName;
     }
@@ -106,6 +111,7 @@ public class S3ImageService {
         try{
             amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
         }catch (Exception e){
+            log.error("[S3Image]: I/O error on image delete");
             throw new S3Exception(S3ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }
@@ -116,6 +122,7 @@ public class S3ImageService {
             String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
             return decodingKey.substring(1); // 맨 앞의 '/' 제거
         }catch (MalformedURLException | UnsupportedEncodingException e){
+            log.error("[S3Image]: encoding or format error on URL");
             throw new S3Exception(S3ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }

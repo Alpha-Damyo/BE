@@ -40,9 +40,11 @@ public class PictureService {
     private RedisTemplate<String, Object> countTemplate;
 
     public PictureResponse getPicture(Long id) {
-        Picture picture = pictureRepository.findPictureById(id).orElseThrow(
-                () -> new PictureException(PICTURE_NOT_FOUND)
-        );
+        Picture picture = pictureRepository.findPictureById(id)
+            .orElseThrow(() -> {
+                log.error("[Picture]: image not found by id | {}", id);
+                return new PictureException(PICTURE_NOT_FOUND);
+            });
         log.info("[Picture]: load picture by id | {}", id);
         return new PictureResponse(picture);
     }
@@ -98,7 +100,7 @@ public class PictureService {
                 .orElse(-1);
 
         if (targetIdx == -1) {
-            System.out.println("out");
+            log.error("[Picture]: user id not found | {}", userId);
             throw new IllegalArgumentException("User ID not found");
         }
 

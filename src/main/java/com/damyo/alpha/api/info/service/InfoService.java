@@ -12,12 +12,14 @@ import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_ID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class InfoService {
@@ -29,12 +31,15 @@ public class InfoService {
     private static final int POST_INFO_CONTRIBUTION_INCREMENT = 5;
 
     public void updateInfo(UpdateInfoRequest updateInfoRequest, UserDetailsImpl details) {
-        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId()).orElseThrow(
-                () -> new AreaException(NOT_FOUND_ID)
-        );
+        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId())
+                .orElseThrow(() -> {
+                    log.error("[Info]: area not found by id | {}", updateInfoRequest.smokingAreaId());
+                    return new AreaException(NOT_FOUND_ID);
+                });
         User user = details.getUser();
         infoRepository.save(updateInfoRequest.toEntity(sa, user));
         userService.updateContribution(user.getId(), POST_INFO_CONTRIBUTION_INCREMENT);
+        log.info("[Info]: info update complete");
     }
 
     public InfoResponse getInfo(String smokingAreaId) {
@@ -45,6 +50,7 @@ public class InfoService {
             scoreSum += info.getScore();
             sizeCnt += 1;
         }
+        log.info("[Info]: info find complete");
         return new InfoResponse(sizeCnt, scoreSum);
     }
 }

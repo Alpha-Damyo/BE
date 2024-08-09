@@ -41,6 +41,7 @@ public class AuthController {
             @RequestHeader(value = "Authorization", required = false) String authorHeader,
             @Parameter(description = "토큰을 제공한 인증 제공자(google, naver, kakao)", in = ParameterIn.DEFAULT, required = true)
             @PathVariable String provider) {
+        log.info("[Auth]: /login/{} | {}", provider, authorHeader);
         String token = authorHeader.substring(7);
         TokenResponse tokenResponse = authService.login(token, provider);
         return ResponseEntity.ok().body(tokenResponse);
@@ -50,6 +51,7 @@ public class AuthController {
     @Operation(summary = "소셜 로그인 생략하고 토큰 발급받기(테스트용)", description = "바뀐 로그인 방식으로 회원가입된 3개의 계정에 대해 토큰을 발급받는다." +
             "'106362899132468449802', '3399007981', 'tmO5sDw_IaLlon7-M7CesK43rgFDdAnogEKq-ubl_9c' 중에 하나를 골라 providerId에 넣는다")
     public ResponseEntity<TokenResponse> getToken(@RequestParam String providerId) {
+        log.info("[Info]: /token | {}", providerId);
         return ResponseEntity.ok().body(authService.generateTestToken(providerId));
     }
 
@@ -58,6 +60,7 @@ public class AuthController {
     public ResponseEntity<TokenResponse> reissueToken(
             @RequestBody ReissueRequest reissueRequest
             ) {
+        log.info("[Info]: /reissue | {}", reissueRequest);
         TokenResponse tokenResponse = authService.reissue(reissueRequest.refreshToken());
         return ResponseEntity.ok().body(tokenResponse);
     }
