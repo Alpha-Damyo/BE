@@ -67,6 +67,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	implementation 'com.bucket4j:bucket4j_jdk17-redis-common:8.13.1'
+	implementation 'com.bucket4j:bucket4j_jdk17-lettuce:8.13.1'
 }
 // QueryDSL setting ------------------------------------------------------------------------------------------------
 def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile
