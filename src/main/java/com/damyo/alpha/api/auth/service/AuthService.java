@@ -9,6 +9,7 @@ import com.damyo.alpha.api.auth.jwt.JwtProvider;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -52,6 +53,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    @Value("${guest.profile}")
+    private String guestProfile;
 
     public TokenResponse login(String token, String provider) {
         Map<String, Object> userInfo = getUserInfo(token, provider);
@@ -137,7 +141,7 @@ public class AuthService {
         // TO DO: 기본 이름, 프로필 설정하기
         log.info("[Auth]: user account create complete");
         return userRepository.findUserByProviderId(providerId).orElseGet(
-                () -> userRepository.save(new User("유저", provider, providerId, null))
+                () -> userRepository.save(new User("유저", provider, providerId, guestProfile))
         );
     }
 
