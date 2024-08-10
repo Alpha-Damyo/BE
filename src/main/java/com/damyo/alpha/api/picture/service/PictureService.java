@@ -5,10 +5,12 @@ import com.damyo.alpha.api.picture.domain.Picture;
 import com.damyo.alpha.api.picture.exception.PictureErrorCode;
 import com.damyo.alpha.api.picture.exception.PictureException;
 import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
+import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.picture.domain.PictureRepository;
 import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
+import com.damyo.alpha.api.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.damyo.alpha.api.picture.exception.PictureErrorCode.PICTURE_NOT_FOUND;
+import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_ID;
+import static com.damyo.alpha.api.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -70,8 +74,16 @@ public class PictureService {
     }
 
     public void uploadPicture(UUID userId, String areaId, String url) {
-        User user = userRepository.findUserById(userId).get();
-        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(areaId).get();
+        User user = userRepository.findUserById(userId)
+                .orElseThrow(() -> {
+                    log.error("user is not found by id | {}", userId);
+                    return new UserException(USER_NOT_FOUND);
+                });
+        SmokingArea sa = smokingAreaRepository.findSmokingAreaById(areaId)
+                .orElseThrow(() -> {
+                    log.error("area is not found by id | {}", areaId);
+                    return new AreaException(NOT_FOUND_ID);
+                });
         pictureRepository.save(
                 Picture.builder().
                         pictureUrl(url).

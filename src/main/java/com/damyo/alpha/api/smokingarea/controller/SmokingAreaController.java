@@ -87,9 +87,11 @@ public class SmokingAreaController {
             if(userDetails != null) {
                 pictureService.uploadPicture(userDetails.getId(), area.getId(), imgUrl);
                 userService.updateContribution(userDetails.getId(), POST_SA_CONTRIBUTION_INCREMENT);
+                log.info("[Area]: image URL save by user complete | {}: {}: {}", userDetails.getId(), area.getId(),imgUrl);
             }
             else{
                 pictureService.uploadPicture(UUID.fromString(guestUUID), area.getId(), imgUrl);
+                log.info("[Area]: image URL save by anonymous complete | {}: {}", area.getId(),imgUrl);
             }
         }
 
