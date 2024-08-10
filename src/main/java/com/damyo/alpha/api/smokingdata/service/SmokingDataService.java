@@ -8,11 +8,13 @@ import com.damyo.alpha.api.smokingdata.domain.SmokingDataRepository;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SmokingDataService {
@@ -25,10 +27,12 @@ public class SmokingDataService {
         SmokingArea area = smokingAreaRepository.findSmokingAreaById(areaId).get();
         User user = userRepository.findUserById(userId).get();
         smokingDataRepository.save(SmokingData.builder().user(user).createdAt(LocalDateTime.now()).smokingArea(area).build());
+        log.info("[Data]: data create complete");
     }
 
     public StatisticsRegionResponse getStatisticsByRegion() {
         List<Object[]> list = smokingDataRepository.findAreaTopByCreatedAt(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+        log.info("[Data]: region statistics create complete");
         return new StatisticsRegionResponse(getAllRegion(list), getAreaTop(list));
     }
 
@@ -44,7 +48,7 @@ public class SmokingDataService {
         List<Map.Entry<String, Long>> allRegionList = new ArrayList<>(allRegion.entrySet());
 
         Collections.sort(allRegionList, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-
+        log.info("[Data]: all-region statistics create complete");
         return new AllRegionStatisticsResponse(allRegionList);
     }
 
@@ -58,7 +62,7 @@ public class SmokingDataService {
             areaTopList.add(Map.of(name, count));
             if(areaTopList.size() == 3) break;
         }
-
+        log.info("[Data]: top-area statistics create complete");
         return  new AreaTopResponse(areaTopList);
     }
 
@@ -68,7 +72,7 @@ public class SmokingDataService {
 
         List<SmokingData> dataMonthList = smokingDataRepository.findSmokingDataByCreateAt(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
         Integer peopleMonth = smokingDataRepository.findUserNumberByCreateAt(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
-
+        log.info("[Data]: date statistics create complete");
         return new StatisticsDateResponse(getHourlyStatistics(dataList, peopleSum), getDailyStatistics(dataList, peopleSum), getWeeklyStatistics(dataMonthList, peopleMonth), getMonthlyStatistics(dataList, peopleSum), getDayWeekStatistics(dataList, peopleSum));
     }
 
@@ -90,7 +94,7 @@ public class SmokingDataService {
         if(peopleSum != 0){
             for(int i=1; i<9; i++) time[i] /= peopleSum;
         }
-
+        log.info("[Data]: hourly statistics create complete");
         return new HourlyStatisticsResponse(time);
     }
 
@@ -105,7 +109,7 @@ public class SmokingDataService {
         if(peopleSum != 0){
             for(int i=1; i<32; i++) days[i] /= peopleSum;
         }
-
+        log.info("[Data]: daily statistics create complete");
         return new DailyStatisticsResponse(days);
     }
 
@@ -120,11 +124,10 @@ public class SmokingDataService {
             else weeks[4] += 1;
         }
 
-
         if(peopleSum != 0){
             for(int i=1; i<5; i++) weeks[i] /= peopleSum;
         }
-
+        log.info("[Data]: weekly statistics create complete");
         return new WeeklyStatisticsResponse(weeks);
     }
 
@@ -139,7 +142,7 @@ public class SmokingDataService {
         if(peopleSum != 0){
             for(int i=1; i<13; i++) month[i] /= peopleSum;
         }
-
+        log.info("[Data]: monthly statistics create complete");
         return new MonthlyStatisticsResponse(month);
     }
 
@@ -154,7 +157,7 @@ public class SmokingDataService {
         if(peopleSum != 0){
             for(int i=1; i<8; i++) dayWeek[i] /= peopleSum;
         }
-
+        log.info("[Data]: day of week statistics create complete");
         return new DayOfWeekStatisticsResponse(dayWeek);
     }
 

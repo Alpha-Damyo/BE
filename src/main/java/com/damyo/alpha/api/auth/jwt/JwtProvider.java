@@ -1,11 +1,10 @@
 package com.damyo.alpha.api.auth.jwt;
 
-import com.damyo.alpha.api.auth.exception.AuthErrorCode;
-import com.damyo.alpha.api.auth.exception.TokenException;
+import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
+import com.damyo.alpha.api.auth.exception.AuthException;
 import com.damyo.alpha.api.auth.service.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,48 +22,99 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.damyo.alpha.api.auth.exception.AuthErrorCode.*;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
-    private static final int EXPIRED_DURATION = 24 * 365;
+    @Value("${secret.at}")
+    private String accessSecret;
+    @Value("${secret.rt}")
+    private String refreshSecret;
+    private static final int ACCESS_EXPIRED_DURATION = 60 * 60 * 24 * 7;
+    private static final int REFRESH_EXPIRED_DURATION = 60 * 60 * 24 * 365;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GRANT_TYPE = "Bearer ";
-    private Key key;
-
+    private Key accessKey;
+    private Key refreshKey;
     private final UserDetailServiceImpl userDetailService;
 
     @PostConstruct
     private void init() {
-        key = Keys.hmacShaKeyFor(secret.getBytes());
+        accessKey = Keys.hmacShaKeyFor(accessSecret.getBytes());
+        refreshKey = Keys.hmacShaKeyFor(refreshSecret.getBytes());
     }
 
-    public String generate(String id) {
+    public TokenResponse generate(String id) {
         Claims claims = Jwts.claims();
         claims.put("id", id);
-        return generateToken(claims);
+        return TokenResponse.builder()
+                .accessToken(generateAccessToken(claims))
+                .refreshToken(generateRefreshToken(claims))
+                .build();
     }
 
-    private String generateToken(Claims claims) {
+    private String generateAccessToken(Claims claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(issuedAt())
-                .setExpiration(expiredAt())
-                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(accessExpiredAt())
+                .signWith(accessKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    private Date expiredAt() {
+    private String generateRefreshToken(Claims claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(issuedAt())
+                .setExpiration(refreshExpiredAt())
+                .signWith(refreshKey,SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    private Date accessExpiredAt() {
         LocalDateTime now = LocalDateTime.now();
-        return Date.from(now.plusHours(EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(now.plusSeconds(ACCESS_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Date refreshExpiredAt() {
+        LocalDateTime now = LocalDateTime.now();
+        return Date.from(now.plusSeconds(REFRESH_EXPIRED_DURATION).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private Date issuedAt() {
         LocalDateTime now = LocalDateTime.now();
         return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public String validateRefreshAndGetId(String refreshToken) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(refreshKey)
+                    .build()
+                    .parseClaimsJws(refreshToken)
+                    .getBody()
+                    .get("id", String.class);
+        } catch (Exception e) {
+            log.info("3-1");
+            throw new AuthException(INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    public String validateAccessAndGetId(String accessToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(accessKey)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .get("id", String.class);
+    }
+
+    public Authentication createAuthentication(UUID id) {
+        UserDetails userDetails = userDetailService.loadUserByUsername(id.toString());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -73,19 +123,5 @@ public class JwtProvider {
             return bearerToken.substring(7);
         }
         return null;
-    }
-
-    public String validateTokenAndGetId(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("id", String.class);
-    }
-
-    public Authentication createAuthentication(UUID id) {
-        UserDetails userDetails = userDetailService.loadUserByUsername(id.toString());
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -57,6 +58,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
             "WHERE sa.id = :id")
     void updateSmokingAreaDescriptionById(@Param("description") String description, @Param("id") String id);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE SmokingArea sa SET sa.isActive = false " +
             "WHERE sa.id = :id")

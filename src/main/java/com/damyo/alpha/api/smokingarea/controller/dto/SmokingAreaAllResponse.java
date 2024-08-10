@@ -19,13 +19,9 @@ public record SmokingAreaAllResponse(
         Float score,
         Boolean status,
         Boolean opened,
-        Long openedCount,
         Boolean closed,
-        Long closedCount,
         Boolean indoor,
-        Long indoorCount,
         Boolean outdoor,
-        Long outdoorCount,
         List<PictureResponse> pictureList
 ) {
 }

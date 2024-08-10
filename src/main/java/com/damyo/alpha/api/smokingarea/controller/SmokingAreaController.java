@@ -20,9 +20,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +48,7 @@ public class SmokingAreaController {
     private final UserService userService;
     private final InfoService infoService;
     private final S3ImageService s3ImageService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Value("${guest.uuid}")
     private String guestUUID;
@@ -57,6 +61,7 @@ public class SmokingAreaController {
             @ApiResponse(responseCode = "200", description = "흡연구역 정보 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreas(){
+        log.info("[Area]: /all");
         List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaAll();
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
@@ -74,6 +79,7 @@ public class SmokingAreaController {
             @Parameter(description = "제보 첨부 사진", in = ParameterIn.DEFAULT)
             @RequestPart(required = false) MultipartFile imgFile
             ){
+        log.info("[Area]: /postArea | {}", areaRequest);
         SmokingArea area =  smokingAreaService.addSmokingArea(areaRequest);
 
         if(imgFile != null) {
@@ -99,13 +105,15 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaAllResponse> getSmokingAreaDetailsById(
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
+        log.info("[Area]: /details/{}", smokingAreaId);
         SmokingAreaDetailResponse area = smokingAreaService.findAreaById(smokingAreaId).toDTO();
         InfoResponse info = infoService.getInfo(smokingAreaId);
+        Float avgScore = Math.round((info.score() + area.score()) / (info.size()+1) * 10) / 10.0F;
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
-                area.createdAt(), area.description(), area.score(), area.status(), area.opened(), info.opened(), area.closed(), info.closed(),
-                area.indoor(), info.indoor(), area.outdoor(), info.outdoor(), picList);
+                area.createdAt(), area.description(), avgScore, area.status(), area.opened(), area.closed(),
+                area.indoor(), area.outdoor(), picList);
 
         return ResponseEntity.ok(response);
     }
@@ -118,6 +126,7 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaSummaryResponse> getSmokingAreaSummaryById(
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
+        log.info("[Area]: /summary/{}", smokingAreaId);
         SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
 
         return ResponseEntity.ok(areaResponse.toSUM());
@@ -132,6 +141,7 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaListResponse> getSmokingAreasByCreatedAt(
             @Parameter(description = "기준 날짜", in = ParameterIn.DEFAULT)
             @RequestParam LocalDate createdAt){
+        log.info("[Area]: /dateSearch | {}", createdAt);
         List<SmokingAreaSummaryResponse> areaResponses = smokingAreaService.findAreaByCreatedAt(LocalDateTime.of(createdAt, LocalTime.MIN));
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponses));
     }
@@ -152,6 +162,7 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByLocate(
             @Parameter(description = "좌표 검색 요청사항", in = ParameterIn.DEFAULT)
             @RequestBody SearchLocateRequest coordinate){
+        log.info("[Area]: /locateSearch | {}", coordinate);
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByCoordinate(coordinate);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
@@ -165,6 +176,7 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByRegion(
             @Parameter(description = "검색 지역", in = ParameterIn.DEFAULT)
             @RequestParam String region){
+        log.info("[Area]: /regionSearch | {}", region);
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByRegion(region);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
@@ -178,22 +190,15 @@ public class SmokingAreaController {
     public ResponseEntity<SmokingAreaListResponse> searchSmokingAreaByQuery(
             @Parameter(description = "검색어 검색 요청사항", in = ParameterIn.DEFAULT)
             @RequestBody SearchQueryRequest query){
+        log.info("[Area]: /querySearch | {}", query);
         List<SmokingAreaSummaryResponse> areaResponseList = smokingAreaService.findAreaByQuery(query);
         return ResponseEntity.ok(new SmokingAreaListResponse(areaResponseList));
     }
-    @GetMapping("/report/{smokingAreaId}")
-    @Operation(summary = "흡연구역 신고", description = "흡연구역이 존재하지 않을 때 유저가 보내는 요청")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "흡연구역 신고 성공"),
-            @ApiResponse(responseCode = "R101", description = "이미 신고한 흡연구역을 다시 신고한 경우")
-    })
-    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details) {
-        smokingAreaService.reportSmokingArea(smokingAreaId, details.getId());
-        return ResponseEntity.ok().body("신고 완료");
-    }
+
     @GetMapping("/report/test")
     @Operation(summary = "흡연구역 비활성화", description = "흡연구역이 신고 N회 이상인 경우 흡연구역 비활성화(테스트용)")
     public ResponseEntity<?> testReport() {
+        log.info("[Area]: /report/test");
         smokingAreaService.updateSmokingAreaByReport();
         return null;
     }

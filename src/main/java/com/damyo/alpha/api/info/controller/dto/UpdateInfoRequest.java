@@ -9,21 +9,13 @@ public record UpdateInfoRequest(
         @NonNull
         String smokingAreaId,
         @NonNull
-        Integer score,
-        Boolean opened,
-        Boolean closed,
-        Boolean indoor,
-        Boolean outdoor
+        Integer score
 ) {
         public Info toEntity(SmokingArea smokingArea, User user) {
                 return Info.builder().
                         smokingArea(smokingArea).
                         user(user).
                         score(score).
-                        opened(opened).
-                        closed(closed).
-                        indoor(indoor).
-                        outdoor(outdoor).
                         build();
         }
 }

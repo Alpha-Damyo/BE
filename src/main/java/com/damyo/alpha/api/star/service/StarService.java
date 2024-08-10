@@ -12,6 +12,7 @@ import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.star.domain.StarRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import static com.damyo.alpha.api.star.exception.StarErrorCode.STAR_NOT_FOUND;
 import static com.damyo.alpha.api.star.exception.StarErrorCode.UNAUTHORIZED_ACTION;
 import static com.damyo.alpha.api.user.exception.UserErrorCode.USER_NOT_FOUND;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StarService {
@@ -35,6 +37,7 @@ public class StarService {
         Star saved = starRepository.save(new Star(request, smokingArea, user));
         smokingArea.getStaredList().add(saved);
         user.getStarList().add(saved);
+        log.info("[Star]: star create complete");
     }
 
     public List<StarResponse> getStarList(UserDetailsImpl details) {
@@ -44,16 +47,21 @@ public class StarService {
         for (Star star : starList) {
             starResponseList.add(new StarResponse(star));
         }
+        log.info("[Star]: star list find complete");
         return starResponseList;
     }
 
     public void deleteStar(Long starId, UUID id) {
-        Star star = starRepository.findStarById(starId).orElseThrow(
-                () -> new StarException(STAR_NOT_FOUND)
-        );
+        Star star = starRepository.findStarById(starId)
+            .orElseThrow(() -> {
+                log.error("[Star]: star not found by id | {}", starId);
+                return new StarException(STAR_NOT_FOUND);
+            });
         if (!star.getUser().getId().equals(id)) {
+            log.error("[Star]: unauthorized action | {}", id);
             throw new StarException(UNAUTHORIZED_ACTION);
         }
         starRepository.deleteById(starId);
+        log.info("[Star]: star delete complete");
     }
 }

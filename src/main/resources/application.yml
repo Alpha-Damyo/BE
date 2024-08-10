@@ -22,11 +22,13 @@ spring:
     jdbc:
       initialize-schema: always
 
-jwt:
-  secret: ${JWT_SECRET}
+secret:
+  at: ${AT_SECRET}
+  rt: ${RT_SECRET}
 
 guest:
   uuid: ${GUEST_UUID}
+  profile: ${GUEST_PROFILE}
 
 cloud:
   aws:
