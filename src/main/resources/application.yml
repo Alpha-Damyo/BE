@@ -34,6 +34,11 @@ guest:
   uuid: ${GUEST_UUID}
   profile: ${GUEST_PROFILE}
 
+bucket:
+  capacity: ${BUCKET_CAPACITY}
+  refill: ${BUCKET_REFILL}
+
+
 cloud:
   aws:
     s3:
