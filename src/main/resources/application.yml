@@ -26,6 +26,10 @@ secret:
   at: ${AT_SECRET}
   rt: ${RT_SECRET}
 
+expiration:
+  at: ${AT_EXP}
+  rt: ${RT_EXP}
+
 guest:
   uuid: ${GUEST_UUID}
   profile: ${GUEST_PROFILE}

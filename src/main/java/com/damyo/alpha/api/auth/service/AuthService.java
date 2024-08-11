@@ -75,7 +75,9 @@ public class AuthService {
                     return new AuthException(ACCOUNT_NOT_FOUND);
                 }
         );
+        TokenResponse tokenResponse = jwtProvider.generate(user.getId().toString());
         log.info("[Auth]: test token generate");
+        saveRTK(user.getId().toString(), tokenResponse.refreshToken());
         return jwtProvider.generate(user.getId().toString());
     }
 
