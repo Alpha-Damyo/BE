@@ -59,7 +59,7 @@ public class InfoController {
         return ResponseEntity.ok().body("리뷰 작성 완료");
     }
 
-    @GetMapping("/{saId}")
+    @GetMapping("/tags/{saId}")
     @Operation(summary="해당 흡연구역의 태그 반환", description = "해당 흡연구역의 태그를 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "태그값 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
