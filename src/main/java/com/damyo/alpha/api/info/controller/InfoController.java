@@ -37,7 +37,7 @@ public class InfoController {
     private final S3ImageService s3ImageService;
 
     @PostMapping(value="/postInfo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.")
+    @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.", security = @SecurityRequirement(name = "jwt"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "리뷰 작성에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })

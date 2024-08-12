@@ -25,6 +25,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/star")
+@Deprecated
 @Tag(name = "StarController")
 public class StarController {
     private final StarService starService;
