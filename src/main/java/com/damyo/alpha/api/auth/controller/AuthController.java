@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class AuthController {
     private final S3ImageService s3ImageService;
 
     @PostMapping("/login/{provider}")
-    @Operation(summary = "로그인", description = "토큰을 반환한다.")
+    @Operation(summary = "로그인", description = "토큰을 반환한다.", security = @SecurityRequirement(name = "providerToken"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입에 성공함", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "A102", description = "해당 토큰으로 받아온 providerId DB에 존재하지 않을 때.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

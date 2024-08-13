@@ -20,8 +20,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint entryPoint;
     private static final String[] ALLOWED_URLS = {
-            "/api/auth/**", "/api/area/**", "/api/info/{saId}",
-            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error"
+            "/api/auth/**", "/api/area/**", "/api/info/tags/**",
+            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error", "/health"
     };
 
     @Bean

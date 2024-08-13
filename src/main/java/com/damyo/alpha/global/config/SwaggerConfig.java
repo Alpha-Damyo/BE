@@ -15,8 +15,6 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         String jwt = "jwt";
         String providerToken = "providerToken";
-        SecurityRequirement jwtSecurityRequirement = new SecurityRequirement().addList(jwt);
-        SecurityRequirement providerTokenSecurityRequirement = new SecurityRequirement().addList(providerToken);
         Components components = new Components()
                 .addSecuritySchemes(jwt, new SecurityScheme().name(jwt).type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
@@ -26,10 +24,7 @@ public class SwaggerConfig {
                         .bearerFormat("token"));
 
         return new OpenAPI()
-                .components(new Components())
                 .info(apiInfo())
-                .addSecurityItem(jwtSecurityRequirement)
-                .addSecurityItem(providerTokenSecurityRequirement)
                 .components(components);
     }
 

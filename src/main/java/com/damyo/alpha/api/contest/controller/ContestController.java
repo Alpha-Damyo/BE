@@ -25,6 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api/contest")
 @RequiredArgsConstructor
 @RestController
+@Deprecated
 @Tag(name = "ContestController")
 public class ContestController {
     private final PictureService pictureService;

@@ -30,6 +30,7 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -70,6 +71,9 @@ dependencies {
 
 //	implementation 'com.jcraft:jsch:0.1.55'
 //	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	implementation 'com.bucket4j:bucket4j_jdk17-redis-common:8.13.1'
+	implementation 'com.bucket4j:bucket4j_jdk17-lettuce:8.13.1'
 }
 // QueryDSL setting ------------------------------------------------------------------------------------------------
 def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile

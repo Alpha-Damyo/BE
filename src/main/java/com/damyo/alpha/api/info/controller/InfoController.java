@@ -37,7 +37,7 @@ public class InfoController {
     private final S3ImageService s3ImageService;
 
     @PostMapping(value="/postInfo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.")
+    @Operation(summary="리뷰 작성하기", description = "리뷰를 작성한다.", security = @SecurityRequirement(name = "jwt"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "리뷰 작성에 성공하였습니다.", content = @Content(mediaType = "application/json")),
     })
@@ -59,7 +59,7 @@ public class InfoController {
         return ResponseEntity.ok().body("리뷰 작성 완료");
     }
 
-    @GetMapping("/{saId}")
+    @GetMapping("/tags/{saId}")
     @Operation(summary="해당 흡연구역의 태그 반환", description = "해당 흡연구역의 태그를 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "태그값 반환에 성공하였습니다.", content = @Content(mediaType = "application/json")),
