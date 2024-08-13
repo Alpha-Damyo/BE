@@ -38,6 +38,10 @@ bucket:
   capacity: ${BUCKET_CAPACITY}
   refill: ${BUCKET_REFILL}
 
+management:
+  endpoints:
+    web:
+      base-path: /
 
 cloud:
   aws:

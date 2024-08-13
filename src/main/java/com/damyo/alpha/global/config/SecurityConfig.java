@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint entryPoint;
     private static final String[] ALLOWED_URLS = {
             "/api/auth/**", "/api/area/**", "/api/info/tags/**",
-            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error"
+            "/swagger-ui/**", "/v3/**", "/favicon.ico", "/error", "/health"
     };
 
     @Bean
