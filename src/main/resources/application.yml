@@ -63,5 +63,6 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
     persist-authorization: true
+    swg3-address: ${SWG3_ADDRESS}
   paths-to-match:
     - /api/**

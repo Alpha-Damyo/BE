@@ -6,11 +6,17 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${springdoc.swagger-ui.swg3-address}")
+    private String address;
 
     @Bean
     public OpenAPI openAPI() {
@@ -24,10 +30,13 @@ public class SwaggerConfig {
                         .scheme("bearer")
                         .bearerFormat("token"));
 
+        Server server = new Server();
+        server.setUrl(address);
+
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
                 .info(apiInfo())
-                .components(components);
+                .components(components)
+                .servers(List.of(server));
     }
 
     private Info apiInfo() {
