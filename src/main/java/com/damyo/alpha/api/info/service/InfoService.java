@@ -13,6 +13,8 @@ import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class InfoService {
 
     private static final int POST_INFO_CONTRIBUTION_INCREMENT = 5;
 
+    @CachePut(value="areaCache", key="#updateInfoRequest.smokingAreaId()", cacheManager="contentCacheManager")
     public void updateInfo(UpdateInfoRequest updateInfoRequest, UserDetailsImpl details) {
         SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId())
                 .orElseThrow(() -> {
@@ -38,6 +41,9 @@ public class InfoService {
                 });
         User user = details.getUser();
         infoRepository.save(updateInfoRequest.toEntity(sa, user));
+        int size = infoRepository.findInfosBySmokingAreaId(updateInfoRequest.smokingAreaId()).size();
+        Float score = (sa.getScore() * size + updateInfoRequest.score()) / (size + 1);
+        smokingAreaRepository.updateSmokingAreaScoreById(score, sa.getId());
         userService.updateContribution(user.getId(), POST_INFO_CONTRIBUTION_INCREMENT);
         log.info("[Info]: info update complete");
     }

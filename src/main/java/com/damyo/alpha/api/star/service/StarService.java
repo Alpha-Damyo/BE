@@ -13,6 +13,7 @@ import com.damyo.alpha.api.star.domain.StarRepository;
 import com.damyo.alpha.api.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class StarService {
     private final StarRepository starRepository;
     private final SmokingAreaRepository smokingAreaRepository;
 
+    @Cacheable(value="areaCache", key="#request.saId()", cacheManager="contentCacheManager")
     public void addStar(AddStarRequest request, UserDetailsImpl details) {
         // 예외 처리 해야함
         SmokingArea smokingArea = smokingAreaRepository.findSmokingAreaById(request.saId()).get();
