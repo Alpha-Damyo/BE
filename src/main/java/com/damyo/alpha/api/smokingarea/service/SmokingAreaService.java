@@ -6,6 +6,7 @@ import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
 import com.damyo.alpha.api.smokingarea.exception.AreaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,6 +38,7 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
+    @Cacheable(value="areaCache", key="#smokingAreaId", cacheManager="contentCacheManager")
     public SmokingArea findAreaById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
                 .orElseThrow(() -> {
