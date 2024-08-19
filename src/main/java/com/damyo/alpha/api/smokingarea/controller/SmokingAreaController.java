@@ -107,6 +107,7 @@ public class SmokingAreaController {
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
         log.info("[Area]: /details/{}", smokingAreaId);
+
         SmokingAreaDetailResponse area = smokingAreaService.findAreaDTOById(smokingAreaId);
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
 
