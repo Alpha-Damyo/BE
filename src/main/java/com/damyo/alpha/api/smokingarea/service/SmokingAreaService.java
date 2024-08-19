@@ -38,14 +38,24 @@ public class SmokingAreaService {
         return areaResponses;
     }
 
-    @Cacheable(value="areaCache", key="#smokingAreaId", cacheManager="contentCacheManager")
-    public SmokingArea findAreaById(String smokingAreaId) {
+    @Cacheable(value="areaDetailsCache", key="#smokingAreaId", cacheManager="contentCacheManager")
+    public SmokingAreaDetailResponse findAreaDTOById(String smokingAreaId) {
         SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
                 .orElseThrow(() -> {
-                    log.error("[Area]: area not found by id | {}", smokingAreaId);
+                    log.error("[Area]: area detail not found by id | {}", smokingAreaId);
                     return new AreaException(NOT_FOUND_ID);
                 });
-        return area;
+        return area.toDTO();
+    }
+
+    @Cacheable(value="areaSummaryCache", key="#smokingAreaId", cacheManager="contentCacheManager")
+    public SmokingAreaSummaryResponse findAreaSUMById(String smokingAreaId) {
+        SmokingArea area =  smokingAreaRepository.findSmokingAreaById(smokingAreaId)
+                .orElseThrow(() -> {
+                    log.error("[Area]: area summary not found by id | {}", smokingAreaId);
+                    return new AreaException(NOT_FOUND_ID);
+                });
+        return area.toSUM();
     }
 
     public List<SmokingAreaSummaryResponse> findAreaByCreatedAt(LocalDateTime createdAt) {

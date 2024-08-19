@@ -31,7 +31,6 @@ public class StarService {
     private final StarRepository starRepository;
     private final SmokingAreaRepository smokingAreaRepository;
 
-    @Cacheable(value="areaCache", key="#request.saId()", cacheManager="contentCacheManager")
     public void addStar(AddStarRequest request, UserDetailsImpl details) {
         // 예외 처리 해야함
         SmokingArea smokingArea = smokingAreaRepository.findSmokingAreaById(request.saId()).get();

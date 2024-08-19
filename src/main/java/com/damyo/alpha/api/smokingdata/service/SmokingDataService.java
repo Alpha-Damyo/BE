@@ -24,7 +24,6 @@ public class SmokingDataService {
     private final SmokingAreaRepository smokingAreaRepository;
     private final UserRepository userRepository;
 
-    @Cacheable(value="areaCache", key="#areaId", cacheManager="contentCacheManager")
     public void addSmokingData(UUID userId, String areaId) {
         SmokingArea area = smokingAreaRepository.findSmokingAreaById(areaId).get();
         User user = userRepository.findUserById(userId).get();

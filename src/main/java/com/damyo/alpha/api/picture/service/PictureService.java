@@ -55,12 +55,14 @@ public class PictureService {
         return new PictureResponse(picture);
     }
 
+    @Cacheable(value="pictureUserCache", key="#id", cacheManager="contentCacheManager")
     public List<PictureResponse> getPicturesByUser(UUID id) {
         List<Picture> pictures = pictureRepository.findPicturesByUser_id(id);
         log.info("[Picture]: load pictures by user | {}", id);
         return getPictureListResponse(pictures);
     }
 
+    @Cacheable(value="pictureAreaCache", key="#id", cacheManager="contentCacheManager")
     public List<PictureResponse> getPicturesBySmokingArea(String id, Long count) {
         List<Picture> pictures = pictureRepository.findPicturesBySmokingArea_Id(id, count);
         log.info("[Picture]: load pictures by area | {}", id);
