@@ -46,7 +46,6 @@ public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
     private final PictureService pictureService;
     private final UserService userService;
-    private final InfoService infoService;
     private final S3ImageService s3ImageService;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -108,13 +107,12 @@ public class SmokingAreaController {
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
         log.info("[Area]: /details/{}", smokingAreaId);
-        SmokingAreaDetailResponse area = smokingAreaService.findAreaById(smokingAreaId).toDTO();
-        InfoResponse info = infoService.getInfo(smokingAreaId);
-        Float avgScore = Math.round((info.score() + area.score()) / (info.size()+1) * 10) / 10.0F;
+
+        SmokingAreaDetailResponse area = smokingAreaService.findAreaDTOById(smokingAreaId);
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
-                area.createdAt(), area.description(), avgScore, area.status(), area.opened(), area.closed(),
+                area.createdAt(), area.description(), area.score(), area.status(), area.opened(), area.closed(),
                 area.indoor(), area.outdoor(), picList);
 
         return ResponseEntity.ok(response);
@@ -129,9 +127,9 @@ public class SmokingAreaController {
             @Parameter(description = "흡연구역 ID", in = ParameterIn.PATH)
             @PathVariable String smokingAreaId){
         log.info("[Area]: /summary/{}", smokingAreaId);
-        SmokingArea areaResponse = smokingAreaService.findAreaById(smokingAreaId);
+        SmokingAreaSummaryResponse response = smokingAreaService.findAreaSUMById(smokingAreaId);
 
-        return ResponseEntity.ok(areaResponse.toSUM());
+        return ResponseEntity.ok(response);
     }
 
     // 특정날짜이후 추가된 구역찾기
