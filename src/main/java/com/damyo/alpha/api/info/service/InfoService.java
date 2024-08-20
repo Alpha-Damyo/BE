@@ -43,6 +43,7 @@ public class InfoService {
         User user = details.getUser();
         infoRepository.save(updateInfoRequest.toEntity(sa, user));
         int size = infoRepository.findInfosBySmokingAreaId(updateInfoRequest.smokingAreaId()).size();
+        log.info("[test]: {}", size);
         Float score = (sa.getScore() * size + updateInfoRequest.score()) / (size + 1);
         smokingAreaRepository.updateSmokingAreaScoreById(score, sa.getId());
         userService.updateContribution(user.getId(), POST_INFO_CONTRIBUTION_INCREMENT);
