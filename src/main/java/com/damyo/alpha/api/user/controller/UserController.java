@@ -3,6 +3,7 @@ package com.damyo.alpha.api.user.controller;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
+import com.damyo.alpha.api.user.controller.dto.ReportRequest;
 import com.damyo.alpha.api.user.controller.dto.UserResponse;
 import com.damyo.alpha.api.user.domain.User;
 import com.damyo.alpha.api.user.domain.UserRepository;
@@ -112,15 +113,16 @@ public class UserController {
         return ResponseEntity.ok().body("회원 삭제 완료");
     }
 
-    @GetMapping("/report/{smokingAreaId}")
+    @PostMapping("/report/{smokingAreaId}")
     @Operation(summary = "흡연구역 신고", description = "흡연구역이 존재하지 않을 때 유저가 보내는 요청")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 신고 성공"),
             @ApiResponse(responseCode = "R101", description = "이미 신고한 흡연구역을 다시 신고한 경우")
     })
-    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details) {
+    public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details,
+                                               @RequestBody ReportRequest reportRequest) {
         log.info("[User]: /report/{}", smokingAreaId);
-        smokingAreaService.reportSmokingArea(smokingAreaId, details.getId());
+        smokingAreaService.handleReport(smokingAreaId, details.getId(), reportRequest);
         return ResponseEntity.ok().body("신고 완료");
     }
 }
