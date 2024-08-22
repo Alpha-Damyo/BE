@@ -17,9 +17,8 @@ public class SmokingAreaReportDetail {
     @Column(name = "other_suggestion", length = 500)
     private String otherSuggestion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "smoking_area_id")
-    private SmokingArea smokingArea;
+    @Column(name = "smoking_area_id")
+    private String smokingAreaId;
 
 }
 

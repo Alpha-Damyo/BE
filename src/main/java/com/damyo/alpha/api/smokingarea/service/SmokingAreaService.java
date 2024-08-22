@@ -208,12 +208,9 @@ public class SmokingAreaService {
         }
 
         if (reportRequest.otherSuggestions() != null) {
-            SmokingArea smokingArea = smokingAreaRepository.findSmokingAreaById(smokingAreaId).orElseThrow(
-                    () -> new AreaException(NOT_FOUND_ID)
-            );
             SmokingAreaReportDetail smokingAreaReportDetail = SmokingAreaReportDetail.builder()
                             .otherSuggestion(reportRequest.otherSuggestions())
-                            .smokingArea(smokingArea)
+                            .smokingAreaId(smokingAreaId)
                             .build();
 
             smokingAreaReportDetailRepository.save(smokingAreaReportDetail);
