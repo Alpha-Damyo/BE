@@ -45,6 +45,7 @@ import java.util.UUID;
 public class SmokingAreaController {
     private final SmokingAreaService smokingAreaService;
     private final PictureService pictureService;
+    private final InfoService infoService;
     private final UserService userService;
     private final S3ImageService s3ImageService;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -110,9 +111,10 @@ public class SmokingAreaController {
 
         SmokingAreaDetailResponse area = smokingAreaService.findAreaDTOById(smokingAreaId);
         List<PictureResponse> picList = pictureService.getPicturesBySmokingArea(smokingAreaId, 10L);
+        Long reviewCnt = infoService.getInfo(smokingAreaId).size() + 1L;
 
         SmokingAreaAllResponse response = new SmokingAreaAllResponse(area.areaId(), area.name(), area.latitude(), area.longitude(), area.address(),
-                area.createdAt(), area.description(), area.score(), area.status(), area.opened(), area.closed(),
+                area.createdAt(), area.description(), area.score(), reviewCnt, area.status(), area.opened(), area.closed(),
                 area.indoor(), area.outdoor(), picList);
 
         return ResponseEntity.ok(response);
