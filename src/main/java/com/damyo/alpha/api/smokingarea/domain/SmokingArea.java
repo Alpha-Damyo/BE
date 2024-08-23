@@ -67,6 +67,21 @@ public class SmokingArea {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "not_exist")
+    private Long notExist;
+
+    @Column(name = "incorrect_tag")
+    private Long incorrectTag;
+
+    @Column(name = "incorrect_locate")
+    private Long incorrectLocate;
+
+    @Column(name = "inappropriate_word")
+    private Long inappropriateWord;
+
+    @Column(name = "inappropriate_picture")
+    private Long inappropriatePicture;
+
     @Builder.Default
     @OneToMany(mappedBy = "smokingArea", fetch = FetchType.LAZY)
     @ToString.Exclude
