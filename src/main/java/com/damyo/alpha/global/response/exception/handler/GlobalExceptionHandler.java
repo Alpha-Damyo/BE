@@ -1,10 +1,9 @@
-package com.damyo.alpha.global.exception.handler;
+package com.damyo.alpha.global.response.exception.handler;
 
-import com.damyo.alpha.global.exception.error.BaseException;
-import com.damyo.alpha.global.exception.error.CommonErrorCode;
-import com.damyo.alpha.global.exception.error.ErrorCode;
-import com.damyo.alpha.api.auth.exception.AuthException;
-import com.damyo.alpha.global.exception.error.ErrorResponse;
+import com.damyo.alpha.global.response.exception.error.BaseException;
+import com.damyo.alpha.global.response.exception.error.CommonErrorCode;
+import com.damyo.alpha.global.response.exception.error.ErrorCode;
+import com.damyo.alpha.global.response.exception.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

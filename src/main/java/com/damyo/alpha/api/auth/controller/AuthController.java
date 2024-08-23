@@ -2,11 +2,10 @@ package com.damyo.alpha.api.auth.controller;
 
 
 import com.damyo.alpha.api.auth.controller.dto.ReissueRequest;
-import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.auth.controller.dto.TokenResponse;
 import com.damyo.alpha.api.auth.service.AuthService;
-import com.damyo.alpha.global.exception.error.ErrorResponse;
+import com.damyo.alpha.global.response.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")

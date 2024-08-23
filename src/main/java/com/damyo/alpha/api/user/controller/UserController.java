@@ -5,10 +5,9 @@ import com.damyo.alpha.api.picture.service.S3ImageService;
 import com.damyo.alpha.api.smokingarea.service.SmokingAreaService;
 import com.damyo.alpha.api.user.controller.dto.ReportRequest;
 import com.damyo.alpha.api.user.controller.dto.UserResponse;
-import com.damyo.alpha.api.user.domain.User;
-import com.damyo.alpha.api.user.domain.UserRepository;
 import com.damyo.alpha.api.user.service.UserService;
-import com.damyo.alpha.global.exception.error.ErrorResponse;
+import com.damyo.alpha.global.response.CommonSuccessApiResponse;
+import com.damyo.alpha.global.response.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -26,8 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -66,7 +62,7 @@ public class UserController {
     public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "변경할 이름") @RequestParam String name) {
         log.info("[User]: /update/name | {}", name);
         userService.updateName(details, name);
-        return ResponseEntity.ok().body("이름 변경 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("이름 변경 완료"));
     }
 
     @Operation(summary = "유저 프로필 변경", description = "유저의 프로필을 변경한다.")
@@ -84,7 +80,7 @@ public class UserController {
         String profileUrl = s3ImageService.upload(profile);
         String prevUrl = userService.updateProfile(details, profileUrl);
         s3ImageService.deleteImageFromS3(prevUrl);
-        return ResponseEntity.ok().body("프로필 변경 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("프로필 변경 완료"));
     }
 
     @Operation(summary = "유저 기여도 변경", description = "유저의 기여도를 변경한다.")
@@ -97,7 +93,7 @@ public class UserController {
     public ResponseEntity<?> updateScore(@AuthenticationPrincipal UserDetailsImpl details, @Schema(description = "기여도 증가량") @RequestParam int increment) {
         log.info("[User]: /update/score");
         userService.updateContribution(details.getId(), increment);
-        return ResponseEntity.ok().body("기여도 변경 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("기여도 변경 완료"));
     }
 
     @Operation(summary = "유저 삭제", description = "유저를 DB에서 지운다.")
@@ -110,19 +106,19 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl details) {
         log.info("[User]: /delete");
         userService.deleteUser(details.getId());
-        return ResponseEntity.ok().body("회원 삭제 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("회원 삭제 완료"));
     }
 
     @PostMapping("/report/{smokingAreaId}")
     @Operation(summary = "흡연구역 신고", description = "흡연구역이 존재하지 않을 때 유저가 보내는 요청")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "흡연구역 신고 성공"),
-            @ApiResponse(responseCode = "R101", description = "이미 신고한 흡연구역을 다시 신고한 경우")
+            @ApiResponse(responseCode = "SA102", description = "이미 신고한 흡연구역을 다시 신고한 경우")
     })
     public ResponseEntity<?> reportSmokingArea(@PathVariable String smokingAreaId, @AuthenticationPrincipal UserDetailsImpl details,
                                                @RequestBody ReportRequest reportRequest) {
         log.info("[User]: /report/{}", smokingAreaId);
         smokingAreaService.handleReport(smokingAreaId, details.getId(), reportRequest);
-        return ResponseEntity.ok().body("신고 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("신고 완료"));
     }
 }

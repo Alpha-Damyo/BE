@@ -1,6 +1,6 @@
 package com.damyo.alpha.api.picture.exception;
 
-import com.damyo.alpha.global.exception.error.ErrorCode;
+import com.damyo.alpha.global.response.exception.error.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
