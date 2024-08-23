@@ -33,7 +33,7 @@ public class InfoService {
 
     private static final int POST_INFO_CONTRIBUTION_INCREMENT = 5;
 
-    @CacheEvict(value={"areaDetailsCache", "areaSummaryCache"}, key="#updateInfoRequest.smokingAreaId()", cacheManager="contentCacheManager")
+    @CacheEvict(value={"areaDetailsCache", "areaSummaryCache", "pictureAreaCache"}, key="#updateInfoRequest.smokingAreaId()", cacheManager="contentCacheManager")
     public void updateInfo(UpdateInfoRequest updateInfoRequest, UserDetailsImpl details) {
         SmokingArea sa = smokingAreaRepository.findSmokingAreaById(updateInfoRequest.smokingAreaId())
                 .orElseThrow(() -> {

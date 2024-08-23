@@ -17,6 +17,7 @@ public record SmokingAreaAllResponse(
         LocalDateTime createdAt,
         String description,
         Float score,
+        Long reviewCount,
         Boolean status,
         Boolean opened,
         Boolean closed,
