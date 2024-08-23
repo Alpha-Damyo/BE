@@ -4,7 +4,7 @@ import com.damyo.alpha.api.star.controller.dto.AddStarRequest;
 import com.damyo.alpha.api.star.controller.dto.StarResponse;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.star.service.StarService;
-import com.damyo.alpha.global.exception.error.ErrorResponse;
+import com.damyo.alpha.global.response.exception.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,7 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController

@@ -4,12 +4,9 @@ import com.damyo.alpha.api.picture.controller.dto.UploadPictureRequest;
 import com.damyo.alpha.api.picture.controller.dto.PictureResponse;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.picture.service.S3ImageService;
-import com.damyo.alpha.api.star.controller.dto.StarResponse;
-import com.damyo.alpha.global.exception.error.ErrorResponse;
+import com.damyo.alpha.global.response.CommonSuccessApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -105,6 +102,6 @@ public class PictureController {
             @RequestParam String addr){
         log.info("[Picture]: /delete | {}", addr);
         s3ImageService.deleteImageFromS3(addr);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(new CommonSuccessApiResponse("사진 삭제 완료"));
     }
 }

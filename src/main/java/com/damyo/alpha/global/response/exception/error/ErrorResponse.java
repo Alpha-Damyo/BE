@@ -1,4 +1,4 @@
-package com.damyo.alpha.global.exception.error;
+package com.damyo.alpha.global.response.exception.error;
 
 public record ErrorResponse(
         String code,

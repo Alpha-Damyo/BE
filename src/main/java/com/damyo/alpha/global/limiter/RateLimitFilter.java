@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,9 +32,11 @@ public class RateLimitFilter implements Filter {
         }
         else {
             HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-            httpResponse.setContentType("text/plain");
+            httpResponse.setContentType("application/json;charset=UTF-8");
             httpResponse.setStatus(429);
-            httpResponse.getWriter().append("Too many requests");
+            JSONObject responseJSON = new JSONObject();
+            responseJSON.put("message", "잠시 후 다시 시도해주세요.");
+            httpResponse.getWriter().print(responseJSON);
         }
     }
 

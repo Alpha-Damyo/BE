@@ -3,10 +3,10 @@ package com.damyo.alpha.api.info.controller;
 import com.damyo.alpha.api.auth.domain.UserDetailsImpl;
 import com.damyo.alpha.api.info.controller.dto.UpdateInfoRequest;
 import com.damyo.alpha.api.info.controller.dto.InfoResponse;
-import com.damyo.alpha.api.info.domain.Info;
 import com.damyo.alpha.api.info.service.InfoService;
 import com.damyo.alpha.api.picture.service.PictureService;
 import com.damyo.alpha.api.picture.service.S3ImageService;
+import com.damyo.alpha.global.response.CommonSuccessApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -24,7 +24,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -56,7 +55,7 @@ public class InfoController {
             pictureService.uploadPicture(details.getId(), updateInfoRequest.smokingAreaId(), imgUrl);
         }
 
-        return ResponseEntity.ok().body("리뷰 작성 완료");
+        return ResponseEntity.ok().body(new CommonSuccessApiResponse("리뷰 작성 완료"));
     }
 
     @GetMapping("/tags/{saId}")
