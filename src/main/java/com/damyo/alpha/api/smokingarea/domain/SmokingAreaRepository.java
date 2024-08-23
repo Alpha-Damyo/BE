@@ -88,4 +88,34 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:region%")
     List<SmokingArea> findSmokingAreaByRegion(@Param("region") String region);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.notExist = :notExist " +
+            "WHERE sa.id = :id")
+    void updateNotExist(@Param("id") String id, @Param("notExist") long notExist);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.incorrectTag = :incorrectTag " +
+            "WHERE sa.id = :id")
+    void updateIncorrectTag(@Param("id") String id, @Param("incorrectTag") long incorrectTag);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.incorrectLocate = :incorrectLocate " +
+            "WHERE sa.id = :id")
+    void updateIncorrectLocate(@Param("id") String id, @Param("incorrectLocate") long incorrectLocate);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.inappropriateWord = :inappropriateWord " +
+            "WHERE sa.id = :id")
+    void updateInappropriateWord(@Param("id") String id, @Param("inappropriateWord") long inappropriateWord);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE SmokingArea sa SET sa.inappropriatePicture = :inappropriatePicture " +
+            "WHERE sa.id = :id")
+    void updateInappropriatePicture(@Param("id") String id, @Param("inappropriatePicture") long inappropriatePicture);
 }

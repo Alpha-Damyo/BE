@@ -1,15 +1,17 @@
 package com.damyo.alpha.api.smokingarea.service;
 
 import com.damyo.alpha.api.smokingarea.controller.dto.*;
-import com.damyo.alpha.api.smokingarea.domain.SmokingArea;
-import com.damyo.alpha.api.smokingarea.domain.SmokingAreaRepository;
+import com.damyo.alpha.api.smokingarea.domain.*;
 import com.damyo.alpha.api.smokingarea.exception.AreaException;
+import com.damyo.alpha.api.user.controller.dto.ReportRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,7 +27,13 @@ import static com.damyo.alpha.api.smokingarea.exception.AreaErrorCode.NOT_FOUND_
 public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
+    private final SmokingAreaReportDetailRepository smokingAreaReportDetailRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private static final String NOT_EXIST_KEY = "not-exist";
+    private static final String TAG_KEY = "incorrect-tag";
+    private static final String LOCATE_KEY = "incorrect-locate";
+    private static final String WORD_KEY = "inappropriate-word";
+    private static final String PICTURE_KEY = "inappropriate-picture";
 
     public List<SmokingAreaSummaryResponse> findAreaAll(){
         List<SmokingArea> areas = smokingAreaRepository.findAll();
@@ -156,26 +164,90 @@ public class SmokingAreaService {
         return areaResponseList;
     }
 
-    public void reportSmokingArea(String smokingAreaId, UUID userId) {
+    public void handleReport(String smokingAreaId, UUID userId, ReportRequest reportRequest) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        String key = "SA::" + smokingAreaId;
-        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) {
+        String setKey = "report-users::" + smokingAreaId + "::set";
+        if (setOperations.isMember(setKey, userId)) {
             log.error("[Area]: area report already {}", smokingAreaId);
             throw new AreaException(ALREADY_REPORT);
         }
         log.info("[Area]: area report complete");
-        setOperations.add(key, userId);
-    }
+        setOperations.add(setKey, userId);
 
+        String hashKey = "smoking-area::" + smokingAreaId + "::hash";
+        HashOperations<String, String, Long> hashOperations = redisTemplate.opsForHash();
+        if (reportRequest.notExist()) {
+            hashOperations.increment(hashKey, NOT_EXIST_KEY, 1L);
+        }
+        else {
+            hashOperations.increment(hashKey, NOT_EXIST_KEY, 0L);
+        }
+        if (reportRequest.incorrectTag()) {
+            hashOperations.increment(hashKey, TAG_KEY, 1L);
+        }
+        else {
+            hashOperations.increment(hashKey, TAG_KEY, 0L);
+        }
+        if (reportRequest.incorrectLocation()) {
+            hashOperations.increment(hashKey, LOCATE_KEY, 1L);
+        }
+        else {
+            hashOperations.increment(hashKey, LOCATE_KEY, 0L);
+        }
+        if (reportRequest.inappropriateWord()) {
+            hashOperations.increment(hashKey, WORD_KEY, 1L);
+        }
+        else {
+            hashOperations.increment(hashKey, WORD_KEY, 0L);
+        }
+        if (reportRequest.inappropriatePicture()) {
+            hashOperations.increment(hashKey, PICTURE_KEY, 1L);
+        }
+        else {
+            hashOperations.increment(hashKey, PICTURE_KEY, 0L);
+        }
+
+        if (reportRequest.otherSuggestions() != null) {
+            SmokingAreaReportDetail smokingAreaReportDetail = SmokingAreaReportDetail.builder()
+                            .otherSuggestion(reportRequest.otherSuggestions())
+                            .smokingAreaId(smokingAreaId)
+                            .build();
+
+            smokingAreaReportDetailRepository.save(smokingAreaReportDetail);
+        }
+    }
 
     @Scheduled(cron = "0 0 0 1 * ?", zone = "Asia/Seoul")
     public void updateSmokingAreaByReport() {
-        Set<String> keys = redisTemplate.keys("SA*");
+//        Set<String> keys = redisTemplate.keys("SA*");
+//        if (keys != null) {
+//            SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+//            for (String key : keys) {
+//                String smokingAreaId = key.split("::")[1];
+//                if (setOperations.size(key) >= 5) {
+//                    smokingAreaRepository.updateSmokingAreaActiveById(smokingAreaId);
+//                    redisTemplate.delete(key);
+//                }
+//            }
+//        }
+        Set<String> keys = redisTemplate.keys("smoking-area*");
         if (keys != null) {
-            SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+            HashOperations<String, String, Long> hashOperations = redisTemplate.opsForHash();
             for (String key : keys) {
                 String smokingAreaId = key.split("::")[1];
-                if (setOperations.size(key) >= 5) {
+                long notExist = Long.parseLong(String.valueOf(hashOperations.get(key, NOT_EXIST_KEY)));
+                long incorrectTag = Long.parseLong(String.valueOf(hashOperations.get(key, TAG_KEY)));
+                long incorrectLocate = Long.parseLong(String.valueOf(hashOperations.get(key, LOCATE_KEY)));
+                long inappropriateWord = Long.parseLong(String.valueOf(hashOperations.get(key, WORD_KEY)));
+                long inappropriatePicture = Long.parseLong(String.valueOf(hashOperations.get(key, PICTURE_KEY)));
+
+                smokingAreaRepository.updateNotExist(smokingAreaId, notExist);
+                smokingAreaRepository.updateIncorrectTag(smokingAreaId, incorrectTag);
+                smokingAreaRepository.updateIncorrectLocate(smokingAreaId, incorrectLocate);
+                smokingAreaRepository.updateInappropriateWord(smokingAreaId, inappropriateWord);
+                smokingAreaRepository.updateInappropriatePicture(smokingAreaId, inappropriatePicture);
+
+                if (notExist >= 5) {
                     smokingAreaRepository.updateSmokingAreaActiveById(smokingAreaId);
                     redisTemplate.delete(key);
                 }
