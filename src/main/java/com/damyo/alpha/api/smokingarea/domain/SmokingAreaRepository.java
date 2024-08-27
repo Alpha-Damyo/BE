@@ -33,7 +33,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, String
 
     @Query("SELECT sa FROM SmokingArea sa " +
             "WHERE sa.id LIKE %:areaName% " +
-            "ORDER BY sa.createdAt DESC " +
+            "ORDER BY sa.id DESC " +
             "LIMIT 1")
     Optional<SmokingArea> findSmokingAreaIdByAreaName(@Param("areaName") String areaName);
 
